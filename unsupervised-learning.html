@@ -1,0 +1,1315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Unsupervised Learning: Introduction &ndash; Learning Machines</title>
+<meta name="description" content="A simple, friendly guide to Unsupervised Learning: learning without labels, discovering hidden structure, a taxonomy diagram of methods, and an introduction to Clustering.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,600;12..96,700;12..96,800&family=Figtree:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600;700&display=swap" rel="stylesheet">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="stylesheet" href="style.css">
+<style>
+/* Page-specific styling for Unsupervised Learning Introduction */
+.ul-hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: var(--teal-tint);
+  border: 1px solid rgba(14, 168, 148, 0.3);
+  color: var(--teal-dark);
+  font-family: var(--display);
+  font-size: 0.78rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 0.35rem 0.85rem;
+  border-radius: 999px;
+  margin-bottom: 1rem;
+}
+
+/* Side-by-Side Supervised vs Unsupervised Comparison */
+.ul-vs-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.2rem;
+  margin: 1.8rem 0;
+}
+@media (min-width: 640px) {
+  .ul-vs-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.ul-vs-card {
+  background: var(--surface);
+  border: 1.5px solid var(--line);
+  border-radius: var(--radius);
+  padding: 1.5rem;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.ul-vs-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
+}
+
+.ul-vs-card--sup {
+  border-top: 4px solid var(--coral);
+}
+.ul-vs-card--unsup {
+  border-top: 4px solid var(--teal);
+}
+
+.ul-vs-card__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+
+.ul-vs-card__tag {
+  font-size: 0.72rem;
+  font-family: var(--display);
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 0.25rem 0.65rem;
+  border-radius: 999px;
+}
+.ul-vs-card--sup .ul-vs-card__tag {
+  background: var(--coral-tint);
+  color: var(--coral-dark);
+}
+.ul-vs-card--unsup .ul-vs-card__tag {
+  background: var(--teal-tint);
+  color: var(--teal-dark);
+}
+
+.ul-vs-card__title {
+  font-family: var(--display);
+  font-size: 1.2rem;
+  font-weight: 700;
+  margin: 0 0 0.4rem;
+  color: var(--ink);
+}
+
+.ul-vs-card__analogy {
+  font-size: 0.92rem;
+  color: var(--ink-soft);
+  margin-bottom: 1rem;
+  line-height: 1.5;
+  background: var(--bg);
+  padding: 0.75rem 0.95rem;
+  border-radius: var(--radius-sm);
+  border-left: 3px solid var(--line);
+}
+
+.ul-vs-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  font-size: 0.9rem;
+}
+
+.ul-vs-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.6rem;
+  color: var(--ink);
+}
+.ul-vs-bullet {
+  font-weight: 800;
+  line-height: 1;
+  margin-top: 0.15rem;
+}
+.ul-vs-card--sup .ul-vs-bullet { color: var(--coral); }
+.ul-vs-card--unsup .ul-vs-bullet { color: var(--teal); }
+
+/* Interactive Toggle Playground: Labeled vs Unlabeled Data */
+.ul-interactive-container {
+  background: var(--surface);
+  border: 2px solid var(--line);
+  border-radius: var(--radius);
+  padding: 1.6rem;
+  margin: 2rem 0;
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.03);
+}
+
+.ul-interactive-controls {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.8rem;
+  margin-bottom: 1.2rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--line);
+}
+
+.ul-pill-group {
+  display: inline-flex;
+  background: var(--bg);
+  padding: 0.25rem;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+}
+
+.ul-pill-btn {
+  background: transparent;
+  border: none;
+  padding: 0.45rem 1rem;
+  border-radius: 999px;
+  font-family: var(--display);
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--ink-soft);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.ul-pill-btn.is-active {
+  background: var(--surface);
+  color: var(--ink);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.ul-toggle-readout {
+  font-size: 0.92rem;
+  color: var(--ink-soft);
+  line-height: 1.5;
+  background: var(--bg);
+  padding: 0.9rem 1.1rem;
+  border-radius: var(--radius-sm);
+  margin-top: 1rem;
+  border-left: 3px solid var(--teal);
+}
+
+/* Unsupervised Methods Diagram & Interactive Explorer */
+.ul-methods-explorer {
+  background: var(--surface);
+  border: 2px solid var(--line);
+  border-radius: var(--radius);
+  padding: 1.8rem;
+  margin: 2rem 0;
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.03);
+}
+
+.ul-methods-nav {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 0.6rem;
+  margin-bottom: 1.4rem;
+}
+
+.ul-method-tab {
+  background: var(--bg);
+  border: 1.5px solid var(--line);
+  border-radius: 10px;
+  padding: 0.75rem 0.85rem;
+  cursor: pointer;
+  text-align: left;
+  transition: all 0.2s ease;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.ul-method-tab:hover {
+  border-color: var(--teal);
+  background: var(--surface-tint);
+}
+
+.ul-method-tab.is-active {
+  background: var(--surface);
+  border-color: var(--teal);
+  box-shadow: 0 4px 14px rgba(14, 168, 148, 0.15);
+}
+
+.ul-method-tab__name {
+  font-family: var(--display);
+  font-size: 0.92rem;
+  font-weight: 700;
+  color: var(--ink);
+}
+
+.ul-method-tab__tag {
+  font-size: 0.72rem;
+  color: var(--muted);
+}
+.ul-method-tab.is-active .ul-method-tab__tag {
+  color: var(--teal-dark);
+  font-weight: 600;
+}
+
+.ul-method-display {
+  background: var(--bg);
+  border: 1.5px solid var(--line);
+  border-radius: var(--radius-sm);
+  padding: 1.4rem;
+}
+
+.ul-method-display__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.8rem;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.ul-method-display__title {
+  font-family: var(--display);
+  font-size: 1.15rem;
+  font-weight: 700;
+  margin: 0;
+  color: var(--ink);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.ul-method-display__desc {
+  font-size: 0.95rem;
+  color: var(--ink-soft);
+  margin-bottom: 1.2rem;
+  line-height: 1.6;
+}
+
+.ul-method-examples-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 0.8rem;
+}
+
+.ul-method-chip {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 0.3rem 0.8rem;
+  font-size: 0.82rem;
+  font-family: "IBM Plex Mono", monospace;
+  color: var(--ink);
+}
+
+/* Clustering Spotlight Showcase */
+.ul-clustering-spotlight {
+  background: linear-gradient(135deg, rgba(14, 168, 148, 0.06) 0%, rgba(233, 168, 37, 0.06) 100%);
+  border: 2px solid rgba(14, 168, 148, 0.35);
+  border-radius: var(--radius);
+  padding: 1.8rem 2rem;
+  margin: 2rem 0;
+}
+
+.ul-apps-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1rem;
+  margin-top: 1.2rem;
+}
+
+.ul-app-card {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  padding: 1.2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.ul-app-card__icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  background: var(--teal-tint);
+  color: var(--teal-dark);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ul-app-card__title {
+  font-family: var(--display);
+  font-size: 0.98rem;
+  font-weight: 700;
+  margin: 0;
+  color: var(--ink);
+}
+
+.ul-app-card__text {
+  font-size: 0.88rem;
+  color: var(--ink-soft);
+  margin: 0;
+  line-height: 1.5;
+}
+
+/* Bridge to Next Lesson Card */
+.ul-next-banner {
+  background: linear-gradient(135deg, rgba(255, 90, 60, 0.08) 0%, rgba(14, 168, 148, 0.08) 100%);
+  border: 2px solid rgba(255, 90, 60, 0.3);
+  border-radius: var(--radius);
+  padding: 2rem;
+  margin: 2.4rem 0 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  position: relative;
+  overflow: hidden;
+}
+@media (min-width: 640px) {
+  .ul-next-banner {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+  }
+}
+
+.ul-next-banner__btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  background: var(--coral);
+  color: #FFFFFF !important;
+  font-family: var(--display);
+  font-weight: 700;
+  font-size: 0.95rem;
+  padding: 0.75rem 1.4rem;
+  border-radius: 999px;
+  text-decoration: none;
+  box-shadow: 0 4px 14px rgba(255, 90, 60, 0.35);
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+}
+.ul-next-banner__btn:hover {
+  background: var(--coral-dark);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(255, 90, 60, 0.45);
+}
+
+/* Quiz option styling */
+.ul-quiz-card {
+  background: var(--surface);
+  border: 1.5px solid var(--line);
+  border-radius: var(--radius);
+  padding: 1.5rem;
+  margin: 1.2rem 0;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.02);
+}
+.ul-quiz-q {
+  font-family: var(--display);
+  font-weight: 700;
+  font-size: 1.05rem;
+  margin: 0 0 1rem;
+  color: var(--ink);
+}
+.ul-quiz-options {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+.ul-quiz-opt {
+  background: var(--bg);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 0.65rem 1rem;
+  text-align: left;
+  font-size: 0.9rem;
+  font-family: var(--body);
+  color: var(--ink);
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+.ul-quiz-opt:hover {
+  background: var(--surface-tint);
+  border-color: var(--coral-tint);
+}
+.ul-quiz-opt.is-correct {
+  background: var(--teal-tint) !important;
+  border-color: var(--teal) !important;
+  color: var(--teal-dark) !important;
+  font-weight: 700;
+}
+.ul-quiz-opt.is-wrong {
+  background: var(--coral-tint) !important;
+  border-color: var(--coral) !important;
+  color: var(--coral-dark) !important;
+}
+.ul-quiz-feedback {
+  margin-top: 0.8rem;
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  font-size: 0.88rem;
+  display: none;
+}
+.ul-quiz-feedback.is-visible { display: block; }
+.ul-quiz-feedback.is-correct {
+  background: var(--teal-tint);
+  border-left: 4px solid var(--teal);
+  color: var(--teal-dark);
+}
+.ul-quiz-feedback.is-wrong {
+  background: var(--coral-tint);
+  border-left: 4px solid var(--coral);
+  color: var(--coral-dark);
+}
+</style>
+</head>
+<body>
+
+<div class="grain" aria-hidden="true"></div>
+
+<div class="progress-rail" aria-hidden="true"><div class="progress-fill" id="progressFill"></div></div>
+
+<header class="top-bar">
+  <div class="top-bar__brand">
+    <span class="course-nav__mark">LM</span>
+    <span class="top-bar__title">Learning Machines</span>
+  </div>
+  <div class="top-bar__controls">
+    <span class="top-bar__time" id="readTime">~6 min read</span>
+    <button class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="courseNav">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="4" x2="20" y1="6" y2="6"/><line x1="4" x2="20" y1="12" y2="12"/><line x1="4" x2="20" y1="18" y2="18"/></svg>
+      <span class="nav-toggle__label">Course map</span>
+    </button>
+  </div>
+</header>
+
+<div class="nav-overlay" id="navOverlay" aria-hidden="true"></div>
+
+<!-- ============ SLIDE-OVER SIDEBAR ============ -->
+<aside class="course-nav" id="courseNav">
+  <div class="course-nav__header">
+    <h2 class="course-nav__title-side">Course map</h2>
+    <button class="nav-close" id="navClose" aria-label="Close nav">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
+    </button>
+  </div>
+  <p class="course-nav__tagline">A slow, careful path through machine learning, start to finish.</p>
+
+  <ol class="course-nav__list">
+    <li class="course-nav__item is-completed">
+      <a href="index.html" class="course-nav__inner-link">
+        <span class="course-nav__num">1</span>
+        <div>
+          <span class="course-nav__name">Introduction</span>
+          <span class="course-nav__state">completed</span>
+        </div>
+      </a>
+    </li>
+    <li class="course-nav__item is-completed">
+      <a href="data-preprocessing.html" class="course-nav__inner-link">
+        <span class="course-nav__num">2</span>
+        <div>
+          <span class="course-nav__name">Data Preprocessing</span>
+          <span class="course-nav__state">completed</span>
+        </div>
+      </a>
+    </li>
+    <li class="course-nav__item is-completed">
+      <a href="eda.html" class="course-nav__inner-link">
+        <span class="course-nav__num">3</span>
+        <div>
+          <span class="course-nav__name">Exploratory Data Analysis</span>
+          <span class="course-nav__state">completed</span>
+        </div>
+      </a>
+    </li>
+    <li class="course-nav__item is-completed">
+      <a href="supervised-learning.html" class="course-nav__inner-link">
+        <span class="course-nav__num">4</span>
+        <div>
+          <span class="course-nav__name">Supervised Learning</span>
+          <span class="course-nav__state">completed</span>
+        </div>
+      </a>
+    </li>
+    <ol class="course-nav__sub-list">
+      <li class="course-nav__sub-item">
+        <a href="supervised-learning.html">
+          <span class="course-nav__sub-num">4.1</span>
+          <div>
+            <span class="course-nav__sub-name">Introduction</span>
+            <span class="course-nav__state">completed</span>
+          </div>
+        </a>
+      </li>
+      <li class="course-nav__sub-item">
+        <a href="classification.html">
+          <span class="course-nav__sub-num">4.2</span>
+          <div>
+            <span class="course-nav__sub-name">Classification &amp; Decision Trees</span>
+            <span class="course-nav__state">completed</span>
+          </div>
+        </a>
+      </li>
+      <li class="course-nav__sub-item">
+        <a href="id3-algorithm.html">
+          <span class="course-nav__sub-num">4.3</span>
+          <div>
+            <span class="course-nav__sub-name">ID3 Algorithm</span>
+            <span class="course-nav__state">completed</span>
+          </div>
+        </a>
+      </li>
+      <li class="course-nav__sub-item">
+        <a href="c45-algorithm.html">
+          <span class="course-nav__sub-num">4.4</span>
+          <div>
+            <span class="course-nav__sub-name">C4.5 Algorithm</span>
+            <span class="course-nav__state">completed</span>
+          </div>
+        </a>
+      </li>
+      <li class="course-nav__sub-item">
+        <a href="cart-algorithm.html">
+          <span class="course-nav__sub-num">4.5</span>
+          <div>
+            <span class="course-nav__sub-name">CART Algorithm</span>
+            <span class="course-nav__state">completed</span>
+          </div>
+        </a>
+      </li>
+      <li class="course-nav__sub-item">
+        <a href="regression-analysis.html">
+          <span class="course-nav__sub-num">4.6</span>
+          <div>
+            <span class="course-nav__sub-name">Introduction to Regression</span>
+            <span class="course-nav__state">completed</span>
+          </div>
+        </a>
+      </li>
+      <li class="course-nav__sub-item">
+        <a href="simple-linear-regression.html">
+          <span class="course-nav__sub-num">4.7</span>
+          <div>
+            <span class="course-nav__sub-name">Simple Linear Regression</span>
+            <span class="course-nav__state">completed</span>
+          </div>
+        </a>
+      </li>
+      <li class="course-nav__sub-item">
+        <a href="polynomial-regression.html">
+          <span class="course-nav__sub-num">4.8</span>
+          <div>
+            <span class="course-nav__sub-name">Polynomial Regression</span>
+            <span class="course-nav__state">completed</span>
+          </div>
+        </a>
+      </li>
+    </ol>
+    <li class="course-nav__item is-active-group">
+      <span class="course-nav__num">5</span>
+      <div>
+        <span class="course-nav__name">Unsupervised Learning</span>
+        <span class="course-nav__state">in progress</span>
+      </div>
+    </li>
+    <ol class="course-nav__sub-list">
+      <li class="course-nav__sub-item is-active">
+        <a href="unsupervised-learning.html">
+          <span class="course-nav__sub-num">5.1</span>
+          <div>
+            <span class="course-nav__sub-name">Introduction</span>
+            <span class="course-nav__state">reading now</span>
+          </div>
+        </a>
+      </li>
+      <li class="course-nav__sub-item">
+        <a href="hierarchical-clustering.html">
+          <span class="course-nav__sub-num">5.2</span>
+          <div>
+            <span class="course-nav__sub-name">Hierarchical Clustering</span>
+            <span class="course-nav__state">available now</span>
+          </div>
+        </a>
+      </li>
+    </ol>
+    <li class="course-nav__item is-locked">
+      <span class="course-nav__num">6</span>
+      <div>
+        <span class="course-nav__name">Reinforcement Learning</span>
+        <span class="course-nav__state">
+          <svg class="course-nav__lock" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          coming soon
+        </span>
+      </div>
+    </li>
+  </ol>
+</aside>
+
+<div class="shell">
+
+  <!-- ============ MAIN ARTICLE ============ -->
+  <main class="lesson">
+
+    <header class="lesson__header">
+      <div class="ul-hero-badge">Module 5 &bull; Foundations</div>
+      <span class="lesson__eyebrow-free-title">
+        <h1>Unsupervised Learning: Introduction</h1>
+        <svg class="title-underline" viewBox="0 0 520 14" preserveAspectRatio="none" aria-hidden="true">
+          <path d="M4 9 C 120 2, 260 13, 400 6 C 440 4, 480 8, 516 5"/>
+        </svg>
+      </span>
+      <p class="lesson__dek">What happens when you have tons of data, but nobody handed you the answers? Unsupervised learning discovers hidden patterns, natural clusters, and underlying structure on its own.</p>
+    </header>
+
+    <!-- ---- Section 1: What is Unsupervised Learning? ---- -->
+    <section class="block" id="what-is-unsupervised-learning">
+      <div class="block__body">
+        <h2 class="fade-up animate-on-scroll">
+          <span class="icon-badge icon-badge--teal">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/><path d="M2 12h20"/></svg>
+          </span>
+          What is unsupervised learning in simple English?
+        </h2>
+
+        <div class="definition fade-up animate-on-scroll">
+          <div class="definition__label">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+            Core Definition
+          </div>
+          <p>
+            <strong>Unsupervised Learning = Learning Without an Answer Key.</strong><br>
+            The algorithm is given input data <strong>without any labels or target outputs</strong>. Its job is to explore the data and find natural groupings, relationships, and structure all by itself.
+          </p>
+        </div>
+
+        <p class="marginable fade-up animate-on-scroll" data-note="In supervised learning, we had (X, y): inputs and answers. In unsupervised learning, we only have X: inputs. No teacher, no test grades.">
+          In everyday life, you do this all the time. Imagine dumping a bucket of assorted Lego bricks or coins onto a table. Nobody tells you which brick belongs to which castle, and nobody labels them "Group A" or "Group B".
+        </p>
+
+        <p class="fade-up animate-on-scroll">
+          Yet within minutes, you instinctively separate them: all the red 2&times;4 pieces into one pile, tiny yellow studs into another, and long flat plates into a third. You didn't need an answer key. You found the patterns by comparing <em>how similar or different the items were to each other</em>.
+        </p>
+
+        <!-- Supervised vs Unsupervised Comparison Grid -->
+        <div class="ul-vs-grid fade-up animate-on-scroll">
+          <!-- Supervised Card -->
+          <div class="ul-vs-card ul-vs-card--sup">
+            <div class="ul-vs-card__head">
+              <span class="ul-vs-card__title">Supervised Learning</span>
+              <span class="ul-vs-card__tag">With Answers</span>
+            </div>
+            <div class="ul-vs-card__analogy">
+              <strong>Analogy:</strong> Studying with a teacher holding an answer key. Every mistake gives feedback to correct guesses.
+            </div>
+            <ul class="ul-vs-list">
+              <li class="ul-vs-item">
+                <span class="ul-vs-bullet">&bull;</span>
+                <span><strong>Data:</strong> Features \(X\) paired with labels \(y\).</span>
+              </li>
+              <li class="ul-vs-item">
+                <span class="ul-vs-bullet">&bull;</span>
+                <span><strong>Goal:</strong> Predict the label for new unseen examples.</span>
+              </li>
+              <li class="ul-vs-item">
+                <span class="ul-vs-bullet">&bull;</span>
+                <span><strong>Main tasks:</strong> Classification (spam vs. not spam) and Regression (house prices).</span>
+              </li>
+            </ul>
+          </div>
+
+          <!-- Unsupervised Card -->
+          <div class="ul-vs-card ul-vs-card--unsup">
+            <div class="ul-vs-card__head">
+              <span class="ul-vs-card__title">Unsupervised Learning</span>
+              <span class="ul-vs-card__tag">No Answers</span>
+            </div>
+            <div class="ul-vs-card__analogy">
+              <strong>Analogy:</strong> Exploring an uncharted island. You sketch a map and group similar landscapes based purely on observation.
+            </div>
+            <ul class="ul-vs-list">
+              <li class="ul-vs-item">
+                <span class="ul-vs-bullet">&bull;</span>
+                <span><strong>Data:</strong> Features \(X\) only. Zero labels \(y\).</span>
+              </li>
+              <li class="ul-vs-item">
+                <span class="ul-vs-bullet">&bull;</span>
+                <span><strong>Goal:</strong> Uncover hidden patterns, clusters, and representations.</span>
+              </li>
+              <li class="ul-vs-item">
+                <span class="ul-vs-bullet">&bull;</span>
+                <span><strong>Main tasks:</strong> Clustering, Dimensionality Reduction, Association Rules.</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Interactive Visual: Supervised vs Unsupervised View -->
+        <div class="ul-interactive-container fade-up animate-on-scroll">
+          <div class="ul-interactive-controls">
+            <div>
+              <h3 style="margin: 0; font-size: 1.1rem; font-family: var(--display);">Interactive Visualizer: See the Difference</h3>
+              <p style="margin: 0.2rem 0 0; font-size: 0.86rem; color: var(--muted);">Toggle between how supervised models see data vs. how unsupervised algorithms find clusters.</p>
+            </div>
+            <div class="ul-pill-group">
+              <button class="ul-pill-btn is-active" id="btnToggleUnsup">Unsupervised (Raw &rarr; Clusters)</button>
+              <button class="ul-pill-btn" id="btnToggleSup">Supervised (Labeled Classes)</button>
+            </div>
+          </div>
+
+          <svg id="svgPerspectiveDemo" viewBox="0 0 600 240" style="width: 100%; height: auto; background: var(--bg); border-radius: var(--radius-sm); border: 1px solid var(--line);">
+            <!-- Grid Lines -->
+            <line x1="50" y1="20" x2="50" y2="210" stroke="#E5DFD5" stroke-width="1.5" />
+            <line x1="50" y1="210" x2="570" y2="210" stroke="#E5DFD5" stroke-width="1.5" />
+            <text x="560" y="228" font-size="11" fill="#8A8177" text-anchor="end" font-family="IBM Plex Mono">Feature 1 (e.g. Spending)</text>
+            <text x="35" y="25" font-size="11" fill="#8A8177" text-anchor="end" font-family="IBM Plex Mono" transform="rotate(-90 35 25)">Feature 2 (e.g. Income)</text>
+
+            <!-- Supervised decision line (hidden by default) -->
+            <line id="supBoundaryLine" x1="180" y1="20" x2="420" y2="210" stroke="#FF5A3C" stroke-width="2.5" stroke-dasharray="5 5" opacity="0" style="transition: opacity 0.3s ease;" />
+            <text id="supBoundaryText" x="290" y="70" font-size="11" fill="#D8431F" font-weight="700" font-family="Figtree" opacity="0" style="transition: opacity 0.3s ease;">Trained Decision Boundary</text>
+
+            <!-- Cluster Rings / Hulls (visible in unsupervised mode) -->
+            <ellipse id="clusterRing1" cx="150" cy="150" rx="65" ry="42" fill="rgba(14, 168, 148, 0.08)" stroke="#0EA894" stroke-width="1.5" stroke-dasharray="3 3" style="transition: all 0.3s ease;" />
+            <ellipse id="clusterRing2" cx="440" cy="80" rx="70" ry="45" fill="rgba(233, 168, 37, 0.08)" stroke="#E9A825" stroke-width="1.5" stroke-dasharray="3 3" style="transition: all 0.3s ease;" />
+
+            <!-- Points Group -->
+            <g id="svgDemoPoints"></g>
+          </svg>
+
+          <div class="ul-toggle-readout" id="ulToggleReadout">
+            <strong>Unsupervised Mode:</strong> The machine is handed raw data points without any class tags. By calculating distances between points, it identifies two naturally occurring clusters: <em>Cluster A</em> (bottom left) and <em>Cluster B</em> (top right).
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ---- Section 2: Diagram of Unsupervised Learning Methods ---- -->
+    <section class="block" id="unsupervised-methods-diagram">
+      <div class="block__body">
+        <h2 class="fade-up animate-on-scroll">
+          <span class="icon-badge icon-badge--gold">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="5" r="3"/><circle cx="5" cy="19" r="3"/><circle cx="19" cy="19" r="3"/><path d="M12 8v4"/><path d="M5 16l5-4"/><path d="M19 16l-5-4"/></svg>
+          </span>
+          Taxonomy: Unsupervised Learning Methods Diagram
+        </h2>
+        <p class="fade-up animate-on-scroll">
+          Without labeled answers to predict, what do unsupervised algorithms actually do? The methods branch into four foundational families based on their underlying goal:
+        </p>
+
+        <!-- Master SVG Hierarchy Architecture Diagram -->
+        <div class="ul-methods-explorer fade-up animate-on-scroll">
+          <div style="text-align: center; margin-bottom: 1.5rem;">
+            <span class="ul-hero-badge">Architecture &bull; Method Taxonomy</span>
+            <h3 style="margin: 0.3rem 0; font-size: 1.3rem; font-family: var(--display);">The 4 Pillars of Unsupervised Learning</h3>
+            <p style="margin: 0; font-size: 0.9rem; color: var(--muted);">Click any branch tab below to inspect what it solves, how it works, and common algorithms.</p>
+          </div>
+
+          <!-- Interactive Nav Tabs for Branches -->
+          <div class="ul-methods-nav">
+            <button class="ul-method-tab is-active" data-method="clustering">
+              <span class="ul-method-tab__name">1. Clustering</span>
+              <span class="ul-method-tab__tag">Grouping by similarity</span>
+            </button>
+            <button class="ul-method-tab" data-method="dimred">
+              <span class="ul-method-tab__name">2. Dimension Reduction</span>
+              <span class="ul-method-tab__tag">Compressing features</span>
+            </button>
+            <button class="ul-method-tab" data-method="association">
+              <span class="ul-method-tab__name">3. Association Rules</span>
+              <span class="ul-method-tab__tag">Item co-occurrence</span>
+            </button>
+            <button class="ul-method-tab" data-method="anomaly">
+              <span class="ul-method-tab__name">4. Anomaly Detection</span>
+              <span class="ul-method-tab__tag">Spotting rare outliers</span>
+            </button>
+          </div>
+
+          <!-- Dynamic Display Card for the selected method -->
+          <div class="ul-method-display" id="ulMethodDisplay">
+            <div class="ul-method-display__header">
+              <h4 class="ul-method-display__title" id="ulMethodTitle">
+                <span class="icon-badge icon-badge--teal" style="width: 1.6rem; height: 1.6rem;">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><circle cx="19" cy="6" r="2"/><circle cx="5" cy="18" r="2"/></svg>
+                </span>
+                Clustering &mdash; Discovering Natural Groupings
+              </h4>
+              <span class="ul-vs-card__tag" id="ulMethodTag" style="background: var(--teal-tint); color: var(--teal-dark);">Flagship Method</span>
+            </div>
+            <p class="ul-method-display__desc" id="ulMethodDesc">
+              Groups data points so that items inside the same cluster are much more similar to one another than to points in other clusters. Useful for customer segmentation, news topic clustering, and biological taxonomy.
+            </p>
+            <div style="font-size: 0.85rem; font-weight: 700; color: var(--ink); text-transform: uppercase; letter-spacing: 0.04em;">Prominent Algorithms:</div>
+            <div class="ul-method-examples-list" id="ulMethodChips">
+              <span class="ul-method-chip" style="border-color: var(--teal); color: var(--teal-dark); font-weight:700;">Hierarchical Clustering</span>
+              <span class="ul-method-chip">K-Means</span>
+              <span class="ul-method-chip">DBSCAN</span>
+              <span class="ul-method-chip">Gaussian Mixture Models (GMM)</span>
+            </div>
+          </div>
+
+          <!-- Comprehensive Visual Diagram Tree -->
+          <div style="margin-top: 1.8rem; background: var(--bg); border: 1.5px solid var(--line); border-radius: var(--radius-sm); padding: 1.4rem; overflow-x: auto;">
+            <div style="min-width: 620px;">
+              <svg viewBox="0 0 740 250" style="width: 100%; height: auto; display: block;">
+                <!-- Root Box -->
+                <rect x="270" y="10" width="200" height="42" rx="8" fill="#1B1712" />
+                <text x="370" y="36" fill="#FFFFFF" font-family="Bricolage Grotesque" font-weight="700" font-size="14" text-anchor="middle">Unsupervised Learning</text>
+
+                <!-- Connecting Lines -->
+                <path d="M 370 52 L 370 75 C 370 95, 95 85, 95 110" fill="none" stroke="#0EA894" stroke-width="2.5" />
+                <path d="M 370 52 L 370 75 C 370 95, 275 85, 275 110" fill="none" stroke="#E9A825" stroke-width="2.5" />
+                <path d="M 370 52 L 370 75 C 370 95, 465 85, 465 110" fill="none" stroke="#8B5CF6" stroke-width="2.5" />
+                <path d="M 370 52 L 370 75 C 370 95, 645 85, 645 110" fill="none" stroke="#FF5A3C" stroke-width="2.5" />
+
+                <!-- 4 Method Boxes -->
+                <!-- 1. Clustering -->
+                <g>
+                  <rect x="15" y="110" width="160" height="46" rx="8" fill="#FFFFFF" stroke="#0EA894" stroke-width="2" />
+                  <text x="95" y="132" fill="#0B7B6B" font-family="Bricolage Grotesque" font-weight="700" font-size="12.5" text-anchor="middle">1. Clustering</text>
+                  <text x="95" y="147" fill="#8A8177" font-family="Figtree" font-size="10.5" text-anchor="middle">Grouping Similar Points</text>
+                  <!-- Leaf items -->
+                  <text x="95" y="180" fill="#1B1712" font-family="IBM Plex Mono" font-size="10.5" text-anchor="middle" font-weight="600">&bull; Hierarchical</text>
+                  <text x="95" y="200" fill="#514A42" font-family="IBM Plex Mono" font-size="10.5" text-anchor="middle">&bull; K-Means</text>
+                  <text x="95" y="220" fill="#514A42" font-family="IBM Plex Mono" font-size="10.5" text-anchor="middle">&bull; DBSCAN</text>
+                </g>
+
+                <!-- 2. Dimensionality Reduction -->
+                <g>
+                  <rect x="195" y="110" width="160" height="46" rx="8" fill="#FFFFFF" stroke="#E9A825" stroke-width="2" />
+                  <text x="275" y="132" fill="#A9770B" font-family="Bricolage Grotesque" font-weight="700" font-size="12.5" text-anchor="middle">2. Dimension Reduction</text>
+                  <text x="275" y="147" fill="#8A8177" font-family="Figtree" font-size="10.5" text-anchor="middle">Compressing Features</text>
+                  <!-- Leaf items -->
+                  <text x="275" y="180" fill="#514A42" font-family="IBM Plex Mono" font-size="10.5" text-anchor="middle">&bull; PCA</text>
+                  <text x="275" y="200" fill="#514A42" font-family="IBM Plex Mono" font-size="10.5" text-anchor="middle">&bull; t-SNE / UMAP</text>
+                  <text x="275" y="220" fill="#514A42" font-family="IBM Plex Mono" font-size="10.5" text-anchor="middle">&bull; Autoencoders</text>
+                </g>
+
+                <!-- 3. Association Rules -->
+                <g>
+                  <rect x="385" y="110" width="160" height="46" rx="8" fill="#FFFFFF" stroke="#8B5CF6" stroke-width="2" />
+                  <text x="465" y="132" fill="#6D28D9" font-family="Bricolage Grotesque" font-weight="700" font-size="12.5" text-anchor="middle">3. Association Rules</text>
+                  <text x="465" y="147" fill="#8A8177" font-family="Figtree" font-size="10.5" text-anchor="middle">Discovering Patterns</text>
+                  <!-- Leaf items -->
+                  <text x="465" y="180" fill="#514A42" font-family="IBM Plex Mono" font-size="10.5" text-anchor="middle">&bull; Apriori</text>
+                  <text x="465" y="200" fill="#514A42" font-family="IBM Plex Mono" font-size="10.5" text-anchor="middle">&bull; FP-Growth</text>
+                  <text x="465" y="220" fill="#514A42" font-family="IBM Plex Mono" font-size="10.5" text-anchor="middle">&bull; Eclat</text>
+                </g>
+
+                <!-- 4. Anomaly Detection -->
+                <g>
+                  <rect x="565" y="110" width="160" height="46" rx="8" fill="#FFFFFF" stroke="#FF5A3C" stroke-width="2" />
+                  <text x="645" y="132" fill="#D8431F" font-family="Bricolage Grotesque" font-weight="700" font-size="12.5" text-anchor="middle">4. Anomaly Detection</text>
+                  <text x="645" y="147" fill="#8A8177" font-family="Figtree" font-size="10.5" text-anchor="middle">Catching Outliers</text>
+                  <!-- Leaf items -->
+                  <text x="645" y="180" fill="#514A42" font-family="IBM Plex Mono" font-size="10.5" text-anchor="middle">&bull; Isolation Forest</text>
+                  <text x="645" y="200" fill="#514A42" font-family="IBM Plex Mono" font-size="10.5" text-anchor="middle">&bull; One-Class SVM</text>
+                  <text x="645" y="220" fill="#514A42" font-family="IBM Plex Mono" font-size="10.5" text-anchor="middle">&bull; Local Outlier Factor</text>
+                </g>
+              </svg>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ---- Section 3: First Talk About Clustering ---- -->
+    <section class="block" id="first-talk-about-clustering">
+      <div class="block__body">
+        <h2 class="fade-up animate-on-scroll">
+          <span class="icon-badge icon-badge--coral">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="9" r="4"/><circle cx="15" cy="15" r="4"/><circle cx="17" cy="8" r="2"/></svg>
+          </span>
+          First Talk About Clustering: The Heart of Unsupervised Learning
+        </h2>
+
+        <p class="fade-up animate-on-scroll">
+          Among all the branches of unsupervised learning, <strong>Clustering is by far the most widely used and intuitive starting point</strong>. If you master clustering, you understand the core philosophy of unsupervised learning.
+        </p>
+
+        <!-- Golden Rule Card -->
+        <div class="reg-card fade-up animate-on-scroll" style="background: var(--surface); border: 2px solid var(--teal); padding: 1.6rem; border-radius: var(--radius); margin: 1.5rem 0;">
+          <div style="display: flex; align-items: center; gap: 0.6rem; margin-bottom: 0.6rem;">
+            <span class="icon-badge icon-badge--teal" style="width:1.8rem;height:1.8rem;">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+            </span>
+            <h3 style="margin: 0; font-size: 1.12rem; font-family: var(--display); color: var(--teal-dark);">The Golden Rule of Clustering</h3>
+          </div>
+          <p style="margin: 0; font-size: 1rem; color: var(--ink); line-height: 1.6;">
+            A great clustering algorithm achieves two goals simultaneously:
+          </p>
+          <div style="display: grid; grid-template-columns: 1fr; gap: 0.8rem; margin-top: 1rem;">
+            <div style="background: var(--teal-tint); padding: 0.8rem 1.1rem; border-radius: 8px; border-left: 3px solid var(--teal);">
+              <strong>1. High Intra-Cluster Similarity:</strong> Points inside the same cluster should be as close and similar to each other as possible.
+            </div>
+            <div style="background: var(--coral-tint); padding: 0.8rem 1.1rem; border-radius: 8px; border-left: 3px solid var(--coral);">
+              <strong>2. Low Inter-Cluster Similarity:</strong> Points belonging to different clusters should be as distant and distinct as possible.
+            </div>
+          </div>
+        </div>
+
+        <p class="fade-up animate-on-scroll">
+          Why is clustering so powerful in practice? Because in real business and scientific workflows, <strong>data rarely arrives with neat labels</strong>. Labeling a million records by hand costs fortunes and weeks of human labor. Clustering skips that bottleneck and discovers the natural structure instantly.
+        </p>
+
+        <!-- Real-world Applications Grid -->
+        <div class="ul-clustering-spotlight fade-up animate-on-scroll">
+          <div style="display: flex; align-items: center; gap: 0.6rem; margin-bottom: 0.5rem;">
+            <span class="icon-badge icon-badge--teal" style="width: 1.8rem; height: 1.8rem;">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="20" height="14" x="2" y="7" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
+            </span>
+            <h3 style="margin: 0; font-size: 1.15rem; font-family: var(--display);">Real-World Clustering Powers</h3>
+          </div>
+          <p style="margin: 0; font-size: 0.92rem; color: var(--ink-soft);">Here is where clustering is transforming everyday industries:</p>
+
+          <div class="ul-apps-grid">
+            <div class="ul-app-card">
+              <div class="ul-app-card__icon">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+              </div>
+              <h4 class="ul-app-card__title">Customer Segmentation</h4>
+              <p class="ul-app-card__text">E-commerce stores segment shoppers by purchase frequency and basket size to tailor marketing campaigns to high-spenders vs. discount-seekers.</p>
+            </div>
+
+            <div class="ul-app-card">
+              <div class="ul-app-card__icon" style="background: var(--gold-tint); color: var(--gold-dark);">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z"/><path d="M6 6h10"/><path d="M6 10h10"/></svg>
+              </div>
+              <h4 class="ul-app-card__title">News Topic Discovery</h4>
+              <p class="ul-app-card__text">Google News scans thousands of new articles every hour and clusters stories covering the exact same breaking event into a single headline group.</p>
+            </div>
+
+            <div class="ul-app-card">
+              <div class="ul-app-card__icon" style="background: var(--coral-tint); color: var(--coral-dark);">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+              </div>
+              <h4 class="ul-app-card__title">Fraud &amp; Anomaly Detection</h4>
+              <p class="ul-app-card__text">Banks cluster regular credit card purchasing behavior. Any transaction that falls into no natural cluster triggers an instant security alert.</p>
+            </div>
+
+            <div class="ul-app-card">
+              <div class="ul-app-card__icon" style="background: rgba(139, 92, 246, 0.12); color: #7C3AED;">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+              </div>
+              <h4 class="ul-app-card__title">Genomics &amp; Medicine</h4>
+              <p class="ul-app-card__text">Biologists cluster patient gene expressions to uncover previously unknown sub-types of cancer, enabling targeted personalized therapies.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- The Major Families of Clustering -->
+        <h3 class="fade-up animate-on-scroll" style="margin-top: 2rem;">How do we actually group points?</h3>
+        <p class="fade-up animate-on-scroll">
+          There isn't just one way to cluster data. Depending on how you think about "similarity", machine learning offers three major strategies:
+        </p>
+
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1rem; margin: 1.2rem 0;" class="fade-up animate-on-scroll">
+          <!-- 1. Hierarchical -->
+          <div style="background: var(--surface); border: 2px solid var(--coral); border-radius: var(--radius-sm); padding: 1.3rem;">
+            <div style="display: inline-block; font-size: 0.72rem; font-weight: 800; text-transform: uppercase; background: var(--coral-tint); color: var(--coral-dark); padding: 0.2rem 0.6rem; border-radius: 999px; margin-bottom: 0.6rem;">Next Up &bull; Part 5.2</div>
+            <h4 style="font-family: var(--display); font-size: 1.05rem; margin: 0 0 0.4rem;">Hierarchical Clustering</h4>
+            <p style="font-size: 0.88rem; color: var(--ink-soft); margin: 0; line-height: 1.5;">
+              Builds a nested tree of clusters called a <strong>dendrogram</strong> by merging or splitting groups step by step. You don't have to specify the number of clusters in advance!
+            </p>
+          </div>
+
+          <!-- 2. Partitional (K-Means) -->
+          <div style="background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius-sm); padding: 1.3rem;">
+            <div style="display: inline-block; font-size: 0.72rem; font-weight: 800; text-transform: uppercase; background: var(--teal-tint); color: var(--teal-dark); padding: 0.2rem 0.6rem; border-radius: 999px; margin-bottom: 0.6rem;">Partitioning</div>
+            <h4 style="font-family: var(--display); font-size: 1.05rem; margin: 0 0 0.4rem;">K-Means Clustering</h4>
+            <p style="font-size: 0.88rem; color: var(--ink-soft); margin: 0; line-height: 1.5;">
+              You choose \(K\) cluster centers (centroids) upfront. The algorithm iteratively assigns points to the nearest centroid and recalculates center positions until stable.
+            </p>
+          </div>
+
+          <!-- 3. Density-Based (DBSCAN) -->
+          <div style="background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius-sm); padding: 1.3rem;">
+            <div style="display: inline-block; font-size: 0.72rem; font-weight: 800; text-transform: uppercase; background: var(--gold-tint); color: var(--gold-dark); padding: 0.2rem 0.6rem; border-radius: 999px; margin-bottom: 0.6rem;">Density</div>
+            <h4 style="font-family: var(--display); font-size: 1.05rem; margin: 0 0 0.4rem;">DBSCAN</h4>
+            <p style="font-size: 0.88rem; color: var(--ink-soft); margin: 0; line-height: 1.5;">
+              Identifies clusters as dense regions of points separated by empty space. Exceptional at finding arbitrary shapes and isolating noisy outliers.
+            </p>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ---- Section 4: Quick Knowledge Check ---- -->
+    <section class="block" id="quiz">
+      <div class="block__body">
+        <h2 class="fade-up animate-on-scroll">
+          <span class="icon-badge icon-badge--teal">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+          </span>
+          Quick Concept Check
+        </h2>
+
+        <div class="ul-quiz-card fade-up animate-on-scroll" id="quizIntro1">
+          <div class="ul-quiz-q">1. What is the fundamental difference between Supervised and Unsupervised Learning?</div>
+          <div class="ul-quiz-options">
+            <button class="ul-quiz-opt" data-correct="false">A) Supervised learning only works on numbers; unsupervised only works on text.</button>
+            <button class="ul-quiz-opt" data-correct="true">B) Supervised learning learns from labeled answer pairs (X, y); unsupervised learning discovers structure from raw unlabeled data (X) alone.</button>
+            <button class="ul-quiz-opt" data-correct="false">C) Supervised models never make mistakes; unsupervised models always make mistakes.</button>
+          </div>
+          <div class="ul-quiz-feedback"></div>
+        </div>
+
+        <div class="ul-quiz-card fade-up animate-on-scroll" id="quizIntro2">
+          <div class="ul-quiz-q">2. Which unsupervised method groups similar observations into meaningful clusters?</div>
+          <div class="ul-quiz-options">
+            <button class="ul-quiz-opt" data-correct="true">A) Clustering (e.g. Hierarchical Clustering, K-Means)</button>
+            <button class="ul-quiz-opt" data-correct="false">B) Linear Regression</button>
+            <button class="ul-quiz-opt" data-correct="false">C) Binary Classification</button>
+          </div>
+          <div class="ul-quiz-feedback"></div>
+        </div>
+
+        <!-- Next Lesson Banner Callout -->
+        <div class="ul-next-banner fade-up animate-on-scroll">
+          <div>
+            <span style="font-size: 0.78rem; font-family: var(--display); font-weight: 800; text-transform: uppercase; color: var(--coral-dark); letter-spacing: 0.05em;">Ready to Dive In?</span>
+            <h3 style="margin: 0.3rem 0; font-size: 1.3rem; font-family: var(--display);">Next Up: Hierarchical Clustering</h3>
+            <p style="margin: 0; font-size: 0.92rem; color: var(--ink-soft); max-width: 50ch;">
+              Learn how hierarchical clustering builds a tree (dendrogram) of your data step-by-step, calculates linkage distances, and lets you cut the hierarchy at any resolution.
+            </p>
+          </div>
+          <a href="hierarchical-clustering.html" class="ul-next-banner__btn">
+            <span>Start Lesson 5.2</span>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+          </a>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ============ LESSON FOOTER ============ -->
+    <footer class="lesson__footer">
+      <a href="polynomial-regression.html" class="lesson__footer-prev" id="prevLessonLink">
+        <span class="lesson__footer-prev-arrow">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5"/><path d="m12 19-7-7 7-7"/></svg>
+        </span>
+        <div class="lesson__footer-prev-text">
+          <span class="lesson__footer-prev-label">Previous module</span>
+          <span class="lesson__footer-prev-name">4.8 Polynomial Regression</span>
+        </div>
+      </a>
+
+      <div class="lesson__footer-progress">Part 1 of 2 &bull; Unsupervised Learning</div>
+
+      <a href="hierarchical-clustering.html" class="lesson__footer-next" id="nextLessonLink">
+        <div class="lesson__footer-next-text">
+          <span class="lesson__footer-next-label">Next part</span>
+          <span class="lesson__footer-next-name">5.2 Hierarchical Clustering</span>
+        </div>
+        <span class="lesson__footer-arrow">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+        </span>
+      </a>
+    </footer>
+
+  </main>
+</div>
+
+<script src="main.js"></script>
+<script src="glossary.js"></script>
+<script>
+(function() {
+  "use strict";
+
+  // --- 1. Interactive Scatter Plot Demo: Supervised vs Unsupervised ---
+  var pts = [
+    // Cluster 1 (Bottom Left)
+    { x: 120, y: 155, supClass: "Fail", supColor: "#FF5A3C", unsupColor: "#0EA894" },
+    { x: 140, y: 135, supClass: "Fail", supColor: "#FF5A3C", unsupColor: "#0EA894" },
+    { x: 165, y: 160, supClass: "Fail", supColor: "#FF5A3C", unsupColor: "#0EA894" },
+    { x: 130, y: 170, supClass: "Fail", supColor: "#FF5A3C", unsupColor: "#0EA894" },
+    { x: 180, y: 140, supClass: "Fail", supColor: "#FF5A3C", unsupColor: "#0EA894" },
+    { x: 150, y: 125, supClass: "Fail", supColor: "#FF5A3C", unsupColor: "#0EA894" },
+
+    // Cluster 2 (Top Right)
+    { x: 410, y: 75, supClass: "Pass", supColor: "#0EA894", unsupColor: "#E9A825" },
+    { x: 445, y: 60, supClass: "Pass", supColor: "#0EA894", unsupColor: "#E9A825" },
+    { x: 430, y: 95, supClass: "Pass", supColor: "#0EA894", unsupColor: "#E9A825" },
+    { x: 470, y: 80, supClass: "Pass", supColor: "#0EA894", unsupColor: "#E9A825" },
+    { x: 460, y: 105, supClass: "Pass", supColor: "#0EA894", unsupColor: "#E9A825" },
+    { x: 420, y: 65, supClass: "Pass", supColor: "#0EA894", unsupColor: "#E9A825" }
+  ];
+
+  var pointsGroup = document.getElementById("svgDemoPoints");
+  var ring1 = document.getElementById("clusterRing1");
+  var ring2 = document.getElementById("clusterRing2");
+  var boundaryLine = document.getElementById("supBoundaryLine");
+  var boundaryText = document.getElementById("supBoundaryText");
+  var readout = document.getElementById("ulToggleReadout");
+
+  var btnUnsup = document.getElementById("btnToggleUnsup");
+  var btnSup = document.getElementById("btnToggleSup");
+
+  var circles = [];
+  if (pointsGroup) {
+    pts.forEach(function(pt) {
+      var c = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+      c.setAttribute("cx", pt.x);
+      c.setAttribute("cy", pt.y);
+      c.setAttribute("r", "7");
+      c.setAttribute("fill", pt.unsupColor);
+      c.setAttribute("stroke", "#FFFFFF");
+      c.setAttribute("stroke-width", "2");
+      c.style.transition = "all 0.3s ease";
+      pointsGroup.appendChild(c);
+      circles.push({ el: c, pt: pt });
+    });
+  }
+
+  function setMode(mode) {
+    if (mode === "supervised") {
+      btnUnsup.classList.remove("is-active");
+      btnSup.classList.add("is-active");
+      if (boundaryLine) boundaryLine.setAttribute("opacity", "1");
+      if (boundaryText) boundaryText.setAttribute("opacity", "1");
+      if (ring1) ring1.setAttribute("opacity", "0");
+      if (ring2) ring2.setAttribute("opacity", "0");
+
+      circles.forEach(function(item) {
+        item.el.setAttribute("fill", item.pt.supColor);
+      });
+
+      if (readout) {
+        readout.innerHTML = "<strong>Supervised Mode:</strong> Every training point arrives with a label (e.g. <span style='color:var(--coral-dark);font-weight:700;'>Fail</span> or <span style='color:var(--teal-dark);font-weight:700;'>Pass</span>). The model's mission is to learn a <strong>decision boundary</strong> that separates these two known answers.";
+        readout.style.borderLeftColor = "var(--coral)";
+      }
+    } else {
+      btnSup.classList.remove("is-active");
+      btnUnsup.classList.add("is-active");
+      if (boundaryLine) boundaryLine.setAttribute("opacity", "0");
+      if (boundaryText) boundaryText.setAttribute("opacity", "0");
+      if (ring1) ring1.setAttribute("opacity", "1");
+      if (ring2) ring2.setAttribute("opacity", "1");
+
+      circles.forEach(function(item) {
+        item.el.setAttribute("fill", item.pt.unsupColor);
+      });
+
+      if (readout) {
+        readout.innerHTML = "<strong>Unsupervised Mode:</strong> The machine is handed raw data points without any class tags. By calculating distances between points, it identifies two naturally occurring clusters: <em>Cluster A</em> (bottom left) and <em>Cluster B</em> (top right).";
+        readout.style.borderLeftColor = "var(--teal)";
+      }
+    }
+  }
+
+  if (btnUnsup) btnUnsup.addEventListener("click", function() { setMode("unsupervised"); });
+  if (btnSup) btnSup.addEventListener("click", function() { setMode("supervised"); });
+
+  // --- 2. Interactive Method Explorer Tabs ---
+  var methodDetails = {
+    clustering: {
+      title: "Clustering &mdash; Grouping Data by Similarity",
+      tag: "Flagship Pillar",
+      tagStyle: "background: var(--teal-tint); color: var(--teal-dark);",
+      desc: "Groups data points so that items inside the same cluster are much more similar to one another than to points in other clusters. Useful for customer segmentation, news topic clustering, and biological taxonomy.",
+      chips: ["Hierarchical Clustering", "K-Means", "DBSCAN", "Gaussian Mixture Models (GMM)"]
+    },
+    dimred: {
+      title: "Dimensionality Reduction &mdash; Compressing Feature Space",
+      tag: "Data Compression",
+      tagStyle: "background: var(--gold-tint); color: var(--gold-dark);",
+      desc: "Projects high-dimensional data (e.g. 100 features) into fewer dimensions (2 or 3) while preserving maximum information and variance. Essential for 2D/3D visualization and preventing the curse of dimensionality.",
+      chips: ["Principal Component Analysis (PCA)", "t-SNE", "UMAP", "Autoencoders"]
+    },
+    association: {
+      title: "Association Rule Mining &mdash; Discovering Hidden Relationships",
+      tag: "Pattern Discovery",
+      tagStyle: "background: rgba(139, 92, 246, 0.12); color: #7C3AED;",
+      desc: "Finds intriguing relationships and 'if-then' correlations between items in large transaction databases. Classic example: 'Customers who buy bread and milk also buy butter 82% of the time'.",
+      chips: ["Apriori Algorithm", "FP-Growth", "Eclat"]
+    },
+    anomaly: {
+      title: "Anomaly Detection &mdash; Finding Rare Oddities & Outliers",
+      tag: "Outlier Hunter",
+      tagStyle: "background: var(--coral-tint); color: var(--coral-dark);",
+      desc: "Models what 'normal' data looks like and flags observations that deviate significantly from the rest. Used heavily in cybersecurity, financial fraud detection, and industrial equipment fault monitoring.",
+      chips: ["Isolation Forest", "One-Class SVM", "Local Outlier Factor (LOF)"]
+    }
+  };
+
+  var methodTabs = document.querySelectorAll(".ul-method-tab");
+  var methodTitle = document.getElementById("ulMethodTitle");
+  var methodTag = document.getElementById("ulMethodTag");
+  var methodDesc = document.getElementById("ulMethodDesc");
+  var methodChips = document.getElementById("ulMethodChips");
+
+  methodTabs.forEach(function(tab) {
+    tab.addEventListener("click", function() {
+      methodTabs.forEach(function(t) { t.classList.remove("is-active"); });
+      tab.classList.add("is-active");
+
+      var key = tab.getAttribute("data-method");
+      var data = methodDetails[key];
+      if (!data) return;
+
+      if (methodTitle) methodTitle.innerHTML = data.title;
+      if (methodTag) {
+        methodTag.textContent = data.tag;
+        methodTag.style.cssText = data.tagStyle;
+      }
+      if (methodDesc) methodDesc.textContent = data.desc;
+      if (methodChips) {
+        methodChips.innerHTML = "";
+        data.chips.forEach(function(chip, idx) {
+          var span = document.createElement("span");
+          span.className = "ul-method-chip";
+          span.textContent = chip;
+          if (idx === 0) {
+            span.style.borderColor = "var(--teal)";
+            span.style.color = "var(--teal-dark)";
+            span.style.fontWeight = "700";
+          }
+          methodChips.appendChild(span);
+        });
+      }
+    });
+  });
+
+  // --- 3. Interactive Quiz Checking ---
+  var quizzes = [
+    {
+      id: "quizIntro1",
+      feedback: "Spot on! Supervised models require explicit pairs of features and answers (X, y). Unsupervised models receive only features (X) and must find natural structure autonomously."
+    },
+    {
+      id: "quizIntro2",
+      feedback: "Exactly right! Clustering partitions data points into coherent groups based on their mathematical similarity or distance."
+    }
+  ];
+
+  quizzes.forEach(function(q) {
+    var card = document.getElementById(q.id);
+    if (!card) return;
+    var opts = card.querySelectorAll(".ul-quiz-opt");
+    var feedbackBox = card.querySelector(".ul-quiz-feedback");
+
+    opts.forEach(function(opt) {
+      opt.addEventListener("click", function() {
+        var isCorrect = opt.getAttribute("data-correct") === "true";
+        opts.forEach(function(o) {
+          o.classList.remove("is-correct", "is-wrong");
+          o.disabled = true;
+        });
+
+        if (isCorrect) {
+          opt.classList.add("is-correct");
+          feedbackBox.className = "ul-quiz-feedback is-visible is-correct";
+          feedbackBox.innerHTML = "<strong>Correct!</strong> " + q.feedback;
+        } else {
+          opt.classList.add("is-wrong");
+          feedbackBox.className = "ul-quiz-feedback is-visible is-wrong";
+          feedbackBox.innerHTML = "<strong>Not quite.</strong> Review the core comparison above and give it another thought!";
+        }
+      });
+    });
+  });
+
+})();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,860 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Supervised Learning: Introduction &ndash; Learning Machines</title>
+<meta name="description" content="A comprehensive lesson on Supervised Learning: Learning from labeled data, Classification vs. Regression dividing figure, and core technical terms.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,600;12..96,700&family=Figtree:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="grain" aria-hidden="true"></div>
+
+<div class="progress-rail" aria-hidden="true"><div class="progress-fill" id="progressFill"></div></div>
+
+<header class="top-bar">
+  <div class="top-bar__brand">
+    <span class="course-nav__mark">LM</span>
+    <span class="top-bar__title">Learning Machines</span>
+  </div>
+  <div class="top-bar__controls">
+    <span class="top-bar__time" id="readTime">~8 min read</span>
+    <button class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="courseNav">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="4" x2="20" y1="6" y2="6"/><line x1="4" x2="20" y1="12" y2="12"/><line x1="4" x2="20" y1="18" y2="18"/></svg>
+      <span class="nav-toggle__label">Course map</span>
+    </button>
+  </div>
+</header>
+
+<div class="nav-overlay" id="navOverlay" aria-hidden="true"></div>
+<!-- ============ SLIDE-OVER SIDEBAR ============ -->
+<aside class="course-nav" id="courseNav">
+  <div class="course-nav__header">
+    <h2 class="course-nav__title-side">Course map</h2>
+    <button class="nav-close" id="navClose" aria-label="Close nav">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
+    </button>
+  </div>
+  <p class="course-nav__tagline">A slow, careful path through machine learning, start to finish.</p>
+
+  <ol class="course-nav__list">
+    <li class="course-nav__item is-completed">
+      <a href="index.html" class="course-nav__inner-link">
+        <span class="course-nav__num">1</span>
+        <div>
+          <span class="course-nav__name">Introduction</span>
+          <span class="course-nav__state">completed</span>
+        </div>
+      </a>
+    </li>
+    <li class="course-nav__item is-completed">
+      <a href="data-preprocessing.html" class="course-nav__inner-link">
+        <span class="course-nav__num">2</span>
+        <div>
+          <span class="course-nav__name">Data Preprocessing</span>
+          <span class="course-nav__state">completed</span>
+        </div>
+      </a>
+    </li>
+    <li class="course-nav__item is-completed">
+      <a href="eda.html" class="course-nav__inner-link">
+        <span class="course-nav__num">3</span>
+        <div>
+          <span class="course-nav__name">Exploratory Data Analysis</span>
+          <span class="course-nav__state">completed</span>
+        </div>
+      </a>
+    </li>
+    <li class="course-nav__item is-active-group">
+      <span class="course-nav__num">4</span>
+      <div>
+        <span class="course-nav__name">Supervised Learning</span>
+        <span class="course-nav__state">in progress</span>
+      </div>
+    </li>
+    <ol class="course-nav__sub-list">
+      <li class="course-nav__sub-item is-active">
+        <a href="supervised-learning.html">
+          <span class="course-nav__sub-num">4.1</span>
+          <div>
+            <span class="course-nav__sub-name">Introduction</span>
+            <span class="course-nav__state">reading now</span>
+          </div>
+        </a>
+      </li>
+      <li class="course-nav__sub-item ">
+        <a href="classification.html">
+          <span class="course-nav__sub-num">4.2</span>
+          <div>
+            <span class="course-nav__sub-name">Classification &amp; Decision Trees</span>
+            <span class="course-nav__state">available now</span>
+          </div>
+        </a>
+      </li>
+      <li class="course-nav__sub-item ">
+        <a href="id3-algorithm.html">
+          <span class="course-nav__sub-num">4.3</span>
+          <div>
+            <span class="course-nav__sub-name">ID3 Algorithm</span>
+            <span class="course-nav__state">available now</span>
+          </div>
+        </a>
+      </li>
+      <li class="course-nav__sub-item ">
+        <a href="c45-algorithm.html">
+          <span class="course-nav__sub-num">4.4</span>
+          <div>
+            <span class="course-nav__sub-name">C4.5 Algorithm</span>
+            <span class="course-nav__state">available now</span>
+          </div>
+        </a>
+      </li>
+      <li class="course-nav__sub-item ">
+        <a href="cart-algorithm.html">
+          <span class="course-nav__sub-num">4.5</span>
+          <div>
+            <span class="course-nav__sub-name">CART Algorithm</span>
+            <span class="course-nav__state">available now</span>
+          </div>
+        </a>
+      </li>
+      <li class="course-nav__sub-item ">
+        <a href="regression-analysis.html">
+          <span class="course-nav__sub-num">4.6</span>
+          <div>
+            <span class="course-nav__sub-name">Introduction to Regression</span>
+            <span class="course-nav__state">available now</span>
+          </div>
+        </a>
+      </li>
+      <li class="course-nav__sub-item">
+        <a href="simple-linear-regression.html">
+          <span class="course-nav__sub-num">4.7</span>
+          <div>
+            <span class="course-nav__sub-name">Simple Linear Regression</span>
+            <span class="course-nav__state">available now</span>
+          </div>
+        </a>
+      </li>
+      <li class="course-nav__sub-item">
+        <a href="polynomial-regression.html">
+          <span class="course-nav__sub-num">4.8</span>
+          <div>
+            <span class="course-nav__sub-name">Polynomial Regression</span>
+            <span class="course-nav__state">available now</span>
+          </div>
+        </a>
+      </li>
+    </ol>
+    <li class="course-nav__item">
+      <a href="unsupervised-learning.html" class="course-nav__inner-link">
+        <span class="course-nav__num">5</span>
+        <div>
+          <span class="course-nav__name">Unsupervised Learning</span>
+          <span class="course-nav__state">available now</span>
+        </div>
+      </a>
+    </li>
+    <ol class="course-nav__sub-list">
+      <li class="course-nav__sub-item">
+        <a href="unsupervised-learning.html">
+          <span class="course-nav__sub-num">5.1</span>
+          <div>
+            <span class="course-nav__sub-name">Introduction</span>
+            <span class="course-nav__state">available now</span>
+          </div>
+        </a>
+      </li>
+      <li class="course-nav__sub-item">
+        <a href="hierarchical-clustering.html">
+          <span class="course-nav__sub-num">5.2</span>
+          <div>
+            <span class="course-nav__sub-name">Hierarchical Clustering</span>
+            <span class="course-nav__state">available now</span>
+          </div>
+        </a>
+      </li>
+    </ol>
+    <li class="course-nav__item is-locked">
+      <span class="course-nav__num">6</span>
+      <div>
+        <span class="course-nav__name">Reinforcement Learning</span>
+        <span class="course-nav__state">
+          <svg class="course-nav__lock" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          coming soon
+        </span>
+      </div>
+    </li>
+  </ol>
+</aside>
+<div class="shell">
+
+  <!-- ============ MAIN ARTICLE ============ -->
+  <main class="lesson">
+
+    <header class="lesson__header">
+      <span class="lesson__eyebrow-free-title">
+        <h1>Supervised Learning: Introduction</h1>
+        <svg class="title-underline" viewBox="0 0 520 14" preserveAspectRatio="none" aria-hidden="true">
+          <path d="M4 9 C 120 2, 260 13, 400 6 C 440 4, 480 8, 516 5"/>
+        </svg>
+      </span>
+      <p class="lesson__dek">Supervised learning is learning from labeled data. By guiding the algorithm with known correct answers, we teach models how to map input features to accurate predictions.</p>
+    </header>
+
+    <!-- ---- Section 1: What is Supervised Learning? ---- -->
+    <section class="block" id="what-is-supervised-learning">
+      <div class="block__body">
+        <h2 class="fade-up animate-on-scroll">
+          <span class="icon-badge icon-badge--coral">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+          </span>
+          What is supervised learning?
+        </h2>
+
+        <div class="definition fade-up animate-on-scroll">
+          <div class="definition__label">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+            Core Principle
+          </div>
+          <p>
+            <strong>Supervised Learning = Learning from Labeled Data.</strong><br>
+            Where, <em>Each training example contains input features and the correct output.</em>.
+          </p>
+        </div>
+
+        <p class="marginable fade-up animate-on-scroll" data-note="Think of a teacher grading homework with an answer key: every mistake gives feedback to help the student improve.">
+          Imagine a student preparing for an exam with a practice booklet where every single question includes the correct answer printed on the back. The student solves a problem, checks the answer key, sees whether they were right or wrong, and adjusts their approach until they master the pattern.
+        </p>
+
+        <p class="fade-up animate-on-scroll">
+          This is exactly how <strong>Supervised Learning</strong> works. We feed a machine learning model thousands of examples containing both the <strong>inputs</strong> (the questions) and the corresponding <strong>ground-truth labels</strong> (the correct answers). By comparing its own guesses against the correct answers, the algorithm calculates its error, updates its internal mathematical weights, and steadily improves until it can reliably answer <em>new, unseen questions</em>.
+        </p>
+
+        <!-- Supervision Flow Architecture Diagram -->
+        <div class="sl-supervision-flow fade-up animate-on-scroll">
+          <div class="sl-supervision-flow__title">
+            <span class="icon-badge icon-badge--teal" style="width:1.9rem;height:1.9rem;">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+            </span>
+            How the Supervision Loop Works
+          </div>
+          <p class="sl-supervision-flow__subtitle">A continuous feedback cycle between inputs, predictions, and ground-truth answers.</p>
+
+          <div class="sl-flow-steps">
+            <!-- Step 1 -->
+            <div class="sl-flow-step sl-flow-step--train">
+              <span class="sl-flow-step__badge">1. Labeled Training Data</span>
+              <h4 class="sl-flow-step__heading">Inputs + Ground Truth</h4>
+              <p class="sl-flow-step__text">The algorithm receives pairs of input features and their corresponding correct answers.</p>
+              <div class="sl-flow-step__math">Data: { (X₁, y₁), (X₂, y₂), ... }</div>
+            </div>
+
+            <!-- Step 2 -->
+            <div class="sl-flow-step sl-flow-step--guide">
+              <span class="sl-flow-step__badge">2. Guided Feedback</span>
+              <h4 class="sl-flow-step__heading">Loss Calculation &amp; Update</h4>
+              <p class="sl-flow-step__text">The model generates guess ŷ. We compare ŷ with actual answer y to measure error and adjust model parameters.</p>
+              <div class="sl-flow-step__math">Error = Loss(Actual y, Guess ŷ)</div>
+            </div>
+
+            <!-- Step 3 -->
+            <div class="sl-flow-step sl-flow-step--predict">
+              <span class="sl-flow-step__badge">3. Generalization</span>
+              <h4 class="sl-flow-step__heading">Inference on New Data</h4>
+              <p class="sl-flow-step__text">Once trained, the model predicts the correct outcome for brand-new, unlabeled instances.</p>
+              <div class="sl-flow-step__math">Output: ŷ = f(X_new)</div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ---- Section 2: Main Dividing Figure: Classification vs Regression ---- -->
+    <section class="block" id="classification-vs-regression">
+      <div class="block__body">
+        <h2 class="fade-up animate-on-scroll">
+          <span class="icon-badge icon-badge--gold">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+          </span>
+          The Main Dividing Figure: Classification vs. Regression
+        </h2>
+        <p class="fade-up animate-on-scroll">
+          All supervised learning problems divide cleanly into two major families based on the type of answer we are asking the model to predict: <strong>Classification</strong> and <strong>Regression</strong>.
+        </p>
+
+        <!-- =========================================================================
+             FIGURE: Supervised Learning Taxonomical Decision Tree
+             ========================================================================= -->
+        <figure class="sl-dividing-container sl-tree-figure fade-up animate-on-scroll" id="slTaxonomyTree" aria-label="Supervised Learning Taxonomical Decision Tree: Classification vs. Regression">
+          
+          <!-- Header -->
+          <div class="sl-tree-header">
+            <div class="sl-tree-header__badge">
+              <span class="icon-badge icon-badge--gold" style="width:1.6rem;height:1.6rem;">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/><path d="M2 12h20"/></svg>
+              </span>
+              <span class="sl-tree-header__eyebrow">Taxonomical Tree Architecture</span>
+            </div>
+            <h3 class="sl-tree-header__title">Supervised Learning Taxonomical Division</h3>
+            <p class="sl-tree-header__desc">
+              Is the target variable a discrete category, or is it a continuous numerical quantity? That single defining question branches the entire machine learning workflow into two foundational paradigms.
+            </p>
+          </div>
+
+          <!-- ============ LEVEL 0: ROOT DECISION NODE ============ -->
+          <div class="sl-tree-root-container">
+            <div class="sl-tree-root-card">
+              <div class="sl-tree-root-pill">ROOT LEVEL &bull; TAXONOMICAL SPLIT</div>
+              <h4 class="sl-tree-root-heading">Supervised Learning Problem Formulation</h4>
+              <div class="sl-tree-decision-hub">
+                <div class="sl-tree-decision-icon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polygon points="12 2 22 12 12 22 2 12 12 2"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+                </div>
+                <div class="sl-tree-decision-text">
+                  <span class="sl-tree-decision-label">Core Dividing Question:</span>
+                  <div class="sl-tree-decision-q">&ldquo;What type of answer are we trying to predict?&rdquo;</div>
+                </div>
+              </div>
+              <div class="sl-tree-beacon sl-tree-beacon--root">
+                <span class="sl-tree-beacon-ping"></span>
+                <span class="sl-tree-beacon-dot"></span>
+              </div>
+            </div>
+          </div>
+
+          <!-- ============ MASTER SVG BRANCH CONNECTOR ============ -->
+          <div class="sl-tree-connector sl-tree-connector--root" aria-hidden="true">
+            <svg class="sl-tree-svg-master" viewBox="0 0 1000 86" preserveAspectRatio="none">
+              <!-- Background guide paths -->
+              <path class="sl-tree-wire-bg" d="M500 0 L500 24 C500 66, 250 36, 250 86" />
+              <path class="sl-tree-wire-bg" d="M500 0 L500 24 C500 66, 750 36, 750 86" />
+              <!-- Animated active wires -->
+              <path class="sl-tree-wire sl-tree-wire--teal" d="M500 0 L500 24 C500 66, 250 36, 250 86" />
+              <path class="sl-tree-wire sl-tree-wire--coral" d="M500 0 L500 24 C500 66, 750 36, 750 86" />
+              <!-- Pulsing traveling particles -->
+              <circle class="sl-tree-particle sl-tree-particle--teal" r="4.5">
+                <animateMotion dur="2.4s" repeatCount="indefinite" path="M500 0 L500 24 C500 66, 250 36, 250 86" />
+              </circle>
+              <circle class="sl-tree-particle sl-tree-particle--coral" r="4.5">
+                <animateMotion dur="2.4s" repeatCount="indefinite" path="M500 0 L500 24 C500 66, 750 36, 750 86" />
+              </circle>
+            </svg>
+            <div class="sl-tree-branch-tags">
+              <span class="sl-tree-branch-tag sl-tree-branch-tag--teal">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                Categorical Target &rarr; Discrete Classes (e.g., Pass vs. Fail)
+              </span>
+              <span class="sl-tree-branch-tag sl-tree-branch-tag--coral">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M3 3v18h18"/><path d="m19 9-5 5-4-4-3 3"/></svg>
+                Numerical Target &rarr; Continuous Values (e.g., Price, Temp)
+              </span>
+            </div>
+          </div>
+
+          <!-- ============ LEVEL 1: TWO MASTER PARADIGMS ============ -->
+          <div class="sl-tree-paradigms-grid">
+
+            <!-- ================= TRUNK 1: CLASSIFICATION ================= -->
+            <div class="sl-tree-trunk sl-tree-trunk--classification">
+
+              <!-- Primary Trunk Node -->
+              <div class="sl-tree-main-card sl-tree-main-card--classification">
+                <div class="sl-tree-card-header">
+                  <span class="sl-tree-card-pill">Categorical Target</span>
+                  <span class="icon-badge icon-badge--teal" style="width:1.9rem;height:1.9rem;">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg>
+                  </span>
+                </div>
+                <h4 class="sl-tree-card-title">1. Classification</h4>
+                <div class="sl-tree-card-question">&ldquo;Which category does this belong to?&rdquo;</div>
+                <p class="sl-tree-card-desc">
+                  Predicts a <strong>discrete categorical label</strong> or class. It draws a clear decision boundary that divides input data points into distinct classes or groups.
+                </p>
+
+                <!-- Mini SVG Diagram: Classification Decision Boundary -->
+                <div class="sl-tree-chart-box">
+                  <svg viewBox="0 0 260 140" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <!-- Axes -->
+                    <line x1="25" y1="120" x2="245" y2="120" stroke="#EDE7DE" stroke-width="2"/>
+                    <line x1="25" y1="120" x2="25" y2="15" stroke="#EDE7DE" stroke-width="2"/>
+                    <!-- Decision Boundary Line -->
+                    <line x1="45" y1="110" x2="225" y2="25" stroke="#0EA894" stroke-width="2.5" stroke-dasharray="4 3"/>
+                    <text x="135" y="55" font-family="'IBM Plex Mono', monospace" font-size="8.5" fill="#0EA894" font-weight="600">Decision Boundary</text>
+                    <!-- Class 1: Circles (Teal) -->
+                    <circle cx="50" cy="80" r="4.5" fill="#0EA894" opacity="0.9"/>
+                    <circle cx="75" cy="95" r="4.5" fill="#0EA894" opacity="0.9"/>
+                    <circle cx="90" cy="70" r="4.5" fill="#0EA894" opacity="0.9"/>
+                    <circle cx="110" cy="88" r="4.5" fill="#0EA894" opacity="0.9"/>
+                    <circle cx="130" cy="98" r="4.5" fill="#0EA894" opacity="0.9"/>
+                    <!-- Class 2: Diamonds / Crosses (Coral) -->
+                    <circle cx="150" cy="35" r="4.5" fill="#FF5A3C" opacity="0.9"/>
+                    <circle cx="175" cy="50" r="4.5" fill="#FF5A3C" opacity="0.9"/>
+                    <circle cx="190" cy="30" r="4.5" fill="#FF5A3C" opacity="0.9"/>
+                    <circle cx="215" cy="45" r="4.5" fill="#FF5A3C" opacity="0.9"/>
+                    <circle cx="230" cy="25" r="4.5" fill="#FF5A3C" opacity="0.9"/>
+                    <!-- Labels -->
+                    <text x="50" y="112" font-family="Figtree, sans-serif" font-size="9" fill="#0B7B6B" font-weight="700">Class: Pass</text>
+                    <text x="165" y="20" font-family="Figtree, sans-serif" font-size="9" fill="#D8431F" font-weight="700">Class: Fail</text>
+                  </svg>
+                </div>
+
+                <ul class="sl-tree-specs-list">
+                  <li><strong>Target Variable (y):</strong> Distinct categories or groups: {Pass, Fail}, {Spam, Ham}, {Cat, Dog}.</li>
+                  <li><strong>Common Output:</strong> A specific class name or likelihood percentage (e.g., &ldquo;Pass: 92% confidence&rdquo;).</li>
+                  <li><strong>Core Concept:</strong> Draws a decision boundary line that divides different classes apart.</li>
+                </ul>
+              </div>
+
+              <!-- Sub-connector down to classification leaves -->
+              <div class="sl-tree-sub-connector" aria-hidden="true">
+                <svg viewBox="0 0 600 46" preserveAspectRatio="none">
+                  <path class="sl-tree-wire-bg" d="M300 0 L300 16 C300 32, 100 24, 100 46" />
+                  <path class="sl-tree-wire-bg" d="M300 0 L300 46" />
+                  <path class="sl-tree-wire-bg" d="M300 0 L300 16 C300 32, 500 24, 500 46" />
+                  <path class="sl-tree-wire sl-tree-wire--teal" d="M300 0 L300 16 C300 32, 100 24, 100 46" />
+                  <path class="sl-tree-wire sl-tree-wire--teal" d="M300 0 L300 46" />
+                  <path class="sl-tree-wire sl-tree-wire--teal" d="M300 0 L300 16 C300 32, 500 24, 500 46" />
+                </svg>
+              </div>
+
+              <!-- Level 2 Sub-Taxonomy Cards: 3 Types -->
+              <div class="sl-tree-sub-grid">
+                <!-- Sub-type 1 -->
+                <div class="sl-tree-sub-card sl-tree-sub-card--classification">
+                  <span class="sl-tree-sub-badge">Binary</span>
+                  <h5 class="sl-tree-sub-title">Binary Classification</h5>
+                  <div class="sl-tree-sub-tag">2 Possible Classes</div>
+                  <p class="sl-tree-sub-text">Predicts between exactly two outcomes or Yes/No choices.</p>
+                  <div class="sl-tree-sub-examples"><strong>Examples:</strong> Spam / Ham, Pass / Fail, Fraud / Legitimate.</div>
+                </div>
+
+                <!-- Sub-type 2 -->
+                <div class="sl-tree-sub-card sl-tree-sub-card--classification">
+                  <span class="sl-tree-sub-badge">Multiclass</span>
+                  <h5 class="sl-tree-sub-title">Multiclass Classification</h5>
+                  <div class="sl-tree-sub-tag">3+ Mutually Exclusive</div>
+                  <p class="sl-tree-sub-text">Assigns an observation into one of several distinct categories.</p>
+                  <div class="sl-tree-sub-examples"><strong>Examples:</strong> Digits 0&ndash;9, Animal species, Sentiment.</div>
+                </div>
+
+                <!-- Sub-type 3 -->
+                <div class="sl-tree-sub-card sl-tree-sub-card--classification">
+                  <span class="sl-tree-sub-badge">Multilabel</span>
+                  <h5 class="sl-tree-sub-title">Multilabel Classification</h5>
+                  <div class="sl-tree-sub-tag">Non-Exclusive Tags</div>
+                  <p class="sl-tree-sub-text">Assigns multiple relevant labels to the same item simultaneously.</p>
+                  <div class="sl-tree-sub-examples"><strong>Examples:</strong> Article tags [Tech, AI], Photo scene objects.</div>
+                </div>
+              </div>
+
+              <!-- Level 3 Operational Leaf: Metrics & Algorithms -->
+              <div class="sl-tree-leaf-card sl-tree-leaf-card--classification">
+                <div class="sl-tree-leaf-row">
+                  <div class="sl-tree-leaf-label">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                    Common Evaluation Metrics
+                  </div>
+                  <div class="sl-tree-leaf-tags">
+                    <span class="sl-tag sl-tag--teal">Accuracy</span>
+                    <span class="sl-tag sl-tag--teal">Precision</span>
+                    <span class="sl-tag sl-tag--teal">Recall</span>
+                    <span class="sl-tag sl-tag--teal">F1-Score</span>
+                  </div>
+                </div>
+                <div class="sl-tree-leaf-row">
+                  <div class="sl-tree-leaf-label">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="m9 12 2 2 4-4"/></svg>
+                    Common Algorithms
+                  </div>
+                  <div class="sl-tree-leaf-tags">
+                    <span class="sl-tag sl-tag--neutral">Logistic Regression</span>
+                    <span class="sl-tag sl-tag--neutral">Decision Trees</span>
+                    <span class="sl-tag sl-tag--neutral">Random Forests</span>
+                    <span class="sl-tag sl-tag--neutral">k-Nearest Neighbors (k-NN)</span>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+
+            <!-- ================= TRUNK 2: REGRESSION ================= -->
+            <div class="sl-tree-trunk sl-tree-trunk--regression">
+
+              <!-- Primary Trunk Node -->
+              <div class="sl-tree-main-card sl-tree-main-card--regression">
+                <div class="sl-tree-card-header">
+                  <span class="sl-tree-card-pill">Continuous Target</span>
+                  <span class="icon-badge icon-badge--coral" style="width:1.9rem;height:1.9rem;">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3v18h18"/><path d="m19 9-5 5-4-4-3 3"/></svg>
+                  </span>
+                </div>
+                <h4 class="sl-tree-card-title">2. Regression</h4>
+                <div class="sl-tree-card-question">&ldquo;How much / What quantity?&rdquo;</div>
+                <p class="sl-tree-card-desc">
+                  Predicts a <strong>continuous numerical quantity</strong>. It fits a trend line or curve through data points to estimate values along an ongoing numerical scale.
+                </p>
+
+                <!-- Mini SVG Diagram: Regression Trend Line -->
+                <div class="sl-tree-chart-box">
+                  <svg viewBox="0 0 260 140" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <!-- Axes -->
+                    <line x1="25" y1="120" x2="245" y2="120" stroke="#EDE7DE" stroke-width="2"/>
+                    <line x1="25" y1="120" x2="25" y2="15" stroke="#EDE7DE" stroke-width="2"/>
+                    <!-- Fitted Trend Line -->
+                    <line x1="35" y1="105" x2="235" y2="30" stroke="#FF5A3C" stroke-width="2.5"/>
+                    <text x="135" y="80" font-family="Figtree, sans-serif" font-size="9" fill="#D8431F" font-weight="700">Fitted Trendline</text>
+                    <!-- Continuous Scatter Points with Error Stems -->
+                    <circle cx="45" cy="98" r="4" fill="#FF5A3C" opacity="0.85"/>
+                    <circle cx="70" cy="85" r="4" fill="#FF5A3C" opacity="0.85"/>
+                    <circle cx="95" cy="88" r="4" fill="#FF5A3C" opacity="0.85"/>
+                    <circle cx="120" cy="65" r="4" fill="#FF5A3C" opacity="0.85"/>
+                    <circle cx="145" cy="72" r="4" fill="#FF5A3C" opacity="0.85"/>
+                    <circle cx="170" cy="50" r="4" fill="#FF5A3C" opacity="0.85"/>
+                    <circle cx="195" cy="38" r="4" fill="#FF5A3C" opacity="0.85"/>
+                    <circle cx="225" cy="35" r="4" fill="#FF5A3C" opacity="0.85"/>
+                    <!-- Residual Dotted Line -->
+                    <line x1="120" y1="65" x2="120" y2="73" stroke="#8A8177" stroke-width="1.5" stroke-dasharray="2 2"/>
+                    <text x="125" y="68" font-family="Figtree, sans-serif" font-size="8" fill="#8A8177">error distance</text>
+                    <text x="160" y="112" font-family="Figtree, sans-serif" font-size="9" fill="#514A42" font-weight="700">Continuous Trend</text>
+                  </svg>
+                </div>
+
+                <ul class="sl-tree-specs-list">
+                  <li><strong>Target Variable (y):</strong> Continuous numerical quantities and real-world measurements.</li>
+                  <li><strong>Common Output:</strong> Specific numbers: $350,000, 24.5&deg;C, 72.4 kg, 120 km/h.</li>
+                  <li><strong>Core Concept:</strong> Fits a trendline or curve that stays as close as possible to all data points.</li>
+                </ul>
+              </div>
+
+              <!-- Sub-connector down to regression leaves -->
+              <div class="sl-tree-sub-connector" aria-hidden="true">
+                <svg viewBox="0 0 600 46" preserveAspectRatio="none">
+                  <path class="sl-tree-wire-bg" d="M300 0 L300 16 C300 32, 100 24, 100 46" />
+                  <path class="sl-tree-wire-bg" d="M300 0 L300 46" />
+                  <path class="sl-tree-wire-bg" d="M300 0 L300 16 C300 32, 500 24, 500 46" />
+                  <path class="sl-tree-wire sl-tree-wire--coral" d="M300 0 L300 16 C300 32, 100 24, 100 46" />
+                  <path class="sl-tree-wire sl-tree-wire--coral" d="M300 0 L300 46" />
+                  <path class="sl-tree-wire sl-tree-wire--coral" d="M300 0 L300 16 C300 32, 500 24, 500 46" />
+                </svg>
+              </div>
+
+              <!-- Level 2 Sub-Taxonomy Cards: 3 Types -->
+              <div class="sl-tree-sub-grid">
+                <!-- Sub-type 1 -->
+                <div class="sl-tree-sub-card sl-tree-sub-card--regression">
+                  <span class="sl-tree-sub-badge">Single Factor</span>
+                  <h5 class="sl-tree-sub-title">Simple Linear Regression</h5>
+                  <div class="sl-tree-sub-tag">1 Input Variable</div>
+                  <p class="sl-tree-sub-text">Draws a straight trendline using a single predictor factor to estimate the target.</p>
+                  <div class="sl-tree-sub-examples"><strong>Examples:</strong> Experience &rarr; Salary, Square Footage &rarr; Price.</div>
+                </div>
+
+                <!-- Sub-type 2 -->
+                <div class="sl-tree-sub-card sl-tree-sub-card--regression">
+                  <span class="sl-tree-sub-badge">Multiple Factors</span>
+                  <h5 class="sl-tree-sub-title">Multiple &amp; Curved Regression</h5>
+                  <div class="sl-tree-sub-tag">Multiple Inputs &amp; Curves</div>
+                  <p class="sl-tree-sub-text">Combines several factors or fits curved paths to model real-world relationships.</p>
+                  <div class="sl-tree-sub-examples"><strong>Examples:</strong> House prices based on size, bedrooms, and location.</div>
+                </div>
+
+                <!-- Sub-type 3 -->
+                <div class="sl-tree-sub-card sl-tree-sub-card--regression">
+                  <span class="sl-tree-sub-badge">Controlled Complexity</span>
+                  <h5 class="sl-tree-sub-title">Regularized Regression</h5>
+                  <div class="sl-tree-sub-tag">Prevents Overfitting</div>
+                  <p class="sl-tree-sub-text">Keeps models balanced and prevents memorizing random noise or irrelevant features.</p>
+                  <div class="sl-tree-sub-examples"><strong>Examples:</strong> Forecasting with dozens of overlapping factors.</div>
+                </div>
+              </div>
+
+              <!-- Level 3 Operational Leaf: Metrics & Algorithms -->
+              <div class="sl-tree-leaf-card sl-tree-leaf-card--regression">
+                <div class="sl-tree-leaf-row">
+                  <div class="sl-tree-leaf-label">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                    Common Evaluation Metrics
+                  </div>
+                  <div class="sl-tree-leaf-tags">
+                    <span class="sl-tag sl-tag--coral">Mean Absolute Error (MAE)</span>
+                    <span class="sl-tag sl-tag--coral">Root Mean Squared Error (RMSE)</span>
+                    <span class="sl-tag sl-tag--coral">R&sup2; Score</span>
+                  </div>
+                </div>
+                <div class="sl-tree-leaf-row">
+                  <div class="sl-tree-leaf-label">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="m9 12 2 2 4-4"/></svg>
+                    Common Algorithms
+                  </div>
+                  <div class="sl-tree-leaf-tags">
+                    <span class="sl-tag sl-tag--neutral">Linear Regression</span>
+                    <span class="sl-tag sl-tag--neutral">Decision Tree Regressors</span>
+                    <span class="sl-tag sl-tag--neutral">Random Forest Regressors</span>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+
+          </div>
+
+          <!-- ============ LEVEL 4: ARCHITECTURAL COMPARISON MATRIX ============ -->
+          <div class="sl-tree-table-section">
+            <div class="sl-tree-table-header">
+              <h4 class="sl-tree-table-title">Side-by-Side Architectural Comparison</h4>
+              <p class="sl-tree-table-caption">Synthesizing the fundamental practical distinctions between both supervised learning paradigms.</p>
+            </div>
+            <div style="overflow-x: auto;">
+              <table class="sl-compare-table">
+                <thead>
+                  <tr>
+                    <th>Property</th>
+                    <th>Classification Branch</th>
+                    <th>Regression Branch</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><strong>Target Type</strong></td>
+                    <td>Discrete categories, classes, or distinct groups</td>
+                    <td>Continuous numbers and real-world measurements</td>
+                  </tr>
+                  <tr>
+                    <td><strong>What the Model Outputs</strong></td>
+                    <td>A category label or likelihood percentage (e.g., &ldquo;Pass: 92%&rdquo;)</td>
+                    <td>An exact numeric quantity (e.g., 24.5&deg;C, $350,000)</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Visual Representation</strong></td>
+                    <td>A decision boundary dividing separate clusters of points</td>
+                    <td>A continuous trendline or curve passing through points</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Core Learning Goal</strong></td>
+                    <td>Separate classes with the fewest possible misclassified items</td>
+                    <td>Minimize the distance between predicted values and actual points</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Common Evaluation Metrics</strong></td>
+                    <td>Accuracy, Precision, Recall, F1-Score</td>
+                    <td>Mean Absolute Error (MAE), RMSE, R&sup2; Score</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Common Algorithms</strong></td>
+                    <td>Logistic Regression, Decision Trees, Random Forests, k-NN</td>
+                    <td>Linear Regression, Decision Tree Regressors, Random Forests</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Sensitivity to Outliers</strong></td>
+                    <td>Generally low; points far from the boundary rarely change it</td>
+                    <td>Noticeable; extreme high or low numbers pull the trendline</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+        </figure>
+
+      </div>
+    </section>
+
+    <!-- ---- Section 3: Technical Terms to Know Before Diving In ---- -->
+    <section class="block" id="technical-terms">
+      <div class="block__body">
+        <h2 class="fade-up animate-on-scroll">
+          <span class="icon-badge icon-badge--teal">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z"/><path d="M6 6h10"/><path d="M6 10h10"/></svg>
+          </span>
+          Technical Terms to Know Before Diving into Learning Algorithms
+        </h2>
+        <p class="fade-up animate-on-scroll">
+          Before we study specific learning algorithms, we must understand the precise vocabulary data scientists use to describe tabular datasets and mathematical representations.
+        </p>
+
+        <!-- Terms 4-Grid -->
+        <div class="sl-terms-grid fade-up animate-on-scroll">
+          
+          <!-- Term 1: Tuple -->
+          <div class="sl-term-card sl-term-card--tuple">
+            <div class="sl-term-head">
+              <span class="sl-term-name">Tuple</span>
+              <span class="sl-term-sym">Row / Sample</span>
+            </div>
+            <p class="sl-term-def">
+              <strong>A single record (row) in the dataset.</strong> Also known in machine learning literature as an <em>instance</em>, <em>observation</em>, or <em>data point</em>. It represents all information gathered for one single entity (such as one student, one patient, or one transaction).
+            </p>
+          </div>
+
+          <!-- Term 2: Attribute (Feature) -->
+          <div class="sl-term-card sl-term-card--attribute">
+            <div class="sl-term-head">
+              <span class="sl-term-name">Attribute (Feature)</span>
+              <span class="sl-term-sym">Column / Input x</span>
+            </div>
+            <p class="sl-term-def">
+              <strong>An input variable used for prediction</strong>, such as age, income, study hours, or loan status. In mathematical modeling, attributes serve as the independent variables from which patterns are learned.
+            </p>
+          </div>
+
+          <!-- Term 3: Attribute Vector -->
+          <div class="sl-term-card sl-term-card--vector">
+            <div class="sl-term-head">
+              <span class="sl-term-name">Attribute Vector</span>
+              <span class="sl-term-sym">Vector X = [x₁, x₂, ...]</span>
+            </div>
+            <p class="sl-term-def">
+              <strong>A collection of all attribute values for one record.</strong> Rather than treating features as isolated numbers, machine learning organizes all input values of a tuple into an ordered mathematical list (vector) denoted as <code>X</code>.
+            </p>
+          </div>
+
+          <!-- Term 4: Class Label -->
+          <div class="sl-term-card sl-term-card--class">
+            <div class="sl-term-head">
+              <span class="sl-term-name">Class Label</span>
+              <span class="sl-term-sym">Target / Ground Truth y</span>
+            </div>
+            <p class="sl-term-def">
+              <strong>The category or answer that a machine learning model is trying to predict in a classification problem.</strong> It is the ground truth provided by the supervisor (e.g., whether the student passed, or whether a transaction was fraud).
+            </p>
+          </div>
+
+        </div>
+
+        <!-- Practical Student Example Showcase -->
+        <div class="sl-student-box fade-up animate-on-scroll">
+          <div class="sl-student-box__head">
+            <h3 class="sl-student-box__title">
+              <span class="icon-badge icon-badge--teal" style="width:1.8rem;height:1.8rem;">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>
+              </span>
+              Simple Example: Inspecting Student Data
+            </h3>
+            <span style="font-size: 0.82rem; font-weight: 600; color: var(--muted); background: var(--bg); padding: 0.3rem 0.75rem; border-radius: 6px; border: 1px solid var(--line);">
+              Concrete Tabular Translation
+            </span>
+          </div>
+
+          <p style="font-size: 0.95rem; color: var(--ink-soft); margin-bottom: 1.2rem;">
+            Imagine we have a dataset tracking student academic performance:
+          </p>
+
+          <div class="sl-student-table-wrap">
+            <table class="sl-student-table">
+              <thead>
+                <tr>
+                  <th>Student</th>
+                  <th>Age</th>
+                  <th>Study Hours</th>
+                  <th>Attendance</th>
+                  <th>Result (Class Label)</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr class="highlight-row">
+                  <td><strong>A (Tuple / Record)</strong></td>
+                  <td>21</td>
+                  <td>5</td>
+                  <td>85%</td>
+                  <td><span style="display:inline-block; padding: 0.2rem 0.6rem; border-radius: 4px; background: var(--teal-tint); color: var(--teal-dark); font-weight:700;">Pass</span></td>
+                </tr>
+                <tr style="opacity: 0.65;">
+                  <td>B</td>
+                  <td>22</td>
+                  <td>2</td>
+                  <td>60%</td>
+                  <td><span style="display:inline-block; padding: 0.2rem 0.6rem; border-radius: 4px; background: var(--coral-tint); color: var(--coral-dark); font-weight:700;">Fail</span></td>
+                </tr>
+                <tr style="opacity: 0.65;">
+                  <td>C</td>
+                  <td>20</td>
+                  <td>7</td>
+                  <td>92%</td>
+                  <td><span style="display:inline-block; padding: 0.2rem 0.6rem; border-radius: 4px; background: var(--teal-tint); color: var(--teal-dark); font-weight:700;">Pass</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div style="background: var(--bg); border: 1px solid var(--line); border-radius: var(--radius); padding: 1.4rem 1.6rem;">
+            <h4 style="font-size: 1rem; margin-bottom: 0.6rem; font-family: var(--display);">Breaking Down Student A:</h4>
+            <p style="font-size: 0.92rem; color: var(--ink-soft); margin-bottom: 0.8rem;">
+              For <strong>Student A</strong>, the attributes / features are:
+            </p>
+            <ul style="margin: 0 0 1rem 1.2rem; font-size: 0.92rem; color: var(--ink-soft);">
+              <li><code>Age = 21</code></li>
+              <li><code>Study Hours = 5</code></li>
+              <li><code>Attendance = 85</code></li>
+            </ul>
+            <p style="font-size: 0.92rem; color: var(--ink-soft); margin-bottom: 0.8rem;">
+              So the <strong>attribute vector</strong> is:
+            </p>
+
+            <!-- Vector Assembly Pill -->
+            <div class="sl-vector-breakdown">
+              <div class="sl-v-attr">
+                <span class="sl-v-attr__name">Feature 1 (Age)</span>
+                <span class="sl-v-attr__val">21</span>
+              </div>
+              <div class="sl-v-attr">
+                <span class="sl-v-attr__name">Feature 2 (Hours)</span>
+                <span class="sl-v-attr__val">5</span>
+              </div>
+              <div class="sl-v-attr">
+                <span class="sl-v-attr__name">Feature 3 (Attendance)</span>
+                <span class="sl-v-attr__val">85</span>
+              </div>
+              <div class="sl-v-arrow">&rarr;</div>
+              <div class="sl-v-result">
+                <span class="sl-v-result__label">Attribute Vector (X)</span>
+                <span class="sl-v-result__math">X = [21, 5, 85]</span>
+              </div>
+            </div>
+
+            <p style="font-size: 0.92rem; color: var(--ink-soft); margin-top: 1.2rem; margin-bottom: 0;">
+              And what about the answer we want to predict? That is the <strong>Class Label</strong>: <code>Result = Pass</code> (or in binary notation: <code>y = 1</code>).
+            </p>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ============ LESSON FOOTER ============ -->
+    <footer class="lesson__footer">
+      <a href="eda.html" class="lesson__footer-prev" id="prevLessonLink">
+        <span class="lesson__footer-prev-arrow">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5"/><path d="m12 19-7-7 7-7"/></svg>
+        </span>
+        <div class="lesson__footer-prev-text">
+          <span class="lesson__footer-prev-label">Previous lesson</span>
+          <span class="lesson__footer-prev-name">3. Exploratory Data Analysis</span>
+        </div>
+      </a>
+
+      <div class="lesson__footer-progress">Part 1 of 6 &bull; Supervised Learning</div>
+
+      <a href="classification.html" class="lesson__footer-next" id="nextLessonLink">
+        <div class="lesson__footer-next-text">
+          <span class="lesson__footer-next-label">Next part</span>
+          <span class="lesson__footer-next-name">4.2 Classification &amp; Decision Trees</span>
+        </div>
+        <span class="lesson__footer-arrow">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+        </span>
+      </a>
+    </footer>
+
+  </main>
+</div>
+
+<script src="main.js"></script>
+</body>
+</html>

@@ -1,0 +1,690 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Introduction to Machine Learning – Learning Machines</title>
+<meta name="description" content="A study-friendly first lesson introducing machine learning: what it is, how it differs from traditional programming, and its three main branches.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,600;12..96,700&family=Figtree:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="grain" aria-hidden="true"></div>
+
+<div class="progress-rail" aria-hidden="true"><div class="progress-fill" id="progressFill"></div></div>
+
+<header class="top-bar">
+  <div class="top-bar__brand">
+    <span class="course-nav__mark">LM</span>
+    <span class="top-bar__title">Learning Machines</span>
+  </div>
+  <div class="top-bar__controls">
+    <span class="top-bar__time" id="readTime">~6 min read</span>
+    <button class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="courseNav">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="4" x2="20" y1="6" y2="6"/><line x1="4" x2="20" y1="12" y2="12"/><line x1="4" x2="20" y1="18" y2="18"/></svg>
+      <span class="nav-toggle__label">Course map</span>
+    </button>
+  </div>
+</header>
+
+<div class="nav-overlay" id="navOverlay" aria-hidden="true"></div>
+
+<!-- ============ SLIDE-OVER SIDEBAR ============ -->
+<aside class="course-nav" id="courseNav">
+  <div class="course-nav__header">
+    <h2 class="course-nav__title-side">Course map</h2>
+    <button class="nav-close" id="navClose" aria-label="Close nav">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
+    </button>
+  </div>
+  <p class="course-nav__tagline">A slow, careful path through machine learning, start to finish.</p>
+
+  <ol class="course-nav__list">
+    <li class="course-nav__item is-active">
+      <span class="course-nav__num">1</span>
+      <div>
+        <span class="course-nav__name">Introduction</span>
+        <span class="course-nav__state">reading now</span>
+      </div>
+    </li>
+    <li class="course-nav__item is-available">
+      <a href="data-preprocessing.html" class="course-nav__inner-link">
+        <span class="course-nav__num">2</span>
+        <div>
+          <span class="course-nav__name">Data Preprocessing</span>
+          <span class="course-nav__state">available now</span>
+        </div>
+      </a>
+    </li>
+    <li class="course-nav__item is-available">
+      <a href="eda.html" class="course-nav__inner-link">
+        <span class="course-nav__num">3</span>
+        <div>
+          <span class="course-nav__name">Exploratory Data Analysis</span>
+          <span class="course-nav__state">available now</span>
+        </div>
+      </a>
+    </li>
+    <li class="course-nav__item is-available">
+      <a href="supervised-learning.html" class="course-nav__inner-link">
+        <span class="course-nav__num">4</span>
+        <div>
+          <span class="course-nav__name">Supervised Learning</span>
+          <span class="course-nav__state">available now</span>
+        </div>
+      </a>
+    </li>
+    <ol class="course-nav__sub-list">
+      <li class="course-nav__sub-item">
+        <a href="supervised-learning.html">
+          <span class="course-nav__sub-num">4.1</span>
+          <div>
+            <span class="course-nav__sub-name">Introduction</span>
+            <span class="course-nav__state">available now</span>
+          </div>
+        </a>
+      </li>
+      <li class="course-nav__sub-item">
+        <a href="classification.html">
+          <span class="course-nav__sub-num">4.2</span>
+          <div>
+            <span class="course-nav__sub-name">Classification &amp; Decision Trees</span>
+            <span class="course-nav__state">available now</span>
+          </div>
+        </a>
+      </li>
+      <li class="course-nav__sub-item">
+        <a href="id3-algorithm.html">
+          <span class="course-nav__sub-num">4.3</span>
+          <div>
+            <span class="course-nav__sub-name">ID3 Algorithm</span>
+            <span class="course-nav__state">available now</span>
+          </div>
+        </a>
+      </li>
+      <li class="course-nav__sub-item">
+        <a href="c45-algorithm.html">
+          <span class="course-nav__sub-num">4.4</span>
+          <div>
+            <span class="course-nav__sub-name">C4.5 Algorithm</span>
+            <span class="course-nav__state">available now</span>
+          </div>
+        </a>
+      </li>
+      <li class="course-nav__sub-item">
+        <a href="cart-algorithm.html">
+          <span class="course-nav__sub-num">4.5</span>
+          <div>
+            <span class="course-nav__sub-name">CART Algorithm</span>
+            <span class="course-nav__state">available now</span>
+          </div>
+        </a>
+      </li>
+      <li class="course-nav__sub-item">
+        <a href="regression-analysis.html">
+          <span class="course-nav__sub-num">4.6</span>
+          <div>
+            <span class="course-nav__sub-name">Introduction to Regression</span>
+            <span class="course-nav__state">available now</span>
+          </div>
+        </a>
+      </li>
+      <li class="course-nav__sub-item">
+        <a href="simple-linear-regression.html">
+          <span class="course-nav__sub-num">4.7</span>
+          <div>
+            <span class="course-nav__sub-name">Simple Linear Regression</span>
+            <span class="course-nav__state">available now</span>
+          </div>
+        </a>
+      </li>
+      <li class="course-nav__sub-item">
+        <a href="polynomial-regression.html">
+          <span class="course-nav__sub-num">4.8</span>
+          <div>
+            <span class="course-nav__sub-name">Polynomial Regression</span>
+            <span class="course-nav__state">available now</span>
+          </div>
+        </a>
+      </li>
+    </ol>
+    <li class="course-nav__item">
+      <a href="unsupervised-learning.html" class="course-nav__inner-link">
+        <span class="course-nav__num">5</span>
+        <div>
+          <span class="course-nav__name">Unsupervised Learning</span>
+          <span class="course-nav__state">available now</span>
+        </div>
+      </a>
+    </li>
+    <ol class="course-nav__sub-list">
+      <li class="course-nav__sub-item">
+        <a href="unsupervised-learning.html">
+          <span class="course-nav__sub-num">5.1</span>
+          <div>
+            <span class="course-nav__sub-name">Introduction</span>
+            <span class="course-nav__state">available now</span>
+          </div>
+        </a>
+      </li>
+      <li class="course-nav__sub-item">
+        <a href="hierarchical-clustering.html">
+          <span class="course-nav__sub-num">5.2</span>
+          <div>
+            <span class="course-nav__sub-name">Hierarchical Clustering</span>
+            <span class="course-nav__state">available now</span>
+          </div>
+        </a>
+      </li>
+    </ol>
+    <li class="course-nav__item is-locked">
+      <span class="course-nav__num">6</span>
+      <div>
+        <span class="course-nav__name">Reinforcement Learning</span>
+        <span class="course-nav__state">
+          <svg class="course-nav__lock" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          coming soon
+        </span>
+      </div>
+    </li>
+  </ol>
+</aside>
+
+<div class="shell">
+
+  <!-- ============ MAIN ARTICLE ============ -->
+  <main class="lesson">
+
+    <header class="lesson__header">
+      <span class="lesson__eyebrow-free-title">
+        <h1>Introduction to Machine Learning</h1>
+        <svg class="title-underline" viewBox="0 0 520 14" preserveAspectRatio="none" aria-hidden="true">
+          <path d="M4 9 C 120 2, 260 13, 400 6 C 440 4, 480 8, 516 5"/>
+        </svg>
+      </span>
+      <p class="lesson__dek">Before you train a single model, it helps to know what the field is actually claiming to do, and why it looks so different from the programming you already know.</p>
+    </header>
+
+    <!-- ---- What is AI ---- -->
+    <section class="block" id="what-is-ai">
+      <div class="block__body">
+        <h2>
+          <span class="icon-badge icon-badge--coral">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9.5 2A2.5 2.5 0 0 1 12 4.5v15a2.5 2.5 0 0 1-4.96.44 2.5 2.5 0 0 1-2.96-3.08 3 3 0 0 1-.34-5.58 2.5 2.5 0 0 1 1.32-4.24 2.5 2.5 0 0 1 4.44-2.04Z"/><path d="M14.5 2A2.5 2.5 0 0 0 12 4.5v15a2.5 2.5 0 0 0 4.96.44 2.5 2.5 0 0 0 2.96-3.08 3 3 0 0 0 .34-5.58 2.5 2.5 0 0 0-1.32-4.24 2.5 2.5 0 0 0-4.44-2.04Z"/></svg>
+          </span>
+          What is artificial intelligence?
+        </h2>
+        <p>
+          Machine learning doesn't stand on its own. It's one way of building
+          <dfn>artificial intelligence</dfn>, so it's worth pinning down what
+          that term is actually asking for.
+        </p>
+        <p class="marginable fade-up animate-on-scroll" data-note="Notice the definition talks about behaviour, not thought. Nobody claims the machine understands anything; it only acts as if it does.">
+          <strong>Artificial intelligence</strong> is the simulation of human
+          intelligence inside a machine: a system built or programmed
+          to mimic the way people sense, decide, and act.
+        </p>
+        <p class="fade-up animate-on-scroll">
+          That's a broad goal, and it can be reached in more than one way. A
+          chess program that searches through millions of possible moves is
+          artificial intelligence. So is a thermostat-like system that follows
+          a long list of hand-written rules. Machine learning is simply the
+          branch of AI that reaches this goal through <em>data</em>, rather
+          than through rules a person writes out by hand.
+        </p>
+      </div>
+    </section>
+
+    <!-- ---- What is ML ---- -->
+    <section class="block" id="what-is-ml">
+      <div class="block__body">
+        <h2 class="fade-up animate-on-scroll">
+          <span class="icon-badge icon-badge--teal">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 3v16a2 2 0 0 0 2 2h16"/><path d="m7 14 4-4 4 4 6-6"/><circle cx="7" cy="14" r="1.5" fill="currentColor"/><circle cx="11" cy="10" r="1.5" fill="currentColor"/><circle cx="15" cy="14" r="1.5" fill="currentColor"/><circle cx="21" cy="8" r="1.5" fill="currentColor"/></svg>
+          </span>
+          What is machine learning?
+        </h2>
+        <p class="marginable fade-up animate-on-scroll" data-note="Read this twice. 'Learning' here just means: the numbers inside the program change, based on examples, until its guesses get better.">
+          In plain terms: machine learning is the part of AI where a computer
+          <strong>learns patterns from examples</strong> instead of being told
+          the rules directly, and then uses those patterns to make predictions
+          or decisions about new situations it hasn't seen before.
+        </p>
+
+        <div class="definition fade-up animate-on-scroll">
+          <p class="definition__label">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+            Formal definition
+          </p>
+          <p>
+            Machine learning is a subset of artificial intelligence in which a
+            system improves its performance on a task by learning statistical
+            patterns from data, rather than by following explicitly
+            hand-coded instructions for that task.
+          </p>
+        </div>
+
+        <p class="fade-up animate-on-scroll">
+          The two definitions describe the same thing at different altitudes.
+          The plain one is enough to get started; the formal one is the phrasing
+          you'll meet again in papers and textbooks.
+        </p>
+
+        <!-- Hierarchy Figure: AI vs ML vs DL (Side-by-Side Layout) -->
+        <figure class="ai-hierarchy fade-up animate-on-scroll" id="aiHierarchyFig" role="group" aria-label="Interactive Hierarchy of Artificial Intelligence, Machine Learning, and Deep Learning">
+          <div class="ai-hierarchy__card">
+            
+            <!-- Left: Reduced size concentric diagram -->
+            <div class="ai-hierarchy__visual-col">
+              <div class="ai-hierarchy__visual">
+                <svg viewBox="0 0 540 440" class="ai-hierarchy__svg" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Concentric diagram: Deep Learning is inside Machine Learning, which is inside Artificial Intelligence">
+                  <defs>
+                    <filter id="nodeShadow" x="-10%" y="-10%" width="125%" height="125%">
+                      <feDropShadow dx="0" dy="4" stdDeviation="6" flood-opacity="0.14"/>
+                    </filter>
+                    <radialGradient id="aiGrad" cx="50%" cy="30%" r="70%">
+                      <stop offset="0%" stop-color="#3B82F6" />
+                      <stop offset="100%" stop-color="#1D4ED8" />
+                    </radialGradient>
+                    <radialGradient id="mlGrad" cx="50%" cy="30%" r="70%">
+                      <stop offset="0%" stop-color="#34D399" />
+                      <stop offset="100%" stop-color="#059669" />
+                    </radialGradient>
+                    <radialGradient id="dlGrad" cx="50%" cy="30%" r="70%">
+                      <stop offset="0%" stop-color="#A78BFA" />
+                      <stop offset="100%" stop-color="#6D28D9" />
+                    </radialGradient>
+                  </defs>
+
+                  <!-- AI Circle (Outer) -->
+                  <g class="ai-node ai-node--ai" data-section="ai" tabindex="0" role="button" aria-label="Inspect Artificial Intelligence">
+                    <circle cx="270" cy="220" r="200" fill="url(#aiGrad)" filter="url(#nodeShadow)" class="ai-circle ai-circle--ai"/>
+                    <text x="270" y="74" text-anchor="middle" class="ai-text ai-text--title">Artificial</text>
+                    <text x="270" y="104" text-anchor="middle" class="ai-text ai-text--title">Intelligence (AI)</text>
+                  </g>
+
+                  <!-- ML Circle (Middle) -->
+                  <g class="ai-node ai-node--ml" data-section="ml" tabindex="0" role="button" aria-label="Inspect Machine Learning">
+                    <circle cx="270" cy="265" r="140" fill="url(#mlGrad)" filter="url(#nodeShadow)" class="ai-circle ai-circle--ml"/>
+                    <text x="270" y="184" text-anchor="middle" class="ai-text ai-text--title">Machine</text>
+                    <text x="270" y="214" text-anchor="middle" class="ai-text ai-text--title">Learning (ML)</text>
+                  </g>
+
+                  <!-- DL Circle (Inner) -->
+                  <g class="ai-node ai-node--dl" data-section="dl" tabindex="0" role="button" aria-label="Inspect Deep Learning">
+                    <circle cx="295" cy="325" r="72" fill="url(#dlGrad)" filter="url(#nodeShadow)" class="ai-circle ai-circle--dl"/>
+                    <text x="295" y="306" text-anchor="middle" class="ai-text ai-text--sub">Deep</text>
+                    <text x="295" y="329" text-anchor="middle" class="ai-text ai-text--sub">Learning</text>
+                    <text x="295" y="350" text-anchor="middle" class="ai-text ai-text--sub">(DL)</text>
+                  </g>
+                </svg>
+              </div>
+              <span class="ai-hierarchy__hint-pill">✨ Hover / tap a circle</span>
+            </div>
+
+            <!-- Right: Header, Tabs, and Dynamic Explanation on the side -->
+            <div class="ai-hierarchy__content-col">
+              <div class="ai-hierarchy__header">
+                <span class="ai-hierarchy__badge">Interactive Concept Map</span>
+                <h3 class="ai-hierarchy__title">Where Machine Learning Fits in AI</h3>
+              </div>
+
+              <!-- Quick Selector Tabs -->
+              <div class="ai-hierarchy__tabs" role="tablist" aria-label="AI Hierarchy levels">
+                <button class="ai-tab is-active" data-target="overview" role="tab" aria-selected="true">All Layers</button>
+                <button class="ai-tab ai-tab--ai" data-target="ai" role="tab" aria-selected="false">AI</button>
+                <button class="ai-tab ai-tab--ml" data-target="ml" role="tab" aria-selected="false">ML</button>
+                <button class="ai-tab ai-tab--dl" data-target="dl" role="tab" aria-selected="false">DL</button>
+              </div>
+
+              <!-- Dynamic Explanation Panels -->
+              <div class="ai-display" id="aiDisplay">
+                
+                <!-- Overview / Default Panel -->
+                <div class="ai-panel is-active" data-panel="overview">
+                  <div class="ai-panel__top">
+                    <span class="ai-panel__tag ai-panel__tag--overview">Full Hierarchy</span>
+                  </div>
+                  <h4 class="ai-panel__heading">A nested continuum of capabilities</h4>
+                  <p class="ai-panel__text">
+                    Deep Learning is an inner subset of Machine Learning, which in turn is a specialized discipline within the broader realm of Artificial Intelligence.
+                  </p>
+                  <div class="ai-panel__chips">
+                    <div class="ai-chip ai-chip--ai">
+                      <span class="ai-chip__dot"></span>
+                      <span><strong>AI:</strong> Broadest scope</span>
+                    </div>
+                    <span class="ai-chip__sep">❯</span>
+                    <div class="ai-chip ai-chip--ml">
+                      <span class="ai-chip__dot"></span>
+                      <span><strong>ML:</strong> Learns from data</span>
+                    </div>
+                    <span class="ai-chip__sep">❯</span>
+                    <div class="ai-chip ai-chip--dl">
+                      <span class="ai-chip__dot"></span>
+                      <span><strong>DL:</strong> Neural nets</span>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- AI Panel -->
+                <div class="ai-panel" data-panel="ai">
+                  <div class="ai-panel__top">
+                    <span class="ai-panel__tag ai-panel__tag--ai">Outer Ring</span>
+                    <span class="ai-panel__tier">Level 1 • Broad Umbrella</span>
+                  </div>
+                  <h4 class="ai-panel__heading" style="color: #1d4ed8;">Artificial Intelligence (AI)</h4>
+                  <p class="ai-panel__text">
+                    The overarching discipline of creating systems capable of mimicking human cognitive tasks—including reasoning, planning, vision, and decision-making. Encompasses both rule-based systems and learning models.
+                  </p>
+                  <div class="ai-panel__detail-box">
+                    <strong>Classic Examples:</strong> Expert systems, search algorithms, pathfinding logic, rule engines.
+                  </div>
+                </div>
+
+                <!-- ML Panel -->
+                <div class="ai-panel" data-panel="ml">
+                  <div class="ai-panel__top">
+                    <span class="ai-panel__tag ai-panel__tag--ml">Middle Ring</span>
+                    <span class="ai-panel__tier">Level 2 • Data-Driven</span>
+                  </div>
+                  <h4 class="ai-panel__heading" style="color: #059669;">Machine Learning (ML)</h4>
+                  <p class="ai-panel__text">
+                    A distinct subset of AI where computers learn statistical patterns and decision boundaries directly from data and past examples, rather than following explicitly programmed step-by-step logic.
+                  </p>
+                  <div class="ai-panel__detail-box">
+                    <strong>Classic Examples:</strong> Linear Regression, Decision Trees, Random Forests, SVMs, K-Means.
+                  </div>
+                </div>
+
+                <!-- DL Panel -->
+                <div class="ai-panel" data-panel="dl">
+                  <div class="ai-panel__top">
+                    <span class="ai-panel__tag ai-panel__tag--dl">Inner Core</span>
+                    <span class="ai-panel__tier">Level 3 • Neural Networks</span>
+                  </div>
+                  <h4 class="ai-panel__heading" style="color: #7c3aed;">Deep Learning (DL)</h4>
+                  <p class="ai-panel__text">
+                    A high-powered subset of Machine Learning that uses multi-layered artificial neural networks. It automatically extracts rich, hierarchical features from raw data like pixels, audio, and text.
+                  </p>
+                  <div class="ai-panel__detail-box">
+                    <strong>Classic Examples:</strong> Large Language Models (LLMs), CNNs, Transformers, Generative AI.
+                  </div>
+                </div>
+
+              </div>
+            </div>
+
+          </div>
+          <figcaption class="ai-hierarchy__caption">
+            <strong>Figure 1.1:</strong> Machine learning is not the entirety of AI—it is a specialized discipline within it, and Deep Learning represents an even deeper subset built on artificial neural networks.
+          </figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <!-- ---- Traditional vs ML programming ---- -->
+    <section class="block" id="two-paradigms">
+      <div class="block__body">
+        <h2 class="fade-up animate-on-scroll">
+          <span class="icon-badge icon-badge--coral">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="18" r="3"/><circle cx="6" cy="6" r="3"/><circle cx="18" cy="6" r="3"/><path d="M18 9v1a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2V9"/><path d="M12 12v3"/></svg>
+          </span>
+          Two ways to arrive at a program
+        </h2>
+        <p class="fade-up animate-on-scroll">
+          The cleanest way to feel the difference is to look at what goes in
+          and what comes out. In both cases you start with data, but which
+          piece is missing is what defines the approach.
+        </p>
+      </div>
+
+      <div class="paradigm-split stagger-group animate-on-scroll" id="paradigmGrid">
+
+        <figure class="paradigm-pane paradigm-pane--traditional stagger-up">
+          <figcaption class="paradigm-pane__cap">Traditional programming</figcaption>
+          <div class="paradigm-diagram" role="img" aria-label="Traditional programming: data and a hand-written program are given as input, and the computer produces output.">
+            <svg viewBox="0 0 320 190" class="pdiag" preserveAspectRatio="xMidYMid meet">
+              <g class="pdiag__inputs">
+                <rect x="10" y="18" width="118" height="46" rx="4" class="box box--data"/>
+                <text x="69" y="46" text-anchor="middle" class="box__label">Data</text>
+
+                <rect x="10" y="98" width="118" height="46" rx="4" class="box box--program"/>
+                <text x="69" y="126" text-anchor="middle" class="box__label">Program</text>
+              </g>
+
+              <path id="tradIn1" class="flow-line" d="M128 41 C 170 41, 170 95, 208 95" fill="none"/>
+              <path id="tradIn2" class="flow-line" d="M128 121 C 170 121, 170 95, 208 95" fill="none"/>
+
+              <rect x="212" y="72" width="98" height="46" rx="4" class="box box--engine"/>
+              <text x="261" y="100" text-anchor="middle" class="box__label">Computer</text>
+
+              <path id="tradOut" class="flow-line flow-line--out" d="M261 118 L 261 168" fill="none" marker-end="url(#arrowTrad)"/>
+              <text x="261" y="185" text-anchor="middle" class="box__label box__label--result">Output</text>
+
+              <circle r="3.5" class="flow-dot flow-dot--traditional">
+                <animateMotion dur="1.8s" repeatCount="indefinite"><mpath href="#tradIn1"/></animateMotion>
+              </circle>
+              <circle r="3.5" class="flow-dot flow-dot--traditional">
+                <animateMotion dur="1.8s" begin="0.4s" repeatCount="indefinite"><mpath href="#tradIn2"/></animateMotion>
+              </circle>
+              <circle r="3.5" class="flow-dot flow-dot--traditional">
+                <animateMotion dur="1.1s" begin="0.9s" repeatCount="indefinite"><mpath href="#tradOut"/></animateMotion>
+              </circle>
+
+              <defs>
+                <marker id="arrowTrad" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto">
+                  <path d="M0,0 L8,4 L0,8 z" class="arrowhead arrowhead--traditional"/>
+                </marker>
+              </defs>
+            </svg>
+          </div>
+          <p class="paradigm-pane__note">You supply the rules. The computer only ever follows them.</p>
+        </figure>
+
+        <figure class="paradigm-pane paradigm-pane--ml stagger-up">
+          <figcaption class="paradigm-pane__cap">Machine learning</figcaption>
+          <div class="paradigm-diagram" role="img" aria-label="Machine learning: data and known outputs are given as input, and the computer produces a program.">
+            <svg viewBox="0 0 320 190" class="pdiag" preserveAspectRatio="xMidYMid meet">
+              <g class="pdiag__inputs">
+                <rect x="10" y="18" width="118" height="46" rx="4" class="box box--data"/>
+                <text x="69" y="46" text-anchor="middle" class="box__label">Data</text>
+
+                <rect x="10" y="98" width="118" height="46" rx="4" class="box box--result-in"/>
+                <text x="69" y="126" text-anchor="middle" class="box__label">Output</text>
+              </g>
+
+              <path id="mlIn1" class="flow-line" d="M128 41 C 170 41, 170 95, 208 95" fill="none"/>
+              <path id="mlIn2" class="flow-line" d="M128 121 C 170 121, 170 95, 208 95" fill="none"/>
+
+              <rect x="212" y="72" width="98" height="46" rx="4" class="box box--engine box--engine-ml"/>
+              <text x="261" y="100" text-anchor="middle" class="box__label">Computer</text>
+
+              <path id="mlOut" class="flow-line flow-line--out flow-line--ml" d="M261 118 L 261 168" fill="none" marker-end="url(#arrowML)"/>
+              <text x="261" y="185" text-anchor="middle" class="box__label box__label--result">Program</text>
+
+              <circle r="3.5" class="flow-dot flow-dot--ml">
+                <animateMotion dur="1.8s" begin="1.2s" repeatCount="indefinite"><mpath href="#mlIn1"/></animateMotion>
+              </circle>
+              <circle r="3.5" class="flow-dot flow-dot--ml">
+                <animateMotion dur="1.8s" begin="1.6s" repeatCount="indefinite"><mpath href="#mlIn2"/></animateMotion>
+              </circle>
+              <circle r="3.5" class="flow-dot flow-dot--ml">
+                <animateMotion dur="1.1s" begin="2.1s" repeatCount="indefinite"><mpath href="#mlOut"/></animateMotion>
+              </circle>
+
+              <defs>
+                <marker id="arrowML" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto">
+                  <path d="M0,0 L8,4 L0,8 z" class="arrowhead arrowhead--ml"/>
+                </marker>
+              </defs>
+            </svg>
+          </div>
+          <p class="paradigm-pane__note">You supply examples of right answers. The computer works out the rules.</p>
+        </figure>
+
+      </div>
+    </section>
+
+    <!-- ---- Why ML keeps improving ---- -->
+    <section class="block" id="why-improving">
+      <div class="block__body">
+        <h2 class="fade-up animate-on-scroll">
+          <span class="icon-badge icon-badge--gold">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg>
+          </span>
+          Why machine learning keeps getting better
+        </h2>
+        <p class="fade-up animate-on-scroll">
+          Machine learning itself is an old idea. Some of its core algorithms
+          date back decades. What changed is the environment around it. Three
+          conditions arrived together, and each one removes a limit the field
+          used to run into.
+        </p>
+      </div>
+
+      <div class="reasons-list stagger-group animate-on-scroll">
+        <article class="reason-item stagger-up">
+          <span class="icon-badge icon-badge--coral reason-item__icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/><path d="M3 12c0 1.66 4 3 9 3s9-1.34 9-3"/></svg>
+          </span>
+          <div class="reason-item__content">
+            <h3>Data, at a scale no one had before</h3>
+            <p>Every device, sensor, and click leaves a record. Patterns that need thousands or millions of examples to surface finally have enough examples to learn from, in volume and in variety.</p>
+          </div>
+        </article>
+        <article class="reason-item stagger-up">
+          <span class="icon-badge icon-badge--gold reason-item__icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="16" height="16" x="4" y="4" rx="2"/><rect width="6" height="6" x="9" y="9" rx="1"/><path d="M15 2v2M15 20v2M2 15h2M2 9h2M20 15h2M20 9h2M9 2v2M9 20v2"/></svg>
+          </span>
+          <div class="reason-item__content">
+            <h3>Computation, now affordable</h3>
+            <p>The processing power once locked inside research labs (especially GPUs built for parallel work) is now something a student can rent by the hour.</p>
+          </div>
+        </article>
+        <article class="reason-item stagger-up">
+          <span class="icon-badge icon-badge--teal reason-item__icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/><path d="M2 12h20"/></svg>
+          </span>
+          <div class="reason-item__content">
+            <h3>Connectivity, fast enough to matter</h3>
+            <p>High-speed internet moves the enormous datasets above from where they're collected to where they're trained, and puts trained models within reach of anyone with a connection.</p>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- ---- Three categories ---- -->
+    <section class="block" id="three-branches">
+      <div class="block__body">
+        <h2 class="fade-up animate-on-scroll">
+          <span class="icon-badge icon-badge--coral">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="4" r="2.5"/><circle cx="5" cy="19" r="2.5"/><circle cx="19" cy="19" r="2.5"/><path d="M12 6.5v4.5"/><path d="M5 16.5c0-4 7-5.5 7-5.5s7 1.5 7 5.5"/></svg>
+          </span>
+          The three branches of machine learning
+        </h2>
+        <p class="fade-up animate-on-scroll">
+          Almost everything in the field falls under one of three approaches,
+          split by a single question: <em>what kind of feedback does the
+          computer learn from?</em> Select each branch to see what it means
+          and which algorithms live there.
+        </p>
+      </div>
+
+      <div class="interactive-tree" id="interactiveTree">
+        <div class="interactive-tree__root">
+          <div class="branch-root">
+            <span class="branch-root__text">Machine Learning</span>
+          </div>
+        </div>
+
+        <svg class="interactive-tree__lines" viewBox="0 0 900 120" preserveAspectRatio="none" aria-hidden="true">
+          <path id="treePathSupervised" d="M450 0 L450 30 C450 60, 150 40, 150 120" class="i-line i-line--purple" />
+          <path id="treePathUnsupervised" d="M450 0 L450 120" class="i-line i-line--pink" />
+          <path id="treePathReinforcement" d="M450 0 L450 30 C450 60, 750 40, 750 120" class="i-line i-line--yellow" />
+        </svg>
+
+        <div class="interactive-tree__cards">
+          <!-- Supervised -->
+          <div class="i-branch">
+            <div class="i-card i-card--purple" data-branch="supervised" tabindex="0">
+              <div class="i-card__title">
+                <span class="icon-badge icon-badge--coral">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3.85 8.62a4 4 0 0 1 4.78-4.77 4 4 0 0 1 6.74 0 4 4 0 0 1 4.78 4.78 4 4 0 0 1 0 6.74 4 4 0 0 1-4.77 4.78 4 4 0 0 1-6.75 0 4 4 0 0 1-4.78-4.77 4 4 0 0 1 0-6.76Z"/><path d="m9 12 2 2 4-4"/></svg>
+                </span>
+                <span class="i-card__name">Supervised Learning</span>
+                <span class="i-card__hint">learns from labelled answers</span>
+              </div>
+              <p class="i-card__desc">Studies examples that already have the correct answer attached, then learns to predict answers for new, unlabelled examples.</p>
+            </div>
+            <div class="i-leaves i-leaves--purple">
+              <span class="i-leaf" tabindex="0">Linear Regression</span>
+              <span class="i-leaf" tabindex="0">Decision Trees</span>
+              <span class="i-leaf" tabindex="0">SVMs</span>
+            </div>
+          </div>
+
+          <!-- Unsupervised -->
+          <div class="i-branch">
+            <div class="i-card i-card--pink" data-branch="unsupervised" tabindex="0">
+              <div class="i-card__title">
+                <span class="icon-badge icon-badge--teal">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8.3 10a.7.7 0 0 1-.626-.382l-3.16-6.32A.7.7 0 0 1 5.14 2.3h6.32a.7.7 0 0 1 .626.998l-3.16 6.32A.7.7 0 0 1 8.3 10Z"/><rect width="7" height="7" x="14" y="14" rx="1"/><circle cx="5.5" cy="17.5" r="3.5"/></svg>
+                </span>
+                <span class="i-card__name">Unsupervised Learning</span>
+                <span class="i-card__hint">finds structure with no answers</span>
+              </div>
+              <p class="i-card__desc">Receives data with no correct answers attached, and has to find hidden structure or groupings on its own.</p>
+            </div>
+            <div class="i-leaves i-leaves--pink">
+              <span class="i-leaf" tabindex="0">K-Means</span>
+              <span class="i-leaf" tabindex="0">PCA</span>
+              <span class="i-leaf" tabindex="0">Autoencoders</span>
+            </div>
+          </div>
+
+          <!-- Reinforcement -->
+          <div class="i-branch">
+            <div class="i-card i-card--yellow" data-branch="reinforcement" tabindex="0">
+              <div class="i-card__title">
+                <span class="icon-badge icon-badge--gold">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.45 1-1 1H7v2h10v-2h-2c-.55 0-1-.45-1-1v-2.34"/><path d="M18 4H6v7a6 6 0 0 0 12 0V4z"/></svg>
+                </span>
+                <span class="i-card__name">Reinforcement Learning</span>
+                <span class="i-card__hint">learns from reward</span>
+              </div>
+              <p class="i-card__desc">An agent takes actions inside an environment, receives a reward or penalty, and gradually learns which actions pay off.</p>
+            </div>
+            <div class="i-leaves i-leaves--yellow">
+              <span class="i-leaf" tabindex="0">Q-Learning</span>
+              <span class="i-leaf" tabindex="0">PPO</span>
+              <span class="i-leaf" tabindex="0">Policy Gradients</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <footer class="lesson__footer">
+      <div class="lesson__footer-progress">Lesson 1 of 6</div>
+      <a href="data-preprocessing.html" class="lesson__footer-next" id="nextLessonLink">
+        <div class="lesson__footer-next-text">
+          <span class="lesson__footer-next-label">Next lesson</span>
+          <span class="lesson__footer-next-name">Data Preprocessing</span>
+        </div>
+        <span class="lesson__footer-arrow">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+        </span>
+      </a>
+    </footer>
+
+  </main>
+</div>
+
+<script src="main.js"></script>
+</body>
+</html>

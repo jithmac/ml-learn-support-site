@@ -1,0 +1,853 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CART Algorithm &ndash; Learning Machines</title>
+<meta name="description" content="The CART decision tree algorithm: Strictly binary trees, Gini Impurity, regression trees for continuous numbers, and cost-complexity pruning.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,600;12..96,700&family=Figtree:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="grain" aria-hidden="true"></div>
+
+<div class="progress-rail" aria-hidden="true"><div class="progress-fill" id="progressFill"></div></div>
+
+<header class="top-bar">
+  <div class="top-bar__brand">
+    <span class="course-nav__mark">LM</span>
+    <span class="top-bar__title">Learning Machines</span>
+  </div>
+  <div class="top-bar__controls">
+    <span class="top-bar__time" id="readTime">~8 min read</span>
+    <button class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="courseNav">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="4" x2="20" y1="6" y2="6"/><line x1="4" x2="20" y1="12" y2="12"/><line x1="4" x2="20" y1="18" y2="18"/></svg>
+      <span class="nav-toggle__label">Course map</span>
+    </button>
+  </div>
+</header>
+
+<div class="nav-overlay" id="navOverlay" aria-hidden="true"></div>
+<!-- ============ SLIDE-OVER SIDEBAR ============ -->
+<aside class="course-nav" id="courseNav">
+  <div class="course-nav__header">
+    <h2 class="course-nav__title-side">Course map</h2>
+    <button class="nav-close" id="navClose" aria-label="Close nav">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
+    </button>
+  </div>
+  <p class="course-nav__tagline">A slow, careful path through machine learning, start to finish.</p>
+
+  <ol class="course-nav__list">
+    <li class="course-nav__item is-completed">
+      <a href="index.html" class="course-nav__inner-link">
+        <span class="course-nav__num">1</span>
+        <div>
+          <span class="course-nav__name">Introduction</span>
+          <span class="course-nav__state">completed</span>
+        </div>
+      </a>
+    </li>
+    <li class="course-nav__item is-completed">
+      <a href="data-preprocessing.html" class="course-nav__inner-link">
+        <span class="course-nav__num">2</span>
+        <div>
+          <span class="course-nav__name">Data Preprocessing</span>
+          <span class="course-nav__state">completed</span>
+        </div>
+      </a>
+    </li>
+    <li class="course-nav__item is-completed">
+      <a href="eda.html" class="course-nav__inner-link">
+        <span class="course-nav__num">3</span>
+        <div>
+          <span class="course-nav__name">Exploratory Data Analysis</span>
+          <span class="course-nav__state">completed</span>
+        </div>
+      </a>
+    </li>
+    <li class="course-nav__item is-active-group">
+      <span class="course-nav__num">4</span>
+      <div>
+        <span class="course-nav__name">Supervised Learning</span>
+        <span class="course-nav__state">in progress</span>
+      </div>
+    </li>
+    <ol class="course-nav__sub-list">
+      <li class="course-nav__sub-item is-completed">
+        <a href="supervised-learning.html">
+          <span class="course-nav__sub-num">4.1</span>
+          <div>
+            <span class="course-nav__sub-name">Introduction</span>
+            <span class="course-nav__state">completed</span>
+          </div>
+        </a>
+      </li>
+      <li class="course-nav__sub-item is-completed">
+        <a href="classification.html">
+          <span class="course-nav__sub-num">4.2</span>
+          <div>
+            <span class="course-nav__sub-name">Classification &amp; Decision Trees</span>
+            <span class="course-nav__state">completed</span>
+          </div>
+        </a>
+      </li>
+      <li class="course-nav__sub-item is-completed">
+        <a href="id3-algorithm.html">
+          <span class="course-nav__sub-num">4.3</span>
+          <div>
+            <span class="course-nav__sub-name">ID3 Algorithm</span>
+            <span class="course-nav__state">completed</span>
+          </div>
+        </a>
+      </li>
+      <li class="course-nav__sub-item is-completed">
+        <a href="c45-algorithm.html">
+          <span class="course-nav__sub-num">4.4</span>
+          <div>
+            <span class="course-nav__sub-name">C4.5 Algorithm</span>
+            <span class="course-nav__state">completed</span>
+          </div>
+        </a>
+      </li>
+      <li class="course-nav__sub-item is-active">
+        <a href="cart-algorithm.html">
+          <span class="course-nav__sub-num">4.5</span>
+          <div>
+            <span class="course-nav__sub-name">CART Algorithm</span>
+            <span class="course-nav__state">reading now</span>
+          </div>
+        </a>
+      </li>
+      <li class="course-nav__sub-item">
+        <a href="regression-analysis.html">
+          <span class="course-nav__sub-num">4.6</span>
+          <div>
+            <span class="course-nav__sub-name">Introduction to Regression</span>
+            <span class="course-nav__state">available now</span>
+          </div>
+        </a>
+      </li>
+      <li class="course-nav__sub-item">
+        <a href="simple-linear-regression.html">
+          <span class="course-nav__sub-num">4.7</span>
+          <div>
+            <span class="course-nav__sub-name">Simple Linear Regression</span>
+            <span class="course-nav__state">available now</span>
+          </div>
+        </a>
+      </li>
+      <li class="course-nav__sub-item">
+        <a href="polynomial-regression.html">
+          <span class="course-nav__sub-num">4.8</span>
+          <div>
+            <span class="course-nav__sub-name">Polynomial Regression</span>
+            <span class="course-nav__state">available now</span>
+          </div>
+        </a>
+      </li>
+    </ol>
+    <li class="course-nav__item">
+      <a href="unsupervised-learning.html" class="course-nav__inner-link">
+        <span class="course-nav__num">5</span>
+        <div>
+          <span class="course-nav__name">Unsupervised Learning</span>
+          <span class="course-nav__state">available now</span>
+        </div>
+      </a>
+    </li>
+    <ol class="course-nav__sub-list">
+      <li class="course-nav__sub-item">
+        <a href="unsupervised-learning.html">
+          <span class="course-nav__sub-num">5.1</span>
+          <div>
+            <span class="course-nav__sub-name">Introduction</span>
+            <span class="course-nav__state">available now</span>
+          </div>
+        </a>
+      </li>
+      <li class="course-nav__sub-item">
+        <a href="hierarchical-clustering.html">
+          <span class="course-nav__sub-num">5.2</span>
+          <div>
+            <span class="course-nav__sub-name">Hierarchical Clustering</span>
+            <span class="course-nav__state">available now</span>
+          </div>
+        </a>
+      </li>
+    </ol>
+    <li class="course-nav__item is-locked">
+      <span class="course-nav__num">6</span>
+      <div>
+        <span class="course-nav__name">Reinforcement Learning</span>
+        <span class="course-nav__state">
+          <svg class="course-nav__lock" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          coming soon
+        </span>
+      </div>
+    </li>
+  </ol>
+</aside>
+<div class="shell">
+
+  <!-- ============ MAIN ARTICLE ============ -->
+  <main class="lesson">
+
+    <header class="lesson__header">
+      <span class="lesson__eyebrow-free-title">
+        <h1>Decision Trees: CART Algorithm</h1>
+        <svg class="title-underline" viewBox="0 0 520 14" preserveAspectRatio="none" aria-hidden="true">
+          <path d="M4 9 C 120 2, 260 13, 400 6 C 440 4, 480 8, 516 5"/>
+        </svg>
+      </span>
+      <p class="lesson__dek">The modern industry standard: Strictly binary trees, Gini Impurity, regression trees for predicting continuous numbers, and cost-complexity pruning.</p>
+    </header>
+
+    <!-- ---- Section 9: The CART Algorithm ---- -->
+    <section class="block" id="cart-algorithm">
+      <div class="block__body">
+        <h2 class="fade-up animate-on-scroll">
+          <span class="icon-badge icon-badge--teal">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="5" r="3"/><circle cx="6" cy="19" r="3"/><circle cx="18" cy="19" r="3"/><path d="M12 8v4"/><path d="m7.5 16.5 3-3.5"/><path d="m16.5 16.5-3-3.5"/></svg>
+          </span>
+          The CART Algorithm: Classification &amp; Regression Trees
+        </h2>
+
+        <!-- Core Principle Card -->
+        <div class="definition fade-up animate-on-scroll">
+          <div class="definition__label">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+            The Modern Workhorse
+          </div>
+          <p>
+            <strong>CART</strong> stands for <strong>Classification And Regression Trees</strong>. Created in 1984 by Leo Breiman and his team, it is the <strong>industry standard</strong> decision tree algorithm today — and it is the exact engine behind Python's <code>scikit-learn</code>!
+          </p>
+        </div>
+
+        <p class="fade-up animate-on-scroll">
+          While <strong>ID3</strong> and <strong>C4.5</strong> were brilliant stepping stones, they had quirks: ID3 got tricked by IDs, and both built messy multi-way branches. 
+          CART made trees practical and fast by following two simple, powerful ideas:
+        </p>
+
+        <!-- The 2 Superpowers of CART Grid -->
+        <div class="cart-pillars-grid fade-up animate-on-scroll">
+          <!-- Pillar 1: Strictly Binary -->
+          <div class="cart-pillar-item cart-pillar-item--teal">
+            <h3 class="cart-pillar-item__title">
+              <span>✌️</span> 1. The Game of 20 Questions
+            </h3>
+            <span class="id3-stat-pill" style="align-self: flex-start; margin-bottom: 0.6rem; background: var(--teal-tint); color: var(--teal-dark);">Strictly Binary (Always 2 Branches)</span>
+            <p style="font-size: 0.92rem; color: var(--ink-soft); line-height: 1.6; margin: 0 0 0.8rem;">
+              Instead of splitting into 3, 4, or 5 messy branches at once (like <em>Sunny, Overcast, Rain</em>), CART plays the game of <strong>20 Questions</strong>: every single test is strictly a <strong>Yes or No</strong> question!
+            </p>
+            <div style="background: var(--bg); border: 1px dashed var(--line); border-radius: 6px; padding: 0.6rem 0.8rem; font-family: 'IBM Plex Mono', monospace; font-size: 0.8rem; color: var(--ink); margin-top: auto;">
+              Example: &ldquo;Is Outlook == Sunny?&rdquo; &rarr; <strong>[Yes] or [No]</strong>
+            </div>
+          </div>
+
+          <!-- Pillar 2: Classification + Regression -->
+          <div class="cart-pillar-item cart-pillar-item--gold">
+            <h3 class="cart-pillar-item__title">
+              <span>🎯</span> 2. Double Duty: Two Jobs in One
+            </h3>
+            <span class="id3-stat-pill" style="align-self: flex-start; margin-bottom: 0.6rem; background: var(--gold-tint); color: var(--gold-dark);">Predicts Categories AND Numbers</span>
+            <p style="font-size: 0.92rem; color: var(--ink-soft); line-height: 1.6; margin: 0 0 0.8rem;">
+              ID3 and C4.5 can only do <em>classification</em> (picking discrete labels like Yes/No). CART can also do <strong>regression</strong> — predicting real numbers like house prices, salaries, or playing minutes!
+            </p>
+            <div style="background: var(--bg); border: 1px dashed var(--line); border-radius: 6px; padding: 0.6rem 0.8rem; font-family: 'IBM Plex Mono', monospace; font-size: 0.8rem; color: var(--ink); margin-top: auto;">
+              Output: Category (Yes/No) OR Number ($65,000)
+            </div>
+          </div>
+        </div>
+
+        <!-- =========================================================================
+             WHAT IS GINI IMPURITY? THE LUCKY DIP ANALOGY
+             ========================================================================= -->
+        <h3 class="fade-up animate-on-scroll" style="margin-top: 2.8rem;">What is Gini Impurity? (In Plain English)</h3>
+        <p class="fade-up animate-on-scroll">
+          For classification, CART doesn't use Entropy or logarithms. Instead, it measures how mixed up a group is using something much simpler: <strong>Gini Impurity</strong>.
+        </p>
+
+        <!-- Lucky Dip Visual Card -->
+        <div class="definition fade-up animate-on-scroll" style="margin-top: 1.2rem; box-shadow: none;">
+          <div class="definition__label">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+            Intuition: The "Lucky Dip" Bag
+          </div>
+          <p style="margin-bottom: 1.2rem;">
+            Imagine reaching into a bag of colored balls without looking, pulling one out, and trying to guess its color:
+          </p>
+
+          <div style="display: flex; gap: 1.5rem; flex-wrap: wrap;">
+            <!-- Pure Bag -->
+            <div style="background: var(--bg); border: 1px solid var(--line); border-radius: var(--radius-sm); padding: 1.4rem; flex: 1; min-width: 260px; text-align: center;">
+              <div style="font-size: 1.3rem; margin-bottom: 0.4rem;">🟢 10 Green &bull; 🔴 0 Red</div>
+              <p style="font-size: 0.88rem; color: var(--ink-soft); margin-bottom: 0.8rem;">
+                Every ball is green. You'll guess "Green" and be right 100% of the time. Zero confusion!
+              </p>
+              <div style="display: inline-block; padding: 0.35rem 0.8rem; background: var(--teal-tint); color: var(--teal-dark); font-weight: 700; border-radius: 6px; font-family: var(--display); font-size: 0.95rem;">
+                ➡️ Gini = 0.0 (100% Pure!)
+              </div>
+            </div>
+
+            <!-- Mixed Bag -->
+            <div style="background: var(--bg); border: 1px solid var(--line); border-radius: var(--radius-sm); padding: 1.4rem; flex: 1; min-width: 260px; text-align: center;">
+              <div style="font-size: 1.3rem; margin-bottom: 0.4rem;">🟢 5 Green &bull; 🔴 5 Red</div>
+              <p style="font-size: 0.88rem; color: var(--ink-soft); margin-bottom: 0.8rem;">
+                Half green, half red. It's a complete coin flip. You'll guess wrong half the time!
+              </p>
+              <div style="display: inline-block; padding: 0.35rem 0.8rem; background: var(--coral-tint); color: var(--coral-dark); font-weight: 700; border-radius: 6px; font-family: var(--display); font-size: 0.95rem;">
+                ➡️ Gini = 0.50 (Maximum Disorder)
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- The Gini Formula Box -->
+        <p class="fade-up animate-on-scroll">
+          Here is the simple math behind Gini Impurity for any group:
+        </p>
+
+        <div class="fade-up animate-on-scroll" style="background: var(--surface); border: 1.5px dashed var(--line); border-radius: var(--radius-sm); padding: 1.5rem; text-align: center; margin-bottom: 1.5rem;">
+          <div style="font-family: var(--display); font-size: 1.35rem; font-weight: 700; color: var(--ink); margin-bottom: 0.4rem;">
+            Gini = 1 &minus; &Sigma; (p<sub>i</sub>)<sup>2</sup>
+          </div>
+          <div style="font-size: 0.9rem; color: var(--ink-soft); max-width: 600px; margin: 0 auto;">
+            For two classes (Yes and No): &nbsp; <code>Gini = 1 &minus; [ p(Yes)&sup2; + p(No)&sup2; ]</code>
+          </div>
+        </div>
+
+        <!-- Why Gini is Faster Callout -->
+        <div class="fade-up animate-on-scroll" style="background: rgba(14, 168, 148, 0.08); border-left: 3.5px solid var(--teal); border-radius: 6px; padding: 0.85rem 1.2rem; font-size: 0.9rem; color: var(--ink); line-height: 1.6; margin-bottom: 2rem;">
+          ⚡ <strong>Why Data Scientists Love Gini:</strong> Entropy requires computing logarithms (<code>log₂</code>), which is slow on millions of rows. Gini only requires simple multiplications (squaring) and subtractions. It runs <strong>much faster</strong> on computers and makes almost identical decisions!
+        </div>
+
+        <!-- =========================================================================
+             CART IN ACTION: STEP-BY-STEP TENNIS EXAMPLE
+             ========================================================================= -->
+        <div class="c45-example-wrap fade-up animate-on-scroll" id="cartTennisExample">
+          <div class="c45-example-head">
+            <span class="id3-stat-pill" style="background: var(--teal-tint); color: var(--teal-dark); border-color: rgba(14, 168, 148, 0.4); margin-bottom: 0.6rem; display: inline-block;">
+              🎾 CART in Action
+            </span>
+            <h3 class="c45-example-title">Step-by-Step Example: Building the Tree with CART</h3>
+            <p class="c45-example-desc">
+              Let's use our familiar <strong>10-day Tennis dataset</strong> from the ID3 lesson. Watch how CART evaluates simple Yes/No questions and builds a clean binary decision tree.
+            </p>
+          </div>
+
+          <!-- Step 1: Baseline Dataset Gini -->
+          <div class="c45-step-card">
+            <div class="c45-step-head">
+              <span class="c45-step-badge">A</span>
+              <h4 class="c45-step-title">Step A: Calculate Overall Starting Gini (The Baseline)</h4>
+            </div>
+
+            <p style="font-size: 0.92rem; color: var(--ink-soft); line-height: 1.6; margin: 0 0 0.8rem;">
+              Across all 10 days in our dataset, we have <strong>6 "Yes"</strong> and <strong>4 "No"</strong>:
+            </p>
+
+            <div class="id3-math-steps-box" style="margin-bottom: 1rem;">
+              <div>&bull; Total Days: <strong>S = 10</strong> | <strong>p(Yes) = 6/10 = 0.60</strong> | <strong>p(No) = 4/10 = 0.40</strong></div>
+              <div style="margin-top: 0.4rem;">
+                Gini(S) = 1 &minus; [ (0.60)&sup2; + (0.40)&sup2; ]
+              </div>
+              <div style="margin-top: 0.25rem;">
+                Gini(S) = 1 &minus; [ 0.36 + 0.16 ] = 1 &minus; 0.52 = <span class="id3-math-highlight">0.4800</span>
+              </div>
+            </div>
+
+            <!-- Gini Meter -->
+            <div class="cart-gini-meter">
+              <div style="display: flex; justify-content: space-between; font-size: 0.78rem; font-family: 'IBM Plex Mono', monospace; color: var(--muted);">
+                <span>0.0 (Pure / Certain)</span>
+                <span>Starting Impurity: <strong>0.4800 / 0.5000</strong></span>
+                <span>0.50 (Max Confusion)</span>
+              </div>
+              <div class="cart-meter-track">
+                <div class="cart-meter-fill" style="width: 96%;"></div>
+              </div>
+            </div>
+            <p style="font-size: 0.82rem; color: var(--muted); margin: 0.4rem 0 0;">
+              💡 <em>Our starting score is 0.4800. Any good Yes/No question must drop this impurity score closer to 0!</em>
+            </p>
+          </div>
+
+          <!-- Step 2: Testing Candidate Yes/No Splits -->
+          <div class="c45-step-card">
+            <div class="c45-step-head">
+              <span class="c45-step-badge">B</span>
+              <h4 class="c45-step-title">Step B: Test Candidate Yes/No Questions</h4>
+            </div>
+
+            <p style="font-size: 0.92rem; color: var(--ink-soft); line-height: 1.6; margin: 0 0 1rem;">
+              Because CART is strictly binary, it turns each feature into a simple <strong>Yes or No</strong> question. Let's see what happens when we ask: <code>"Is Outlook == Sunny?"</code>
+            </p>
+
+            <!-- Detailed breakdown for Outlook == Sunny -->
+            <div style="background: var(--surface); border: 1.5px solid var(--teal); border-radius: 10px; padding: 1.3rem; margin-bottom: 1.2rem;">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.8rem; flex-wrap: wrap; gap: 0.5rem;">
+                <span style="font-family: var(--display); font-weight: 700; font-size: 1.05rem; color: var(--teal-dark);">
+                  Testing Question: &ldquo;Is Outlook == Sunny?&rdquo;
+                </span>
+                <span class="cart-calc-badge" style="font-size: 0.8rem;">Drop in Impurity = +0.1633</span>
+              </div>
+
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
+                <!-- Yes Branch -->
+                <div style="background: var(--bg); border: 1px solid var(--line); border-radius: 8px; padding: 0.9rem;">
+                  <div style="font-weight: 700; font-size: 0.85rem; color: var(--ink); margin-bottom: 0.3rem;">
+                    👉 If YES (4 Days: D1, D2, D8, D9)
+                  </div>
+                  <div style="font-size: 0.82rem; color: var(--ink-soft); line-height: 1.5;">
+                    Contains: <strong>1 Yes, 3 No</strong><br>
+                    Gini(Left) = 1 &minus; [ (1/4)&sup2; + (3/4)&sup2; ]<br>
+                    = 1 &minus; [ 0.0625 + 0.5625 ] = <strong>0.3750</strong>
+                  </div>
+                </div>
+
+                <!-- No Branch -->
+                <div style="background: var(--bg); border: 1px solid var(--line); border-radius: 8px; padding: 0.9rem;">
+                  <div style="font-weight: 700; font-size: 0.85rem; color: var(--ink); margin-bottom: 0.3rem;">
+                    👉 If NO (6 Days: D3, D4, D5, D6, D7, D10)
+                  </div>
+                  <div style="font-size: 0.82rem; color: var(--ink-soft); line-height: 1.5;">
+                    Contains: <strong>5 Yes, 1 No</strong><br>
+                    Gini(Right) = 1 &minus; [ (5/6)&sup2; + (1/6)&sup2; ]<br>
+                    = 1 &minus; [ 0.6944 + 0.0278 ] = <strong>0.2778</strong>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Weighted Average -->
+              <div style="background: var(--bg); border-left: 3px solid var(--teal); padding: 0.7rem 0.9rem; font-family: 'IBM Plex Mono', monospace; font-size: 0.82rem; color: var(--ink); line-height: 1.6;">
+                <strong>Weighted Gini after split:</strong> (4/10)&times;0.3750 + (6/10)&times;0.2778 = <strong>0.3167</strong><br>
+                <strong>Gini Gain (Drop in Disorder):</strong> 0.4800 &minus; 0.3167 = <span style="color: var(--teal-dark); font-weight: 700;">0.1633</span>
+              </div>
+            </div>
+
+            <!-- Likewise: Other Candidate Questions Grid -->
+            <div style="font-weight: 700; font-size: 0.9rem; color: var(--ink); margin: 1.2rem 0 0.5rem;">
+              Testing Other Candidate Yes/No Questions &mdash; Calculated Likewise:
+            </div>
+
+            <div class="cart-calc-grid">
+              <!-- Question 1: Overcast -->
+              <div class="cart-calc-card">
+                <div>
+                  <div class="cart-calc-card__head">
+                    <span class="cart-calc-card__title">☁️ Is Outlook == Overcast?</span>
+                    <span class="cart-calc-badge--gold" style="font-size: 0.72rem; padding: 0.2rem 0.4rem; border-radius: 4px; font-weight: 700;">Rank #2</span>
+                  </div>
+                  <p style="font-size: 0.82rem; color: var(--ink-soft); margin: 0 0 0.5rem;">
+                    Splits into: Overcast (2 Yes, 0 No &rarr; Pure!) vs. Others (4 Yes, 4 No).
+                  </p>
+                </div>
+                <div style="font-family: 'IBM Plex Mono', monospace; font-size: 0.78rem; color: var(--muted); border-top: 1px dashed var(--line); padding-top: 0.5rem;">
+                  Weighted Gini = 0.4000 &bull; <strong>Gain = 0.0800</strong>
+                </div>
+              </div>
+
+              <!-- Question 2: Humidity -->
+              <div class="cart-calc-card">
+                <div>
+                  <div class="cart-calc-card__head">
+                    <span class="cart-calc-card__title">💧 Is Humidity == Normal?</span>
+                    <span class="cart-calc-badge--gold" style="font-size: 0.72rem; padding: 0.2rem 0.4rem; border-radius: 4px; font-weight: 700;">Rank #3</span>
+                  </div>
+                  <p style="font-size: 0.82rem; color: var(--ink-soft); margin: 0 0 0.5rem;">
+                    Splits into: Normal (4 Yes, 1 No) vs. High (2 Yes, 3 No).
+                  </p>
+                </div>
+                <div style="font-family: 'IBM Plex Mono', monospace; font-size: 0.78rem; color: var(--muted); border-top: 1px dashed var(--line); padding-top: 0.5rem;">
+                  Weighted Gini = 0.4000 &bull; <strong>Gain = 0.0800</strong>
+                </div>
+              </div>
+
+              <!-- Question 3: Wind -->
+              <div class="cart-calc-card">
+                <div>
+                  <div class="cart-calc-card__head">
+                    <span class="cart-calc-card__title">💨 Is Wind == Weak?</span>
+                    <span class="cart-calc-badge--gold" style="font-size: 0.72rem; padding: 0.2rem 0.4rem; border-radius: 4px; font-weight: 700;">Rank #4</span>
+                  </div>
+                  <p style="font-size: 0.82rem; color: var(--ink-soft); margin: 0 0 0.5rem;">
+                    Splits into: Weak (5 Yes, 2 No) vs. Strong (1 Yes, 2 No).
+                  </p>
+                </div>
+                <div style="font-family: 'IBM Plex Mono', monospace; font-size: 0.78rem; color: var(--muted); border-top: 1px dashed var(--line); padding-top: 0.5rem;">
+                  Weighted Gini = 0.4190 &bull; <strong>Gain = 0.0610</strong>
+                </div>
+              </div>
+            </div>
+
+            <!-- Winner announcement -->
+            <div style="background: rgba(14, 168, 148, 0.08); border-left: 3px solid var(--teal); border-radius: 6px; padding: 0.85rem 1.1rem; font-size: 0.88rem; color: var(--ink); line-height: 1.6; margin-top: 1rem;">
+              🏆 <strong>The Winner:</strong> <code>"Is Outlook == Sunny?"</code> produces the highest Gini Gain (<strong>0.1633</strong>) and drops disorder the most. CART crowns it as the <strong>Root Node</strong> at the top of the tree!
+            </div>
+          </div>
+
+          <!-- Step 3: Completing the Binary Tree -->
+          <div class="c45-step-card" style="margin-bottom: 0;">
+            <div class="c45-step-head">
+              <span class="c45-step-badge">C</span>
+              <h4 class="c45-step-title">Step C: Repeat on Each Branch Until Every Leaf is 100% Pure</h4>
+            </div>
+
+            <p style="font-size: 0.92rem; color: var(--ink-soft); line-height: 1.6; margin: 0 0 1rem;">
+              Just like ID3 and C4.5, CART repeats this process recursively on each branch:
+            </p>
+
+            <ul style="font-size: 0.88rem; color: var(--ink-soft); line-height: 1.7; margin: 0 0 1.2rem; padding-left: 1.2rem;">
+              <li>
+                <strong>On the YES side (Outlook is Sunny &bull; 4 days):</strong><br>
+                CART tests: <code>"Is Humidity == High?"</code><br>
+                &bull; <strong>Yes (3 days: D1, D2, D8):</strong> All 3 are "No" &rarr; 🎯 <strong>Leaf: Play = NO (100% Pure!)</strong><br>
+                &bull; <strong>No (1 day: D9):</strong> It is "Yes" &rarr; 🎯 <strong>Leaf: Play = YES (100% Pure!)</strong>
+              </li>
+              <li style="margin-top: 0.5rem;">
+                <strong>On the NO side (Outlook is Not Sunny &bull; 6 days):</strong><br>
+                CART tests: <code>"Is Wind == Weak?"</code><br>
+                &bull; <strong>Yes (4 days: D3, D4, D5, D10):</strong> All 4 are "Yes" &rarr; 🎯 <strong>Leaf: Play = YES (100% Pure!)</strong><br>
+                &bull; <strong>No (2 days: D6, D7):</strong> 1 Yes, 1 No. CART asks <code>"Is Outlook == Overcast?"</code>:<br>
+                &nbsp;&nbsp;&ndash; <strong>Yes (D7):</strong> 🎯 <strong>Leaf: Play = YES</strong><br>
+                &nbsp;&nbsp;&ndash; <strong>No (D6 - Rain):</strong> 🎯 <strong>Leaf: Play = NO</strong>
+              </li>
+            </ul>
+
+            <!-- Final SVG Decision Tree Diagram for CART -->
+            <div class="cart-tree-container">
+              <div style="text-align: center; margin-bottom: 1rem;">
+                <span class="id3-stat-pill" style="background: var(--teal-tint); color: var(--teal-dark); font-weight: 800; font-size: 0.78rem;">
+                  🎯 Trained CART Binary Decision Tree
+                </span>
+                <div style="font-family: var(--display); font-size: 1.15rem; font-weight: 700; color: var(--ink); margin-top: 0.3rem;">
+                  Notice: Every Single Node Has Exactly 2 Branches (Yes / No)!
+                </div>
+              </div>
+
+              <svg viewBox="0 0 760 380" width="100%" height="380" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                  <filter id="cartShadow" x="-10%" y="-10%" width="120%" height="130%">
+                    <feDropShadow dx="0" dy="3" stdDeviation="4" flood-color="#000000" flood-opacity="0.08"/>
+                  </filter>
+                  <marker id="cartArrow" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                    <path d="M 0 1 L 10 5 L 0 9 z" fill="#8A8177"/>
+                  </marker>
+                </defs>
+
+                <!-- Connectors from Root (380, 55) -->
+                <!-- Root to Left Child (190, 150) -->
+                <path d="M 330 55 L 200 145" stroke="#8A8177" stroke-width="2.5" fill="none" marker-end="url(#cartArrow)"/>
+                <!-- Root to Right Child (550, 150) -->
+                <path d="M 430 55 L 540 145" stroke="#8A8177" stroke-width="2.5" fill="none" marker-end="url(#cartArrow)"/>
+
+                <!-- Level 1 Branch Labels -->
+                <rect x="230" y="85" width="65" height="24" rx="12" fill="#FBFAF8" stroke="#EDE7DE" stroke-width="1.5"/>
+                <text x="262" y="101" fill="#0B7B6B" font-family="'IBM Plex Mono', monospace" font-size="11" font-weight="700" text-anchor="middle">Yes (4)</text>
+
+                <rect x="470" y="85" width="65" height="24" rx="12" fill="#FBFAF8" stroke="#EDE7DE" stroke-width="1.5"/>
+                <text x="502" y="101" fill="#D8431F" font-family="'IBM Plex Mono', monospace" font-size="11" font-weight="700" text-anchor="middle">No (6)</text>
+
+                <!-- Root Node: Outlook == Sunny? -->
+                <g filter="url(#cartShadow)">
+                  <rect x="280" y="15" width="200" height="52" rx="12" fill="#1B1712"/>
+                  <text x="380" y="38" fill="#FFFFFF" font-family="'Bricolage Grotesque', sans-serif" font-size="15" font-weight="700" text-anchor="middle">☀️ Outlook == Sunny?</text>
+                  <text x="380" y="55" fill="#E9A825" font-family="'IBM Plex Mono', monospace" font-size="11" font-weight="700" text-anchor="middle">ROOT (Gini Gain = 0.1633)</text>
+                </g>
+
+                <!-- Level 1 Left: Humidity == High? -->
+                <g filter="url(#cartShadow)">
+                  <rect x="115" y="145" width="170" height="50" rx="10" fill="#FFFFFF" stroke="#E9A825" stroke-width="2.5"/>
+                  <text x="200" y="168" fill="#1B1712" font-family="'Bricolage Grotesque', sans-serif" font-size="14.5" font-weight="700" text-anchor="middle">💧 Humidity == High?</text>
+                  <text x="200" y="184" fill="#A9770B" font-family="'IBM Plex Mono', monospace" font-size="10.5" font-weight="700" text-anchor="middle">4 rows (1Y, 3N)</text>
+                </g>
+
+                <!-- Level 1 Right: Wind == Weak? -->
+                <g filter="url(#cartShadow)">
+                  <rect x="465" y="145" width="170" height="50" rx="10" fill="#FFFFFF" stroke="#E9A825" stroke-width="2.5"/>
+                  <text x="550" y="168" fill="#1B1712" font-family="'Bricolage Grotesque', sans-serif" font-size="14.5" font-weight="700" text-anchor="middle">💨 Wind == Weak?</text>
+                  <text x="550" y="184" fill="#A9770B" font-family="'IBM Plex Mono', monospace" font-size="10.5" font-weight="700" text-anchor="middle">6 rows (5Y, 1N)</text>
+                </g>
+
+                <!-- Connectors from Humidity -->
+                <path d="M 160 195 L 105 255" stroke="#8A8177" stroke-width="2.2" fill="none" marker-end="url(#cartArrow)"/>
+                <path d="M 240 195 L 265 255" stroke="#8A8177" stroke-width="2.2" fill="none" marker-end="url(#cartArrow)"/>
+
+                <rect x="100" y="215" width="48" height="20" rx="10" fill="#FBFAF8" stroke="#EDE7DE" stroke-width="1.5"/>
+                <text x="124" y="229" fill="#514A42" font-family="'IBM Plex Mono', monospace" font-size="10" font-weight="700" text-anchor="middle">Yes</text>
+
+                <rect x="250" y="215" width="48" height="20" rx="10" fill="#FBFAF8" stroke="#EDE7DE" stroke-width="1.5"/>
+                <text x="274" y="229" fill="#514A42" font-family="'IBM Plex Mono', monospace" font-size="10" font-weight="700" text-anchor="middle">No</text>
+
+                <!-- Leaves under Humidity -->
+                <g filter="url(#cartShadow)">
+                  <rect x="40" y="260" width="130" height="48" rx="10" fill="#FF5A3C"/>
+                  <text x="105" y="283" fill="#FFFFFF" font-family="'Bricolage Grotesque', sans-serif" font-size="15" font-weight="800" text-anchor="middle">✖ Play: NO</text>
+                  <text x="105" y="298" fill="#FFE7DE" font-family="'IBM Plex Mono', monospace" font-size="10.5" font-weight="600" text-anchor="middle">D1, D2, D8 (Pure)</text>
+                </g>
+
+                <g filter="url(#cartShadow)">
+                  <rect x="200" y="260" width="130" height="48" rx="10" fill="#0EA894"/>
+                  <text x="265" y="283" fill="#FFFFFF" font-family="'Bricolage Grotesque', sans-serif" font-size="15" font-weight="800" text-anchor="middle">✔ Play: YES</text>
+                  <text x="265" y="298" fill="#DFF7F3" font-family="'IBM Plex Mono', monospace" font-size="10.5" font-weight="600" text-anchor="middle">D9 (Pure)</text>
+                </g>
+
+                <!-- Connectors from Wind -->
+                <path d="M 510 195 L 430 255" stroke="#8A8177" stroke-width="2.2" fill="none" marker-end="url(#cartArrow)"/>
+                <path d="M 590 195 L 630 235" stroke="#8A8177" stroke-width="2.2" fill="none" marker-end="url(#cartArrow)"/>
+
+                <rect x="440" y="215" width="48" height="20" rx="10" fill="#FBFAF8" stroke="#EDE7DE" stroke-width="1.5"/>
+                <text x="464" y="229" fill="#514A42" font-family="'IBM Plex Mono', monospace" font-size="10" font-weight="700" text-anchor="middle">Yes</text>
+
+                <rect x="600" y="205" width="48" height="20" rx="10" fill="#FBFAF8" stroke="#EDE7DE" stroke-width="1.5"/>
+                <text x="624" y="219" fill="#514A42" font-family="'IBM Plex Mono', monospace" font-size="10" font-weight="700" text-anchor="middle">No</text>
+
+                <!-- Leaf: Wind == Weak -> YES -->
+                <g filter="url(#cartShadow)">
+                  <rect x="365" y="260" width="145" height="48" rx="10" fill="#0EA894"/>
+                  <text x="437" y="283" fill="#FFFFFF" font-family="'Bricolage Grotesque', sans-serif" font-size="15" font-weight="800" text-anchor="middle">✔ Play: YES</text>
+                  <text x="437" y="298" fill="#DFF7F3" font-family="'IBM Plex Mono', monospace" font-size="10" font-weight="600" text-anchor="middle">D3, D4, D5, D10 (Pure)</text>
+                </g>
+
+                <!-- Sub-node: Outlook == Overcast? -->
+                <g filter="url(#cartShadow)">
+                  <rect x="550" y="240" width="165" height="46" rx="8" fill="#FFFFFF" stroke="#E9A825" stroke-width="2"/>
+                  <text x="632" y="260" fill="#1B1712" font-family="'Bricolage Grotesque', sans-serif" font-size="13.5" font-weight="700" text-anchor="middle">☁️ Overcast?</text>
+                  <text x="632" y="275" fill="#A9770B" font-family="'IBM Plex Mono', monospace" font-size="10" font-weight="700" text-anchor="middle">2 rows (D6, D7)</text>
+                </g>
+
+                <!-- Connectors from Overcast -->
+                <path d="M 590 286 L 550 325" stroke="#8A8177" stroke-width="2" fill="none" marker-end="url(#cartArrow)"/>
+                <path d="M 670 286 L 685 325" stroke="#8A8177" stroke-width="2" fill="none" marker-end="url(#cartArrow)"/>
+
+                <!-- Final Leaves under Overcast -->
+                <g filter="url(#cartShadow)">
+                  <rect x="495" y="325" width="110" height="42" rx="8" fill="#0EA894"/>
+                  <text x="550" y="345" fill="#FFFFFF" font-family="'Bricolage Grotesque', sans-serif" font-size="14" font-weight="800" text-anchor="middle">✔ YES</text>
+                  <text x="550" y="358" fill="#DFF7F3" font-family="'IBM Plex Mono', monospace" font-size="9.5" font-weight="600" text-anchor="middle">D7 (Pure)</text>
+                </g>
+
+                <g filter="url(#cartShadow)">
+                  <rect x="635" y="325" width="110" height="42" rx="8" fill="#FF5A3C"/>
+                  <text x="690" y="345" fill="#FFFFFF" font-family="'Bricolage Grotesque', sans-serif" font-size="14" font-weight="800" text-anchor="middle">✖ NO</text>
+                  <text x="690" y="358" fill="#FFE7DE" font-family="'IBM Plex Mono', monospace" font-size="9.5" font-weight="600" text-anchor="middle">D6 (Pure)</text>
+                </g>
+              </svg>
+            </div>
+
+            <!-- Learned Rules Box -->
+            <div style="margin-top: 1.2rem; background: var(--bg); border: 1px solid var(--line); border-radius: 8px; padding: 0.9rem 1.2rem; font-family: 'IBM Plex Mono', monospace; font-size: 0.84rem; color: var(--ink-soft); line-height: 1.7;">
+              <strong>Learned CART Decision Rules:</strong><br>
+              1. <code>IF (Outlook == Sunny) AND (Humidity == High) &rarr; Play = NO</code><br>
+              2. <code>IF (Outlook == Sunny) AND (Humidity == Normal) &rarr; Play = YES</code><br>
+              3. <code>IF (Outlook != Sunny) AND (Wind == Weak) &rarr; Play = YES</code><br>
+              4. <code>IF (Outlook == Rain) AND (Wind == Strong) &rarr; Play = NO</code><br>
+              5. <code>IF (Outlook == Overcast) AND (Wind == Strong) &rarr; Play = YES</code>
+            </div>
+          </div>
+        </div>
+
+        <!-- =========================================================================
+             THE "R" IN CART: REGRESSION TREES
+             ========================================================================= -->
+        <div class="cart-regression-card fade-up animate-on-scroll" style="margin-top: 2.5rem;">
+          <div style="display: flex; align-items: center; gap: 0.6rem; margin-bottom: 0.6rem;">
+            <span class="icon-badge icon-badge--gold" style="width: 2rem; height: 2rem;">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/><line x1="18" y1="20" x2="18" y2="10"/></svg>
+            </span>
+            <h3 style="font-family: var(--display); font-size: 1.3rem; margin: 0; color: var(--ink);">
+              The &ldquo;R&rdquo; in CART: Predicting Real Numbers (Regression Trees)
+            </h3>
+          </div>
+
+          <p style="font-size: 0.95rem; color: var(--ink-soft); line-height: 1.6; margin: 0 0 1.2rem;">
+            What if your goal is not a "Yes" or "No" label, but a <strong>real continuous number</strong>? For example:
+            <em>&ldquo;How many minutes will someone play tennis today?&rdquo;</em> (30 min? 75 min? 120 min?) or <em>&ldquo;What is the price of this house?&rdquo;</em>
+          </p>
+
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.2rem; margin-bottom: 1.2rem;">
+            <!-- How it splits -->
+            <div style="background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 1.2rem;">
+              <div style="font-family: var(--display); font-weight: 700; font-size: 1rem; color: var(--gold-dark); margin-bottom: 0.4rem;">
+                1. How It Splits: Minimizing Spread
+              </div>
+              <p style="font-size: 0.88rem; color: var(--ink-soft); line-height: 1.6; margin: 0;">
+                Instead of checking for class purity with Gini, CART checks the <strong>average value</strong> of each group. It picks the split that groups similar numbers together, minimizing the <strong>Mean Squared Error (MSE)</strong>.
+              </p>
+            </div>
+
+            <!-- What the leaf predicts -->
+            <div style="background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 1.2rem;">
+              <div style="font-family: var(--display); font-weight: 700; font-size: 1rem; color: var(--teal-dark); margin-bottom: 0.4rem;">
+                2. What the Leaf Predicts: The Group Average
+              </div>
+              <p style="font-size: 0.88rem; color: var(--ink-soft); line-height: 1.6; margin: 0;">
+                When a new instance lands on a leaf node, its predicted number is simply the <strong>Average (Mean)</strong> of all training samples in that leaf!
+              </p>
+            </div>
+          </div>
+
+          <!-- Simple Visual Regression Tree Diagram -->
+          <div style="background: var(--surface); border: 1px dashed var(--line); border-radius: 8px; padding: 1.2rem; text-align: center;">
+            <div style="font-size: 0.88rem; font-weight: 700; color: var(--ink); margin-bottom: 0.8rem;">
+              Example: Predicting Tennis Playing Time (Minutes)
+            </div>
+            <div style="display: flex; justify-content: center; align-items: center; gap: 1.5rem; flex-wrap: wrap;">
+              <div style="background: var(--bg); border: 1.5px solid var(--line); border-radius: 8px; padding: 0.8rem 1.2rem;">
+                <div style="font-size: 0.8rem; color: var(--muted); font-weight: 700;">CONDITION</div>
+                <div style="font-size: 0.95rem; font-weight: 700; color: var(--ink); margin-top: 0.2rem;">Temperature &le; 18&deg;C (Cold)</div>
+                <div style="font-size: 0.8rem; color: var(--coral-dark); font-family: 'IBM Plex Mono', monospace; margin-top: 0.3rem;">Times: [30m, 40m, 35m]</div>
+                <div style="margin-top: 0.5rem; font-weight: 800; font-size: 1.05rem; color: var(--coral-dark);">Predicted: 35 Minutes</div>
+              </div>
+
+              <div style="font-size: 1.5rem; color: var(--muted);">&harr;</div>
+
+              <div style="background: var(--bg); border: 1.5px solid var(--line); border-radius: 8px; padding: 0.8rem 1.2rem;">
+                <div style="font-size: 0.8rem; color: var(--muted); font-weight: 700;">CONDITION</div>
+                <div style="font-size: 0.95rem; font-weight: 700; color: var(--ink); margin-top: 0.2rem;">Temperature &gt; 18&deg;C (Warm)</div>
+                <div style="font-size: 0.8rem; color: var(--teal-dark); font-family: 'IBM Plex Mono', monospace; margin-top: 0.3rem;">Times: [90m, 110m, 100m]</div>
+                <div style="margin-top: 0.5rem; font-weight: 800; font-size: 1.05rem; color: var(--teal-dark);">Predicted: 100 Minutes</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- =========================================================================
+             PRUNING IN CART: COST COMPLEXITY (THE SIMPLICITY RULE)
+             ========================================================================= -->
+        <h3 class="fade-up animate-on-scroll" style="margin-top: 2.8rem;">How CART Stops Overfitting: The "Simplicity Rule"</h3>
+        <p class="fade-up animate-on-scroll">
+          Just like ID3, if you let CART run forever without stopping, it will grow tiny branches to isolate every single weird row in your training set.
+        </p>
+
+        <div class="definition fade-up animate-on-scroll" style="margin-top: 1rem; box-shadow: none;">
+          <div class="definition__label">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><line x1="20" y1="4" x2="8.12" y2="15.88"/><line x1="14.47" y1="14.48" x2="20" y2="20"/><line x1="8.12" y1="8.12" x2="12" y2="12"/></svg>
+            Cost-Complexity Pruning (The "Tree Tax")
+          </div>
+          <p style="margin-bottom: 0.8rem;">
+            Think of writing an essay: A 100-page essay mentions every single trivial fact, but nobody can read it. A clean 3-page summary captures the big picture.
+          </p>
+          <p style="margin-bottom: 0.8rem;">
+            CART uses a clever mathematical method called <strong>Cost-Complexity Pruning</strong>:
+          </p>
+          <ul style="margin: 0 0 0.8rem 1.2rem; padding: 0; line-height: 1.6; font-size: 0.92rem; color: var(--ink-soft);">
+            <li>CART first grows a full, deep tree.</li>
+            <li>Then, it attaches a <strong>"simplicity penalty"</strong> (&alpha;) to every single branch. Every extra branch has to "pay rent".</li>
+            <li>If a branch does not improve prediction accuracy enough to justify its cost, <strong>CART snips it off</strong>!</li>
+          </ul>
+          <div style="background: var(--bg); border: 1px dashed var(--line); border-radius: 6px; padding: 0.6rem 0.9rem; font-family: 'IBM Plex Mono', monospace; font-size: 0.85rem; color: var(--ink);">
+            Total Cost = Training Errors + ( &alpha; &times; Number of Leaves )
+          </div>
+        </div>
+
+        <!-- =========================================================================
+             FINAL SUMMARY COMPARISON TABLE: ID3 vs C4.5 vs CART
+             ========================================================================= -->
+        <div class="id3-c45-table-wrap fade-up animate-on-scroll" style="margin-top: 2.8rem;">
+          <div class="id3-c45-table-head">
+            <h4>The Grand Summary: ID3 vs. C4.5 vs. CART</h4>
+            <p>A simple side-by-side comparison of all three landmark algorithms:</p>
+          </div>
+          <div class="id3-c45-table-responsive">
+            <table class="id3-c45-table">
+              <thead>
+                <tr>
+                  <th style="width: 22%;">Feature</th>
+                  <th style="width: 26%;">ID3 (1986)</th>
+                  <th style="width: 26%;">C4.5 (1993)</th>
+                  <th style="width: 26%;">CART (Modern Standard)</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>Author</strong></td>
+                  <td>Ross Quinlan</td>
+                  <td>Ross Quinlan</td>
+                  <td>Breiman, Friedman, Olshen, Stone</td>
+                </tr>
+                <tr>
+                  <td><strong>Splitting Metric</strong></td>
+                  <td>Information Gain (Entropy)</td>
+                  <td>Gain Ratio (Entropy &divide; SplitInfo)</td>
+                  <td><span class="id3-c45-badge-c45">Gini Impurity</span> (or MSE for numbers)</td>
+                </tr>
+                <tr>
+                  <td><strong>Split Style</strong></td>
+                  <td>Multi-way (many branches)</td>
+                  <td>Multi-way &amp; numeric cutoffs</td>
+                  <td><span class="id3-c45-badge-c45">Strictly Binary</span> (Always 2 branches)</td>
+                </tr>
+                <tr>
+                  <td><strong>Supported Tasks</strong></td>
+                  <td>Classification only</td>
+                  <td>Classification only</td>
+                  <td><span class="id3-c45-badge-c45">Classification &amp; Regression!</span></td>
+                </tr>
+                <tr>
+                  <td><strong>Handles Continuous Numbers?</strong></td>
+                  <td>❌ No (categories only)</td>
+                  <td>✔️ Yes (finds cutoffs)</td>
+                  <td>✔️ Yes (binary midpoint cutoffs)</td>
+                </tr>
+                <tr>
+                  <td><strong>Pruning (Stops Overfitting)</strong></td>
+                  <td>❌ None</td>
+                  <td>✔️ Pessimistic Error Pruning</td>
+                  <td>✔️ Cost-Complexity Pruning</td>
+                </tr>
+                <tr>
+                  <td><strong>Where It Is Used Today</strong></td>
+                  <td>Historical foundation</td>
+                  <td>Academic reference (Weka J48)</td>
+                  <td><span class="id3-c45-badge-c45">Python Scikit-Learn</span> &bull; Base for Random Forests &amp; XGBoost!</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Takeaway Note -->
+        <div class="fade-up animate-on-scroll" style="margin-top: 1.5rem; background: rgba(14, 168, 148, 0.08); border-left: 3px solid var(--teal); border-radius: 6px; padding: 0.85rem 1.2rem; font-size: 0.92rem; color: var(--ink); line-height: 1.6;">
+          🎉 <strong>The Big Takeaway:</strong> ID3 gave us the idea of growing trees with entropy. C4.5 fixed the multi-valued attribute trap and introduced numbers. But <strong>CART gave us clean, blazing-fast, strictly binary trees that can predict both categories and numbers</strong> — making it the foundational building block for modern ensemble algorithms like <strong>Random Forests</strong> and <strong>Gradient Boosting (XGBoost)</strong>!
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ============ LESSON FOOTER ============ -->
+    <footer class="lesson__footer">
+      <a href="c45-algorithm.html" class="lesson__footer-prev" id="prevLessonLink">
+        <span class="lesson__footer-prev-arrow">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5"/><path d="m12 19-7-7 7-7"/></svg>
+        </span>
+        <div class="lesson__footer-prev-text">
+          <span class="lesson__footer-prev-label">Previous part</span>
+          <span class="lesson__footer-prev-name">4.4 C4.5 Algorithm</span>
+        </div>
+      </a>
+
+      <div class="lesson__footer-progress">Part 5 of 6 &bull; Supervised Learning</div>
+
+      <a href="regression-analysis.html" class="lesson__footer-next" id="nextLessonLink">
+        <div class="lesson__footer-next-text">
+          <span class="lesson__footer-next-label">Next part</span>
+          <span class="lesson__footer-next-name">4.6 Introduction to Regression</span>
+        </div>
+        <span class="lesson__footer-arrow">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+        </span>
+      </a>
+    </footer>
+
+  </main>
+</div>
+
+<script src="main.js"></script>
+</body>
+</html>

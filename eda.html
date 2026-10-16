@@ -1,0 +1,1105 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Exploratory Data Analysis (EDA) – Learning Machines</title>
+<meta name="description" content="A comprehensive masterclass on Exploratory Data Analysis (EDA): Discovering patterns, checking distributions, detecting outliers with IQR, computing correlation matrices, and understanding Fisher's Iris dataset with runnable Python code.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,600;12..96,700&family=Figtree:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="grain" aria-hidden="true"></div>
+
+<div class="progress-rail" aria-hidden="true"><div class="progress-fill" id="progressFill"></div></div>
+
+<header class="top-bar">
+  <div class="top-bar__brand">
+    <span class="course-nav__mark">LM</span>
+    <span class="top-bar__title">Learning Machines</span>
+  </div>
+  <div class="top-bar__controls">
+    <span class="top-bar__time" id="readTime">~10 min read</span>
+    <button class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="courseNav">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="4" x2="20" y1="6" y2="6"/><line x1="4" x2="20" y1="12" y2="12"/><line x1="4" x2="20" y1="18" y2="18"/></svg>
+      <span class="nav-toggle__label">Course map</span>
+    </button>
+  </div>
+</header>
+
+<div class="nav-overlay" id="navOverlay" aria-hidden="true"></div>
+
+<!-- ============ SLIDE-OVER SIDEBAR ============ -->
+<aside class="course-nav" id="courseNav">
+  <div class="course-nav__header">
+    <h2 class="course-nav__title-side">Course map</h2>
+    <button class="nav-close" id="navClose" aria-label="Close nav">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
+    </button>
+  </div>
+  <p class="course-nav__tagline">A slow, careful path through machine learning, start to finish.</p>
+
+  <ol class="course-nav__list">
+    <li class="course-nav__item is-completed">
+      <a href="index.html" class="course-nav__inner-link">
+        <span class="course-nav__num">1</span>
+        <div>
+          <span class="course-nav__name">Introduction</span>
+          <span class="course-nav__state">completed</span>
+        </div>
+      </a>
+    </li>
+    <li class="course-nav__item is-completed">
+      <a href="data-preprocessing.html" class="course-nav__inner-link">
+        <span class="course-nav__num">2</span>
+        <div>
+          <span class="course-nav__name">Data Preprocessing</span>
+          <span class="course-nav__state">completed</span>
+        </div>
+      </a>
+    </li>
+    <li class="course-nav__item is-active">
+      <span class="course-nav__num">3</span>
+      <div>
+        <span class="course-nav__name">Exploratory Data Analysis</span>
+        <span class="course-nav__state">reading now</span>
+      </div>
+    </li>
+    <li class="course-nav__item is-available">
+      <a href="supervised-learning.html" class="course-nav__inner-link">
+        <span class="course-nav__num">4</span>
+        <div>
+          <span class="course-nav__name">Supervised Learning</span>
+          <span class="course-nav__state">available now</span>
+        </div>
+      </a>
+    </li>
+    <ol class="course-nav__sub-list">
+      <li class="course-nav__sub-item">
+        <a href="supervised-learning.html">
+          <span class="course-nav__sub-num">4.1</span>
+          <div>
+            <span class="course-nav__sub-name">Introduction</span>
+            <span class="course-nav__state">available now</span>
+          </div>
+        </a>
+      </li>
+      <li class="course-nav__sub-item">
+        <a href="classification.html">
+          <span class="course-nav__sub-num">4.2</span>
+          <div>
+            <span class="course-nav__sub-name">Classification &amp; Decision Trees</span>
+            <span class="course-nav__state">available now</span>
+          </div>
+        </a>
+      </li>
+      <li class="course-nav__sub-item">
+        <a href="id3-algorithm.html">
+          <span class="course-nav__sub-num">4.3</span>
+          <div>
+            <span class="course-nav__sub-name">ID3 Algorithm</span>
+            <span class="course-nav__state">available now</span>
+          </div>
+        </a>
+      </li>
+      <li class="course-nav__sub-item">
+        <a href="c45-algorithm.html">
+          <span class="course-nav__sub-num">4.4</span>
+          <div>
+            <span class="course-nav__sub-name">C4.5 Algorithm</span>
+            <span class="course-nav__state">available now</span>
+          </div>
+        </a>
+      </li>
+      <li class="course-nav__sub-item">
+        <a href="cart-algorithm.html">
+          <span class="course-nav__sub-num">4.5</span>
+          <div>
+            <span class="course-nav__sub-name">CART Algorithm</span>
+            <span class="course-nav__state">available now</span>
+          </div>
+        </a>
+      </li>
+      <li class="course-nav__sub-item">
+        <a href="regression-analysis.html">
+          <span class="course-nav__sub-num">4.6</span>
+          <div>
+            <span class="course-nav__sub-name">Introduction to Regression</span>
+            <span class="course-nav__state">available now</span>
+          </div>
+        </a>
+      </li>
+      <li class="course-nav__sub-item">
+        <a href="simple-linear-regression.html">
+          <span class="course-nav__sub-num">4.7</span>
+          <div>
+            <span class="course-nav__sub-name">Simple Linear Regression</span>
+            <span class="course-nav__state">available now</span>
+          </div>
+        </a>
+      </li>
+      <li class="course-nav__sub-item">
+        <a href="polynomial-regression.html">
+          <span class="course-nav__sub-num">4.8</span>
+          <div>
+            <span class="course-nav__sub-name">Polynomial Regression</span>
+            <span class="course-nav__state">available now</span>
+          </div>
+        </a>
+      </li>
+    </ol>
+    <li class="course-nav__item">
+      <a href="unsupervised-learning.html" class="course-nav__inner-link">
+        <span class="course-nav__num">5</span>
+        <div>
+          <span class="course-nav__name">Unsupervised Learning</span>
+          <span class="course-nav__state">available now</span>
+        </div>
+      </a>
+    </li>
+    <ol class="course-nav__sub-list">
+      <li class="course-nav__sub-item">
+        <a href="unsupervised-learning.html">
+          <span class="course-nav__sub-num">5.1</span>
+          <div>
+            <span class="course-nav__sub-name">Introduction</span>
+            <span class="course-nav__state">available now</span>
+          </div>
+        </a>
+      </li>
+      <li class="course-nav__sub-item">
+        <a href="hierarchical-clustering.html">
+          <span class="course-nav__sub-num">5.2</span>
+          <div>
+            <span class="course-nav__sub-name">Hierarchical Clustering</span>
+            <span class="course-nav__state">available now</span>
+          </div>
+        </a>
+      </li>
+    </ol>
+    <li class="course-nav__item is-locked">
+      <span class="course-nav__num">6</span>
+      <div>
+        <span class="course-nav__name">Reinforcement Learning</span>
+        <span class="course-nav__state">
+          <svg class="course-nav__lock" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          coming soon
+        </span>
+      </div>
+    </li>
+  </ol>
+</aside>
+
+<div class="shell">
+
+  <!-- ============ MAIN ARTICLE ============ -->
+  <main class="lesson">
+
+    <header class="lesson__header">
+      <span class="lesson__eyebrow-free-title">
+        <h1>Exploratory Data Analysis (EDA)</h1>
+        <svg class="title-underline" viewBox="0 0 520 14" preserveAspectRatio="none" aria-hidden="true">
+          <path d="M4 9 C 120 2, 260 13, 400 6 C 440 4, 480 8, 516 5"/>
+        </svg>
+      </span>
+      <p class="lesson__dek">Before training any machine learning model, exploratory data analysis is where we summarize main data characteristics, inspect distributions, spot anomalies, and uncover relationships through statistical graphics.</p>
+    </header>
+
+    <!-- ---- Section 1: Philosophy & The 4 Core Objectives ---- -->
+    <section class="block" id="eda-objectives">
+      <div class="block__body">
+        <h2 class="fade-up animate-on-scroll">
+          <span class="icon-badge icon-badge--teal">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+          </span>
+          What is EDA &amp; Why Does it Matter?
+        </h2>
+        
+        <p class="fade-up animate-on-scroll">
+          <strong>Exploratory Data Analysis (EDA)</strong> was pioneered by the legendary statistician John Tukey. It emphasizes looking directly at the data before formulating formal statistical models or training algorithms.
+        </p>
+
+        <!-- =========================================================
+             FEATURED SPOTLIGHT: THE FOREST METAPHOR SHOWCASE
+             ========================================================= -->
+        <div class="forest-metaphor-card fade-up animate-on-scroll">
+          <div class="forest-metaphor-card__glow" aria-hidden="true"></div>
+          
+          <div class="forest-metaphor-card__header">
+            <div class="forest-badge">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="m8 3 4 8 5-5 5 15H2L8 3z"/>
+              </svg>
+              <span>The Foundational Caution</span>
+            </div>
+            <span class="forest-quote-mark">“</span>
+          </div>
+
+          <blockquote class="forest-metaphor-card__quote">
+            Feeding raw data into a machine learning model without EDA is like 
+            <span class="forest-highlight">navigating an unfamiliar forest in pitch darkness</span>.
+          </blockquote>
+
+          <p class="forest-metaphor-card__subtext">
+            Without shining a light on your dataset first, you have zero visibility into the terrain ahead. You risk blundering into statistical pitfalls that silently sabotage model accuracy:
+          </p>
+
+          <div class="forest-hazards-grid">
+            <div class="forest-hazard-item">
+              <div class="forest-hazard-icon forest-hazard-icon--danger">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+              </div>
+              <div class="forest-hazard-content">
+                <h5>Hidden Pits: Missing Values</h5>
+                <p>Undetected NaNs and blanks crash math routines or silently bias gradient updates.</p>
+              </div>
+            </div>
+
+            <div class="forest-hazard-item">
+              <div class="forest-hazard-icon forest-hazard-icon--danger">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+              </div>
+              <div class="forest-hazard-content">
+                <h5>Sudden Obstacles: Outliers</h5>
+                <p>Severe anomalies pull decision boundaries away from reality and warp model weights.</p>
+              </div>
+            </div>
+
+            <div class="forest-hazard-item">
+              <div class="forest-hazard-icon forest-hazard-icon--warning">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+              </div>
+              <div class="forest-hazard-content">
+                <h5>Optical Illusions: Collinearity</h5>
+                <p>Redundant correlated features inflate coefficient variance without providing real signal.</p>
+              </div>
+            </div>
+
+            <div class="forest-hazard-item">
+              <div class="forest-hazard-icon forest-hazard-icon--safe">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+              </div>
+              <div class="forest-hazard-content">
+                <h5>Distorted Landscapes: Skew</h5>
+                <p>Unchecked distributions mislead distance metrics and deceive classification baselines.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="forest-lantern-banner">
+            <div class="forest-lantern-icon">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/>
+                <path d="M9 18h6"/><path d="M10 22h4"/>
+              </svg>
+            </div>
+            <div>
+              <strong>EDA is your lantern:</strong> By computing statistical summaries, inspecting histograms, checking class balance, and rendering correlation matrices first, you illuminate the data terrain and map the exact route to model success.
+            </div>
+          </div>
+        </div>
+
+        <div class="definition fade-up animate-on-scroll" style="margin: 1.8rem 0;">
+          <div class="definition__label">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+            Core Definition
+          </div>
+          <p>
+            <strong>EDA</strong> is the critical initial investigation of a dataset to discover underlying structures, spot anomalies, test fundamental assumptions, and uncover variable relationships using quantitative summary statistics and data visualizations.
+          </p>
+        </div>
+
+        <h3 class="fade-up animate-on-scroll" style="font-family:var(--display); font-size:1.3rem; margin-top:2.2rem; color:var(--ink);">
+          The 4 Core Objectives of EDA
+        </h3>
+
+        <div class="facts-lead-card fade-up animate-on-scroll">
+          <p>
+            Whenever data scientists inspect a new dataset, they systematically answer four fundamental questions:
+          </p>
+        </div>
+
+        <!-- 4 Objectives Cards Grid -->
+        <div class="iris-anatomy-grid fade-up animate-on-scroll">
+          <div class="iris-anatomy-card">
+            <div class="iris-anatomy-card__header">
+              <h4 class="iris-anatomy-card__title">1. Maximize Insight</h4>
+              <span class="iris-anatomy-tag iris-anatomy-tag--sepal">Understanding</span>
+            </div>
+            <p style="font-size:0.92rem; color:var(--ink-soft); margin:0; line-height:1.5;">
+              Gain a deep, intuitive understanding of variables, column distributions, scales, and how different features interact with one another.
+            </p>
+          </div>
+
+          <div class="iris-anatomy-card">
+            <div class="iris-anatomy-card__header">
+              <h4 class="iris-anatomy-card__title">2. Assess Data Quality</h4>
+              <span class="iris-anatomy-tag iris-anatomy-tag--petal">Integrity</span>
+            </div>
+            <p style="font-size:0.92rem; color:var(--ink-soft); margin:0; line-height:1.5;">
+              Pinpoint data collection errors, missing values (<code>NaN</code>s), duplicate rows, incorrect data types, and formatting inconsistencies that require cleaning.
+            </p>
+          </div>
+
+          <div class="iris-anatomy-card">
+            <div class="iris-anatomy-card__header">
+              <h4 class="iris-anatomy-card__title">3. Detect Outliers</h4>
+              <span class="iris-anatomy-tag iris-anatomy-tag--target">Anomalies</span>
+            </div>
+            <p style="font-size:0.92rem; color:var(--ink-soft); margin:0; line-height:1.5;">
+              Detect unusual, extreme data points using the Interquartile Range (IQR) rule and boxplots that might distort model weights and gradient calculations.
+            </p>
+          </div>
+
+          <div class="iris-anatomy-card">
+            <div class="iris-anatomy-card__header">
+              <h4 class="iris-anatomy-card__title">4. Generate Hypotheses</h4>
+              <span class="iris-anatomy-tag" style="background:rgba(16,185,129,0.12); color:#059669;">Modeling</span>
+            </div>
+            <p style="font-size:0.92rem; color:var(--ink-soft); margin:0; line-height:1.5;">
+              Ask smart questions about the data, spot clear patterns or natural groups, and easily pick the right machine learning model for the job.
+            </p>
+          </div>
+        </div>
+
+      </div>
+    </section>
+    <!-- ---- Section 2: Valuable Charts & Plots in EDA ---- -->
+    <section class="block" id="eda-charts-guide">
+      <div class="block__body">
+        <h2 class="fade-up animate-on-scroll">
+          <span class="icon-badge icon-badge--teal">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+          </span>
+          Valuable Charts &amp; Plots in EDA
+        </h2>
+        <p class="fade-up animate-on-scroll">
+          Choosing the right visualization is the fastest way to understand your data. Each chart type serves a specific data type and answers distinct exploratory questions.
+        </p>
+        <p class="fade-up animate-on-scroll" style="font-size:0.92rem; color:var(--muted);">
+          Select any chart tab below to explore its live mini-visualization and key takeaways, or review the complete cheat sheet table at the bottom.
+        </p>
+
+        <!-- Entire Interactive Charts Explorer Container -->
+        <div class="charts-explorer-wrapper-v2 fade-up animate-on-scroll" id="chartsExplorer">
+
+          <!-- 1. Horizontal Chart Switcher Tabs -->
+          <div class="chart-tabs-bar" id="chartTabsBar" role="tablist" aria-label="EDA Chart Types">
+            <button class="chart-tab-btn is-active" data-chart="histogram" role="tab" aria-selected="true">
+              <span class="chart-tab-icon">📊</span>
+              <span class="chart-tab-text">Histogram</span>
+            </button>
+            <button class="chart-tab-btn" data-chart="boxplot" role="tab" aria-selected="false">
+              <span class="chart-tab-icon">📦</span>
+              <span class="chart-tab-text">Box plot</span>
+            </button>
+            <button class="chart-tab-btn" data-chart="scatter" role="tab" aria-selected="false">
+              <span class="chart-tab-icon">🔵</span>
+              <span class="chart-tab-text">Scatter plot</span>
+            </button>
+            <button class="chart-tab-btn" data-chart="line" role="tab" aria-selected="false">
+              <span class="chart-tab-icon">📈</span>
+              <span class="chart-tab-text">Line chart</span>
+            </button>
+            <button class="chart-tab-btn" data-chart="bar" role="tab" aria-selected="false">
+              <span class="chart-tab-icon">📊</span>
+              <span class="chart-tab-text">Bar chart</span>
+            </button>
+            <button class="chart-tab-btn" data-chart="pie" role="tab" aria-selected="false">
+              <span class="chart-tab-icon">🥧</span>
+              <span class="chart-tab-text">Pie chart</span>
+            </button>
+            <button class="chart-tab-btn" data-chart="heatmap" role="tab" aria-selected="false">
+              <span class="chart-tab-icon">🔥</span>
+              <span class="chart-tab-text">Heatmap</span>
+            </button>
+            <button class="chart-tab-btn" data-chart="countplot" role="tab" aria-selected="false">
+              <span class="chart-tab-icon">📍</span>
+              <span class="chart-tab-text">Count plot</span>
+            </button>
+          </div>
+
+          <!-- 2. Wide Interactive Chart Studio Showcase Card -->
+          <div class="chart-studio-card" id="chartStudioCard">
+            <!-- Studio Left: Interactive Plot Area -->
+            <div class="studio-plot-pane">
+              <div class="studio-plot-header">
+                <div class="studio-plot-title-group">
+                  <span class="studio-plot-icon" id="studioPlotIcon">📊</span>
+                  <div>
+                    <h3 class="studio-plot-name" id="studioPlotName">Histogram</h3>
+                    <span class="studio-plot-tag" id="studioPlotTag">Continuous Distribution &amp; Shape</span>
+                  </div>
+                </div>
+                <span class="studio-live-pill">
+                  <span class="studio-pulse-dot"></span> Live Interactive Plot
+                </span>
+              </div>
+
+              <!-- SVG Canvas Wrapper -->
+              <div class="studio-canvas-wrapper" id="studioCanvasWrapper">
+                <!-- Dynamically populated SVG -->
+              </div>
+
+              <!-- Hover Tooltip Bar -->
+              <div class="studio-tooltip-bar" id="studioTooltipBar">
+                <span class="tooltip-dot"></span>
+                <span id="studioTooltipText">Hover over chart elements to inspect values</span>
+              </div>
+            </div>
+
+            <!-- Studio Right: Deep-Dive Breakdown Pane -->
+            <div class="studio-info-pane">
+              <div class="studio-info-grid">
+                <div class="studio-info-card studio-info-card--scope">
+                  <div class="studio-info-label">
+                    <span>🎯</span>
+                    <span>Best Used For</span>
+                  </div>
+                  <div class="studio-info-val" id="studioScope">One numerical variable (e.g. Sepal Length)</div>
+                </div>
+
+                <div class="studio-info-card studio-info-card--learn">
+                  <div class="studio-info-label">
+                    <span>💡</span>
+                    <span>What You Learn</span>
+                  </div>
+                  <div class="studio-info-val" id="studioLearn">Distribution, skewness, shape &amp; modal peaks</div>
+                </div>
+              </div>
+
+              <div class="studio-takeaway-box">
+                <div class="studio-takeaway-label">📌 Key EDA Takeaway</div>
+                <p class="studio-takeaway-desc" id="studioTakeaway">
+                  Splits a continuous variable into equal intervals (bins). The height of each bar reveals where values cluster, whether data is symmetric (normal bell curve) or skewed, and where peak modes occur.
+                </p>
+              </div>
+
+              <div class="studio-code-box">
+                <div class="studio-code-label">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+                  <span>Python Seaborn / Pandas Syntax</span>
+                </div>
+                <code class="studio-code-snippet" id="studioCodeSnippet">sns.histplot(df['sepal length (cm)'], kde=True)</code>
+              </div>
+            </div>
+          </div>
+
+          <!-- 3. Full-Width Quick-Reference Comparison Table -->
+          <div class="charts-table-section">
+            <div class="charts-table-header-row">
+              <h4 class="charts-table-title">Quick-Reference Comparison Cheat Sheet</h4>
+              <span class="charts-table-hint">Click any row below to load its live plot above</span>
+            </div>
+            <div class="charts-table-container">
+              <table class="eda-cheat-table--full" id="edaCheatTable">
+                <thead>
+                  <tr>
+                    <th style="width: 22%;">Chart</th>
+                    <th style="width: 28%;">Best used for</th>
+                    <th style="width: 36%;">What you learn</th>
+                    <th style="width: 14%; text-align: center;">Live Demo</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="chart-row is-active" data-chart="histogram">
+                    <td>
+                      <div class="col-chart-name"><span>📊</span> <strong>Histogram</strong></div>
+                    </td>
+                    <td><span class="chart-type-tag chart-type-tag--num">One numerical variable</span></td>
+                    <td class="col-learn">Distribution, skewness, shape</td>
+                    <td style="text-align: center;"><button class="table-view-btn">Inspect ↗</button></td>
+                  </tr>
+                  <tr class="chart-row" data-chart="boxplot">
+                    <td>
+                      <div class="col-chart-name"><span>📦</span> <strong>Box plot</strong></div>
+                    </td>
+                    <td><span class="chart-type-tag chart-type-tag--num">One numerical variable</span></td>
+                    <td class="col-learn">Median, spread, outliers</td>
+                    <td style="text-align: center;"><button class="table-view-btn">Inspect ↗</button></td>
+                  </tr>
+                  <tr class="chart-row" data-chart="scatter">
+                    <td>
+                      <div class="col-chart-name"><span>🔵</span> <strong>Scatter plot</strong></div>
+                    </td>
+                    <td><span class="chart-type-tag chart-type-tag--bi">Two numerical variables</span></td>
+                    <td class="col-learn">Relationship/correlation</td>
+                    <td style="text-align: center;"><button class="table-view-btn">Inspect ↗</button></td>
+                  </tr>
+                  <tr class="chart-row" data-chart="line">
+                    <td>
+                      <div class="col-chart-name"><span>📈</span> <strong>Line chart</strong></div>
+                    </td>
+                    <td><span class="chart-type-tag chart-type-tag--time">Data over time</span></td>
+                    <td class="col-learn">Trends over time</td>
+                    <td style="text-align: center;"><button class="table-view-btn">Inspect ↗</button></td>
+                  </tr>
+                  <tr class="chart-row" data-chart="bar">
+                    <td>
+                      <div class="col-chart-name"><span>📊</span> <strong>Bar chart</strong></div>
+                    </td>
+                    <td><span class="chart-type-tag chart-type-tag--cat">Categorical variable</span></td>
+                    <td class="col-learn">Frequency/count of categories</td>
+                    <td style="text-align: center;"><button class="table-view-btn">Inspect ↗</button></td>
+                  </tr>
+                  <tr class="chart-row" data-chart="pie">
+                    <td>
+                      <div class="col-chart-name"><span>🥧</span> <strong>Pie chart</strong></div>
+                    </td>
+                    <td><span class="chart-type-tag chart-type-tag--prop">Categorical proportions</span></td>
+                    <td class="col-learn">Percentage/share</td>
+                    <td style="text-align: center;"><button class="table-view-btn">Inspect ↗</button></td>
+                  </tr>
+                  <tr class="chart-row" data-chart="heatmap">
+                    <td>
+                      <div class="col-chart-name"><span>🔥</span> <strong>Heatmap</strong></div>
+                    </td>
+                    <td><span class="chart-type-tag chart-type-tag--multi">Many numerical variables</span></td>
+                    <td class="col-learn">Correlations/patterns</td>
+                    <td style="text-align: center;"><button class="table-view-btn">Inspect ↗</button></td>
+                  </tr>
+                  <tr class="chart-row" data-chart="countplot">
+                    <td>
+                      <div class="col-chart-name"><span>📍</span> <strong>Count plot</strong></div>
+                    </td>
+                    <td><span class="chart-type-tag chart-type-tag--cat">Categorical variable</span></td>
+                    <td class="col-learn">Number of observations per category</td>
+                    <td style="text-align: center;"><button class="table-view-btn">Inspect ↗</button></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ---- Section 3: Interactive 10-Step EDA Pipeline ---- -->
+    <section class="block" id="eda-pipeline-section">
+      <div class="block__body">
+        <h2 class="fade-up animate-on-scroll">
+          <span class="icon-badge icon-badge--coral">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+          </span>
+          The 10-Step Interactive EDA Pipeline
+        </h2>
+        <p class="fade-up animate-on-scroll">
+          Below is the complete 10-step Exploratory Data Analysis workflow corresponding exactly to your project's EDA notebook. Every single operation is explained in plain, simple terms.
+        </p>
+        <p class="fade-up animate-on-scroll" style="font-size:0.92rem; color:var(--muted);">
+          Select any task from the interactive stepper below, read its simple explanation, and click <strong>"▶ Run Code"</strong> to watch the Python code execute in real-time and render the live output transformations.
+        </p>
+      </div>
+
+      <!-- Interactive Pipeline Container -->
+      <div class="pipeline-container fade-up animate-on-scroll" id="edaPipelineContainer">
+          
+          <!-- Stepper Tab Bar (10 steps) -->
+          <div class="eda-stepper" role="tablist" aria-label="EDA steps">
+            <button class="eda-step-btn is-active" data-step="1" role="tab" aria-selected="true">
+              <span class="eda-step-btn__num">1</span>
+              <span>Libraries</span>
+            </button>
+            <button class="eda-step-btn" data-step="2" role="tab" aria-selected="false">
+              <span class="eda-step-btn__num">2</span>
+              <span>Load Data</span>
+            </button>
+            <button class="eda-step-btn" data-step="3" role="tab" aria-selected="false">
+              <span class="eda-step-btn__num">3</span>
+              <span>Info &amp; Stats</span>
+            </button>
+            <button class="eda-step-btn" data-step="4" role="tab" aria-selected="false">
+              <span class="eda-step-btn__num">4</span>
+              <span>Missing Check</span>
+            </button>
+            <button class="eda-step-btn" data-step="5" role="tab" aria-selected="false">
+              <span class="eda-step-btn__num">5</span>
+              <span>Histograms</span>
+            </button>
+            <button class="eda-step-btn" data-step="6" role="tab" aria-selected="false">
+              <span class="eda-step-btn__num">6</span>
+              <span>Class Balance</span>
+            </button>
+            <button class="eda-step-btn" data-step="7" role="tab" aria-selected="false">
+              <span class="eda-step-btn__num">7</span>
+              <span>Pairplot</span>
+            </button>
+            <button class="eda-step-btn" data-step="8" role="tab" aria-selected="false">
+              <span class="eda-step-btn__num">8</span>
+              <span>Correlation</span>
+            </button>
+            <button class="eda-step-btn" data-step="9" role="tab" aria-selected="false">
+              <span class="eda-step-btn__num">9</span>
+              <span>Outliers &amp; IQR</span>
+            </button>
+            <button class="eda-step-btn" data-step="10" role="tab" aria-selected="false">
+              <span class="eda-step-btn__num">10</span>
+              <span>Species Insights</span>
+            </button>
+          </div>
+
+          <!-- Step Info Card -->
+          <div class="pipeline-step-content">
+            <div class="pipeline-step-meta">
+              <span class="pipeline-badge" id="edaStepBadge">Task 1 of 10</span>
+              <div class="pipeline-nav-arrows">
+                <button class="pipe-nav-btn" id="edaPrevStepBtn" disabled aria-label="Previous step">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5"/><path d="m12 19-7-7 7-7"/></svg>
+                  <span>Prev</span>
+                </button>
+                <button class="pipe-nav-btn" id="edaNextStepBtn" aria-label="Next step">
+                  <span>Next</span>
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+                </button>
+              </div>
+            </div>
+
+            <h3 class="pipeline-step-title" id="edaStepTitle">1. Import Foundational Libraries</h3>
+            <p class="pipeline-step-desc" id="edaStepDesc">
+              Loading the foundational Python libraries for exploratory data science: NumPy (vector &amp; matrix math), Pandas (dataframes &amp; tabular manipulation), Matplotlib (foundational figure rendering), and Seaborn (advanced statistical visualization including heatmaps and pairplots).
+            </p>
+            <div class="pipeline-step-tip" id="edaStepTip">
+              💡 <strong>Key Takeaway:</strong> In modern data science, Seaborn acts as a high-level statistical wrapper over Matplotlib — Seaborn designs beautiful statistical plots, while Matplotlib controls figure geometry and labels.
+            </div>
+          </div>
+
+          <!-- Code Sandbox / Editor & Console -->
+          <div class="code-sandbox">
+            <div class="code-sandbox__header">
+              <div class="code-sandbox__mac-dots" aria-hidden="true">
+                <span class="mac-dot mac-dot--red"></span>
+                <span class="mac-dot mac-dot--yellow"></span>
+                <span class="mac-dot mac-dot--green"></span>
+              </div>
+              <div class="code-sandbox__filename" id="edaSandboxFilename">step_1_libraries.py</div>
+              <div class="code-sandbox__actions">
+                <button class="copy-code-btn" id="edaCopyCodeBtn" title="Copy code to clipboard">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>
+                  <span id="edaCopyBtnText">Copy</span>
+                </button>
+                <button class="run-code-btn" id="edaRunCodeBtn">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+                  <span>Run Code</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Code Editor Viewer -->
+            <div class="code-sandbox__editor">
+              <pre><code id="edaCodeSnippet" class="language-python"># Step 1: Import foundational libraries
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+# Show plots inline (when in Jupyter/Colab)
+# %matplotlib inline
+
+print("Libraries imported successfully:")
+print("• NumPy:", np.__version__)
+print("• Pandas:", pd.__version__)
+print("• Matplotlib:", plt.matplotlib.__version__)
+print("• Seaborn:", sns.__version__)</code></pre>
+            </div>
+
+            <!-- Execution Console Output -->
+            <div class="code-sandbox__console">
+              <div class="console-header">
+                <span class="console-title">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="4 17 10 11 4 5"/><line x1="12" y1="19" x2="20" y2="19"/></svg>
+                  Output Console
+                </span>
+                <span class="console-status console-status--ready" id="edaConsoleStatus">Ready to run</span>
+              </div>
+              <div class="console-output" id="edaConsoleOutput">Click "▶ Run Code" above to execute this task.</div>
+            </div>
+          </div>
+
+      </div>
+    </section>
+
+    <!-- ---- Section 4: Deep-Dive Visual Analytics Gallery ---- -->
+    <section class="block" id="eda-visual-gallery">
+      <div class="block__body">
+        <h2 class="fade-up animate-on-scroll">
+          <span class="icon-badge icon-badge--gold">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+          </span>
+          Deep-Dive Visual Analytics Gallery
+        </h2>
+        <p class="fade-up animate-on-scroll">
+          Let's inspect the key mathematical and visual discoveries produced by our EDA script in detail:
+        </p>
+
+        <!-- 1. Correlation Matrix & Heatmap Visual -->
+        <div class="fact-block fact-block--scale fade-up animate-on-scroll" style="margin-top: 2rem;">
+          <div class="fact-block__header">
+            <div class="fact-block__title-area">
+              <span class="fact-block__num">1</span>
+              <div>
+                <h3 class="fact-block__title">Pearson Correlation Matrix &amp; Heatmap Analysis</h3>
+                <span style="font-size:0.84rem; color:var(--muted);">Quantifying linear feature dependencies from -1.0 to +1.0</span>
+              </div>
+            </div>
+            <span class="fact-block__badge">Multicollinearity</span>
+          </div>
+
+          <div class="corr-intro-block">
+            <h4 class="corr-question-title">What is Pearson correlation?</h4>
+            <p class="corr-lead-text">
+              Pearson correlation coefficient, written as \(r\), tells us:
+            </p>
+            <div class="corr-core-rule">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+              <span>How strongly two numerical variables move together, and in which direction.</span>
+            </div>
+          </div>
+
+          <!-- 3-Column Space-Efficient Intuitive Correlation Examples -->
+          <div class="corr-examples-grid">
+            
+            <!-- Example 1: r = +1 -->
+            <div class="corr-example-card corr-example-card--pos">
+              <div class="corr-example-card__header">
+                <span class="corr-example-num">1</span>
+                <div class="corr-example-title-group">
+                  <span class="corr-val-badge corr-val-badge--pos">\(r = +1\)</span>
+                  <span class="corr-rel-name">Perfect positive relationship</span>
+                </div>
+              </div>
+              <div class="corr-table-wrap">
+                <table class="corr-mini-table">
+                  <thead>
+                    <tr>
+                      <th>Study hours</th>
+                      <th>Marks</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr><td>1</td><td>20</td></tr>
+                    <tr><td>2</td><td>40</td></tr>
+                    <tr><td>3</td><td>60</td></tr>
+                    <tr><td>4</td><td>80</td></tr>
+                    <tr><td>5</td><td>100</td></tr>
+                  </tbody>
+                </table>
+              </div>
+              <p class="corr-example-desc">As study hours increase, marks always increase.</p>
+              <div class="corr-math-pill corr-math-pill--pos">$$r = +1$$</div>
+              <p class="corr-example-rule"><strong>Positive</strong> = they move in the same direction.</p>
+            </div>
+
+            <!-- Example 2: r = -1 -->
+            <div class="corr-example-card corr-example-card--neg">
+              <div class="corr-example-card__header">
+                <span class="corr-example-num">2</span>
+                <div class="corr-example-title-group">
+                  <span class="corr-val-badge corr-val-badge--neg">\(r = -1\)</span>
+                  <span class="corr-rel-name">Perfect negative relationship</span>
+                </div>
+              </div>
+              <div class="corr-table-wrap">
+                <table class="corr-mini-table">
+                  <thead>
+                    <tr>
+                      <th>Exercise</th>
+                      <th>Body fat</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr><td>1</td><td>30</td></tr>
+                    <tr><td>2</td><td>25</td></tr>
+                    <tr><td>3</td><td>20</td></tr>
+                    <tr><td>4</td><td>15</td></tr>
+                    <tr><td>5</td><td>10</td></tr>
+                  </tbody>
+                </table>
+              </div>
+              <p class="corr-example-desc">As exercise increases, body fat decreases.</p>
+              <div class="corr-math-pill corr-math-pill--neg">$$r = -1$$</div>
+              <p class="corr-example-rule"><strong>Negative</strong> = they move in opposite directions.</p>
+            </div>
+
+            <!-- Example 3: r = 0 -->
+            <div class="corr-example-card corr-example-card--zero">
+              <div class="corr-example-card__header">
+                <span class="corr-example-num">3</span>
+                <div class="corr-example-title-group">
+                  <span class="corr-val-badge corr-val-badge--zero">\(r \approx 0\)</span>
+                  <span class="corr-rel-name">No linear relationship</span>
+                </div>
+              </div>
+              <div class="corr-table-wrap">
+                <table class="corr-mini-table">
+                  <thead>
+                    <tr>
+                      <th>Hours studied</th>
+                      <th>Shoe size</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr><td>1</td><td>8</td></tr>
+                    <tr><td>2</td><td>10</td></tr>
+                    <tr><td>3</td><td>7</td></tr>
+                    <tr><td>4</td><td>11</td></tr>
+                    <tr><td>5</td><td>9</td></tr>
+                  </tbody>
+                </table>
+              </div>
+              <p class="corr-example-desc">There is no clear pattern between study hours and shoe size.</p>
+              <div class="corr-math-pill corr-math-pill--zero">$$r \approx 0$$</div>
+              <p class="corr-example-rule"><strong>Zero</strong> = no linear relationship.</p>
+            </div>
+
+          </div>
+
+          <!-- So Remember Callout Banner -->
+          <div class="corr-remember-box">
+            <div class="corr-remember-header">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+              <strong>So remember:</strong>
+            </div>
+            <div class="corr-remember-grid">
+              <div class="corr-remember-pill">
+                <span class="corr-pill-label">Sign (+/−)</span>
+                <span class="corr-pill-arrow">=</span>
+                <span class="corr-pill-val">direction</span>
+              </div>
+              <div class="corr-remember-pill">
+                <span class="corr-pill-label">Magnitude (how close to 1)</span>
+                <span class="corr-pill-arrow">=</span>
+                <span class="corr-pill-val">strength</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Live Dataset Correlation Matrix -->
+          <div class="corr-table-card" style="margin-top: 1rem;">
+            <div class="corr-table-card__title">
+              <span>Iris Dataset Correlation Matrix Heatmap</span>
+              <span class="corr-table-tag corr-table-tag--iris">Calculated from Data</span>
+            </div>
+            <table class="compact-corr-table">
+              <thead>
+                <tr>
+                  <th style="text-align:left;">Feature</th>
+                  <th>Sepal L</th>
+                  <th>Sepal W</th>
+                  <th>Petal L</th>
+                  <th>Petal W</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <th style="text-align:left;">sepal length</th>
+                  <td class="cell-corr--pos-max">1.00</td>
+                  <td class="cell-corr--neutral">−0.12</td>
+                  <td class="cell-corr--pos-high">0.87</td>
+                  <td class="cell-corr--pos-high">0.82</td>
+                </tr>
+                <tr>
+                  <th style="text-align:left;">sepal width</th>
+                  <td class="cell-corr--neutral">−0.12</td>
+                  <td class="cell-corr--pos-max">1.00</td>
+                  <td class="cell-corr--neg-mid">−0.43</td>
+                  <td class="cell-corr--neg-mid">−0.37</td>
+                </tr>
+                <tr>
+                  <th style="text-align:left;">petal length</th>
+                  <td class="cell-corr--pos-high">0.87</td>
+                  <td class="cell-corr--neg-mid">−0.43</td>
+                  <td class="cell-corr--pos-max">1.00</td>
+                  <td class="cell-corr--pos-max">0.96</td>
+                </tr>
+                <tr>
+                  <th style="text-align:left;">petal width</th>
+                  <td class="cell-corr--pos-high">0.82</td>
+                  <td class="cell-corr--neg-mid">−0.37</td>
+                  <td class="cell-corr--pos-max">0.96</td>
+                  <td class="cell-corr--pos-max">1.00</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="pipeline-step-tip" style="margin-top:1.2rem;">
+            🔍 <strong>Critical Discovery:</strong> <code>petal length</code> and <code>petal width</code> have a near-perfect correlation of <strong>+0.96</strong>! This indicates severe <em>multicollinearity</em>. In regression models, highly collinear features can inflate coefficient variance; in classification (Lesson 4), having both features reinforces decision confidence.
+          </div>
+        </div>
+
+        <!-- 2. Outlier Anatomy & IQR Rule Diagram -->
+        <div class="fact-block fact-block--split fade-up animate-on-scroll" style="margin-top: 2rem;">
+          <div class="fact-block__header">
+            <div class="fact-block__title-area">
+              <span class="fact-block__num">2</span>
+              <div>
+                <h3 class="fact-block__title">Outlier Detection Anatomy (The 1.5 &times; IQR Rule)</h3>
+                <span style="font-size:0.84rem; color:var(--muted);">How Tukey's boxplot mathematically defines an anomaly</span>
+              </div>
+            </div>
+            <span class="fact-block__badge">Five-Number Summary</span>
+          </div>
+
+          <p>
+            A <strong>boxplot</strong> visually summarizes a variable's distribution through five essential anchor points: <strong>Minimum</strong>, <strong>First Quartile (Q1 / 25%)</strong>, <strong>Median (Q2 / 50%)</strong>, <strong>Third Quartile (Q3 / 75%)</strong>, and <strong>Maximum Whisker</strong>.
+          </p>
+
+          <!-- SVG Visual Boxplot Diagram -->
+          <div class="boxplot-diagram-card">
+            <svg class="boxplot-svg" viewBox="0 0 700 240" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="Boxplot Outlier Detection Diagram">
+              <!-- Background reference grid -->
+              <line x1="50" y1="200" x2="650" y2="200" stroke="var(--line)" stroke-width="2"/>
+              
+              <!-- Lower Whisker -->
+              <line x1="120" y1="120" x2="220" y2="120" stroke="#6B7280" stroke-width="2.5"/>
+              <line x1="120" y1="100" x2="120" y2="140" stroke="#6B7280" stroke-width="2.5"/>
+              <text x="120" y="85" fill="var(--ink-soft)" font-size="12" font-family="var(--sans)" text-anchor="middle">Lower Whisker</text>
+              <text x="120" y="165" fill="var(--ink-muted)" font-size="11" font-family="var(--mono)" text-anchor="middle">Q1 - 1.5&times;IQR</text>
+
+              <!-- IQR Box (Q1 to Q3) -->
+              <rect x="220" y="70" width="260" height="100" rx="6" fill="rgba(14, 168, 148, 0.15)" stroke="#0EA894" stroke-width="2.5"/>
+              
+              <!-- Q1 Label -->
+              <text x="220" y="55" fill="#0EA894" font-size="12" font-family="var(--sans)" font-weight="700" text-anchor="middle">Q1 (25%)</text>
+              
+              <!-- Median (Q2) Line -->
+              <line x1="330" y1="70" x2="330" y2="170" stroke="#EF4444" stroke-width="3.5"/>
+              <text x="330" y="55" fill="#EF4444" font-size="12" font-family="var(--sans)" font-weight="700" text-anchor="middle">Median Q2 (50%)</text>
+
+              <!-- Q3 Label -->
+              <text x="480" y="55" fill="#0EA894" font-size="12" font-family="var(--sans)" font-weight="700" text-anchor="middle">Q3 (75%)</text>
+
+              <!-- Upper Whisker -->
+              <line x1="480" y1="120" x2="580" y2="120" stroke="#6B7280" stroke-width="2.5"/>
+              <line x1="580" y1="100" x2="580" y2="140" stroke="#6B7280" stroke-width="2.5"/>
+              <text x="580" y="85" fill="var(--ink-soft)" font-size="12" font-family="var(--sans)" text-anchor="middle">Upper Whisker</text>
+              <text x="580" y="165" fill="var(--ink-muted)" font-size="11" font-family="var(--mono)" text-anchor="middle">Q3 + 1.5&times;IQR</text>
+
+              <!-- Outliers -->
+              <circle cx="60" cy="120" r="6" fill="#F59E0B" stroke="#B45309" stroke-width="2"/>
+              <text x="60" y="145" fill="#F59E0B" font-size="11" font-family="var(--sans)" font-weight="600" text-anchor="middle">Outlier (2.0 cm)</text>
+
+              <circle cx="625" cy="120" r="6" fill="#F59E0B" stroke="#B45309" stroke-width="2"/>
+              <circle cx="645" cy="120" r="6" fill="#F59E0B" stroke="#B45309" stroke-width="2"/>
+              <text x="635" y="145" fill="#F59E0B" font-size="11" font-family="var(--sans)" font-weight="600" text-anchor="middle">Outliers (&gt;4.05 cm)</text>
+
+              <!-- IQR Span Double Arrow -->
+              <line x1="220" y1="185" x2="480" y2="185" stroke="var(--ink-soft)" stroke-width="1.5" stroke-dasharray="3 3"/>
+              <text x="350" y="220" fill="var(--ink)" font-size="13" font-family="var(--display)" font-weight="700" text-anchor="middle">Interquartile Range (IQR = Q3 - Q1)</text>
+            </svg>
+          </div>
+
+          <p style="font-size:0.92rem; color:var(--ink-soft); line-height:1.6;">
+            In our Iris analysis, <strong>Sepal Width</strong> is the only feature with outliers (4 mild points). Because these are biological variations of healthy flowers rather than telemetry corrupted values, keeping them helps machine learning models generalize to rare, wide-sepaled plants.
+          </p>
+        </div>
+
+        <!-- 3. Pairplot Separability & Machine Learning Readiness -->
+        <div class="fact-block fact-block--cat fade-up animate-on-scroll" style="margin-top: 2rem;">
+          <div class="fact-block__header">
+            <div class="fact-block__title-area">
+              <span class="fact-block__num">3</span>
+              <div>
+                <h3 class="fact-block__title">Linear Separability &amp; The Path to Supervised Learning</h3>
+                <span style="font-size:0.84rem; color:var(--muted);">How EDA reveals the optimal classification decision boundaries</span>
+              </div>
+            </div>
+            <span class="fact-block__badge">Decision Boundary</span>
+          </div>
+
+          <p>
+            When we inspect the scatter plot of <strong>Petal Length vs. Petal Width</strong>, a striking revelation emerges:
+          </p>
+
+          <div class="iris-anatomy-grid" style="margin: 1.2rem 0;">
+            <div style="background:var(--surface); border:1px solid var(--line); border-radius:var(--radius); padding:1.2rem;">
+              <h4 style="font-family:var(--display); color:#3B82F6; margin:0 0 0.5rem;">Iris Setosa: 100% Separable</h4>
+              <p style="font-size:0.88rem; color:var(--ink-soft); margin:0; line-height:1.5;">
+                Every Setosa specimen has Petal Length &le; 2.0 cm and Petal Width &le; 0.6 cm. A simple threshold rule <code>if petal_length &lt; 2.5: return 'setosa'</code> yields <strong>100% classification accuracy</strong>.
+              </p>
+            </div>
+            <div style="background:var(--surface); border:1px solid var(--line); border-radius:var(--radius); padding:1.2rem;">
+              <h4 style="font-family:var(--display); color:#F59E0B; margin:0 0 0.5rem;">Versicolor vs. Virginica</h4>
+              <p style="font-size:0.88rem; color:var(--ink-soft); margin:0; line-height:1.5;">
+                These two species share a minor boundary overlap around petal lengths 4.8–5.1 cm. However, combining both Petal and Sepal measurements allows Linear Classifiers (Logistic Regression, Support Vector Machines) to achieve &gt;97% accuracy!
+              </p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ---- Section 5: Summary & Bridge to Next Lesson ---- -->
+    <section class="block" id="eda-summary">
+      <div class="block__body">
+        <h2 class="fade-up animate-on-scroll">
+          <span class="icon-badge icon-badge--teal">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+          </span>
+          Summary: The Value of EDA in the ML Lifecycle
+        </h2>
+
+        <div class="facts-lead-card fade-up animate-on-scroll">
+          <p>
+            By conducting thorough Exploratory Data Analysis, we have transitioned from raw, opaque numbers into deep domain understanding. We now know:
+          </p>
+          <ul style="margin: 0.8rem 0 0 1.2rem; padding:0; line-height: 1.7; font-size:0.92rem; color:var(--ink);">
+            <li><strong>Data Integrity:</strong> 150 valid records with zero missing values and correct data types.</li>
+            <li><strong>Class Distribution:</strong> Perfectly balanced target (50 samples each for Setosa, Versicolor, and Virginica).</li>
+            <li><strong>Collinearity:</strong> Petal Length and Petal Width move synchronously ($r = 0.96$).</li>
+            <li><strong>Outliers:</strong> Only mild variations exist in Sepal Width, with no critical sensor corruption.</li>
+            <li><strong>Feasibility:</strong> Clear linear separation guarantees high classification performance!</li>
+          </ul>
+        </div>
+
+        <div class="definition fade-up animate-on-scroll" style="margin-top: 2rem;">
+          <div class="definition__label">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+            What Comes Next
+          </div>
+          <p>
+            Now that our data is preprocessed and thoroughly explored, we are ready for <strong>Lesson 4: Supervised Learning</strong>. There, we will see how labeled datasets teach models to perform <strong>Classification</strong> and <strong>Regression</strong>, formulate decision boundaries, and evaluate test predictions.
+          </p>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ============ LESSON FOOTER ============ -->
+    <footer class="lesson__footer">
+      <a href="data-preprocessing.html" class="lesson__footer-prev" id="prevLessonLink">
+        <span class="lesson__footer-prev-arrow">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5"/><path d="m12 19-7-7 7-7"/></svg>
+        </span>
+        <div class="lesson__footer-prev-text">
+          <span class="lesson__footer-prev-label">Previous lesson</span>
+          <span class="lesson__footer-prev-name">2. Data Preprocessing</span>
+        </div>
+      </a>
+
+      <div class="lesson__footer-progress">Lesson 3 of 6</div>
+
+      <a href="supervised-learning.html" class="lesson__footer-next" id="nextLessonLink">
+        <div class="lesson__footer-next-text">
+          <span class="lesson__footer-next-label">Next lesson</span>
+          <span class="lesson__footer-next-name">4. Supervised Learning</span>
+        </div>
+        <span class="lesson__footer-arrow">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+        </span>
+      </a>
+    </footer>
+
+  </main>
+</div>
+
+<script src="main.js"></script>
+</body>
+</html>

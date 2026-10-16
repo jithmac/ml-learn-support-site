@@ -1,0 +1,2612 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hierarchical Clustering: Complete Summary &ndash; Learning Machines</title>
+<meta name="description" content="A comprehensive, beautifully illustrated guide to Hierarchical Clustering: agglomerative vs divisive, dissimilarity metrics, linkage methods, dendrogram cutting, and customer segmentation.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,600;12..96,700;12..96,800&family=Figtree:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600;700&display=swap" rel="stylesheet">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="stylesheet" href="style.css">
+<style>
+/* Page-specific styling for Hierarchical Clustering */
+.hc-hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: var(--coral-tint);
+  border: 1px solid rgba(255, 90, 60, 0.3);
+  color: var(--coral-dark);
+  font-family: var(--display);
+  font-size: 0.78rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 0.35rem 0.85rem;
+  border-radius: 999px;
+  margin-bottom: 1rem;
+}
+
+/* Master Memory Anchor Banner */
+.hc-memory-banner {
+  background: linear-gradient(135deg, rgba(255, 90, 60, 0.09) 0%, rgba(14, 168, 148, 0.09) 100%);
+  border: 2px solid var(--coral);
+  border-radius: var(--radius);
+  padding: 1.8rem 2rem;
+  margin: 2rem 0;
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.04);
+}
+
+.hc-pipeline-flow {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.6rem 0.8rem;
+  margin: 1.2rem 0;
+}
+
+.hc-pipe-chip {
+  background: var(--surface);
+  border: 1.5px solid var(--line);
+  padding: 0.5rem 0.9rem;
+  border-radius: 8px;
+  font-family: var(--display);
+  font-weight: 700;
+  font-size: 0.9rem;
+  color: var(--ink);
+  box-shadow: 0 2px 6px rgba(0,0,0,0.03);
+}
+.hc-pipe-chip--highlight {
+  border-color: var(--coral);
+  background: var(--coral-tint);
+  color: var(--coral-dark);
+}
+.hc-pipe-arrow {
+  color: var(--muted);
+  font-weight: 800;
+  font-size: 1.1rem;
+}
+
+.hc-linkage-cheat {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+  gap: 0.7rem;
+  margin-top: 1rem;
+}
+.hc-cheat-pill {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 0.6rem 0.8rem;
+  text-align: center;
+}
+.hc-cheat-pill__title {
+  font-family: var(--display);
+  font-weight: 800;
+  font-size: 0.82rem;
+  text-transform: uppercase;
+  color: var(--muted);
+  display: block;
+}
+.hc-cheat-pill__val {
+  font-family: var(--display);
+  font-weight: 800;
+  font-size: 1.05rem;
+  color: var(--ink);
+  margin-top: 0.2rem;
+}
+
+/* Two Approaches Grid */
+.hc-approaches-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.2rem;
+  margin: 1.8rem 0;
+}
+@media (min-width: 640px) {
+  .hc-approaches-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+.hc-approach-card {
+  background: var(--surface);
+  border: 1.5px solid var(--line);
+  border-radius: var(--radius);
+  padding: 1.5rem;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.03);
+}
+.hc-approach-card--agglom {
+  border-top: 4px solid var(--teal);
+}
+.hc-approach-card--divis {
+  border-top: 4px solid var(--gold);
+}
+.hc-approach-card__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.8rem;
+}
+.hc-approach-card__title {
+  font-family: var(--display);
+  font-size: 1.15rem;
+  font-weight: 700;
+  margin: 0;
+  color: var(--ink);
+}
+
+/* Agglomerative Interactive Stepper */
+.hc-stepper-box {
+  background: var(--surface);
+  border: 2px solid var(--line);
+  border-radius: var(--radius);
+  padding: 1.8rem;
+  margin: 2rem 0;
+  box-shadow: 0 6px 24px rgba(0,0,0,0.03);
+}
+
+.hc-stepper-controls {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.8rem;
+  margin-bottom: 1.4rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--line);
+}
+
+.hc-step-btns {
+  display: flex;
+  gap: 0.5rem;
+}
+.hc-btn-step {
+  background: var(--bg);
+  border: 1.5px solid var(--line);
+  border-radius: 8px;
+  padding: 0.45rem 0.9rem;
+  font-family: var(--display);
+  font-size: 0.86rem;
+  font-weight: 700;
+  color: var(--ink);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+.hc-btn-step:hover:not(:disabled) {
+  border-color: var(--teal);
+  background: var(--teal-tint);
+}
+.hc-btn-step:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.hc-step-pill-indicator {
+  display: flex;
+  gap: 0.4rem;
+}
+.hc-step-dot {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--bg);
+  border: 1.5px solid var(--line);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.8rem;
+  font-family: var(--display);
+  font-weight: 800;
+  color: var(--muted);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+.hc-step-dot.is-active {
+  background: var(--teal);
+  border-color: var(--teal);
+  color: #FFFFFF;
+}
+
+.hc-step-readout {
+  background: var(--bg);
+  border: 1.5px solid var(--line);
+  border-radius: var(--radius-sm);
+  padding: 1.2rem;
+  margin-top: 1.2rem;
+  font-size: 0.94rem;
+  line-height: 1.6;
+}
+
+/* Linkage Visual Comparison Tabs */
+.hc-linkage-container {
+  background: var(--surface);
+  border: 2px solid var(--line);
+  border-radius: var(--radius);
+  padding: 1.8rem;
+  margin: 2rem 0;
+  box-shadow: 0 6px 24px rgba(0,0,0,0.03);
+}
+
+.hc-linkage-tabs {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.6rem;
+  margin-bottom: 1.4rem;
+}
+@media (max-width: 580px) {
+  .hc-linkage-tabs {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+.hc-linkage-tab {
+  background: var(--bg);
+  border: 1.5px solid var(--line);
+  border-radius: 10px;
+  padding: 0.75rem 0.6rem;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+.hc-linkage-tab:hover {
+  border-color: var(--teal);
+}
+.hc-linkage-tab.is-active {
+  background: var(--surface);
+  border-color: var(--teal);
+  box-shadow: 0 4px 14px rgba(14, 168, 148, 0.15);
+}
+.hc-linkage-tab__name {
+  font-family: var(--display);
+  font-weight: 800;
+  font-size: 0.95rem;
+  color: var(--ink);
+  display: block;
+}
+.hc-linkage-tab__anchor {
+  font-size: 0.72rem;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+.hc-linkage-tab.is-active .hc-linkage-tab__anchor {
+  color: var(--teal-dark);
+  font-weight: 700;
+}
+
+.hc-linkage-content {
+  background: var(--bg);
+  border: 1.5px solid var(--line);
+  border-radius: var(--radius-sm);
+  padding: 1.4rem;
+}
+
+/* Dendrogram Cut Line Interactive Simulator */
+.hc-dendro-box {
+  background: var(--surface);
+  border: 2px solid var(--line);
+  border-radius: var(--radius);
+  padding: 1.8rem;
+  margin: 2rem 0;
+  box-shadow: 0 6px 24px rgba(0,0,0,0.03);
+}
+
+.hc-slider-bar {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  background: var(--bg);
+  padding: 0.9rem 1.2rem;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--line);
+  margin-bottom: 1.4rem;
+}
+.hc-slider-input {
+  flex: 1;
+  accent-color: var(--coral);
+  cursor: pointer;
+}
+.hc-slider-val {
+  font-family: "IBM Plex Mono", monospace;
+  font-weight: 700;
+  font-size: 1rem;
+  color: var(--coral-dark);
+  min-width: 60px;
+}
+
+.hc-cluster-readout-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+  gap: 0.7rem;
+  margin-top: 1.2rem;
+}
+.hc-cluster-chip {
+  background: var(--surface);
+  border: 1.5px solid var(--line);
+  border-radius: 8px;
+  padding: 0.7rem 0.9rem;
+  text-align: center;
+}
+.hc-cluster-chip__num {
+  font-size: 0.72rem;
+  font-family: var(--display);
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--muted);
+}
+.hc-cluster-chip__members {
+  font-family: "IBM Plex Mono", monospace;
+  font-weight: 700;
+  font-size: 1.05rem;
+  color: var(--ink);
+  margin-top: 0.2rem;
+}
+
+/* Customer Segmentation Showcase */
+.hc-customer-box {
+  background: linear-gradient(135deg, rgba(14, 168, 148, 0.05) 0%, rgba(233, 168, 37, 0.05) 100%);
+  border: 2px solid var(--line);
+  border-radius: var(--radius);
+  padding: 1.8rem;
+  margin: 2rem 0;
+}
+
+.hc-customer-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1rem;
+  margin-top: 1.2rem;
+}
+.hc-cust-card {
+  background: var(--surface);
+  border: 1.5px solid var(--line);
+  border-radius: var(--radius-sm);
+  padding: 1.2rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+.hc-cust-card:hover, .hc-cust-card.is-active {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(0,0,0,0.06);
+}
+.hc-cust-card--1.is-active { border-color: var(--teal); border-top: 4px solid var(--teal); }
+.hc-cust-card--2.is-active { border-color: var(--coral); border-top: 4px solid var(--coral); }
+.hc-cust-card--3.is-active { border-color: var(--gold); border-top: 4px solid var(--gold); }
+
+/* =========================================================================
+   ENHANCED ADVANTAGES & DISADVANTAGES TRADEOFF SYSTEM
+   ========================================================================= */
+.hc-tradeoffs-container {
+  margin: 2rem 0;
+}
+
+/* Filter Navigation Bar */
+.hc-tradeoff-nav {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  background: var(--bg);
+  padding: 0.4rem;
+  border-radius: var(--radius-sm);
+  border: 1.5px solid var(--line);
+  margin-bottom: 1.6rem;
+}
+
+.hc-tradeoff-tab {
+  background: transparent;
+  border: none;
+  padding: 0.55rem 1rem;
+  border-radius: 8px;
+  font-family: var(--display);
+  font-size: 0.86rem;
+  font-weight: 700;
+  color: var(--ink-soft);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.hc-tradeoff-tab:hover {
+  color: var(--ink);
+  background: rgba(0,0,0,0.03);
+}
+
+.hc-tradeoff-tab.is-active {
+  background: var(--surface);
+  color: var(--ink);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.hc-tradeoff-tab__count {
+  font-size: 0.72rem;
+  padding: 0.15rem 0.45rem;
+  border-radius: 999px;
+  background: var(--line);
+  color: var(--ink);
+  font-weight: 800;
+}
+.hc-tradeoff-tab.is-active .hc-tradeoff-tab__count {
+  background: var(--coral-tint);
+  color: var(--coral-dark);
+}
+
+/* Tradeoff Cards Grid */
+.hc-tradeoff-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.4rem;
+  margin-bottom: 2rem;
+}
+@media (min-width: 768px) {
+  .hc-tradeoff-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.hc-tradeoff-card {
+  background: var(--surface);
+  border: 1.5px solid var(--line);
+  border-radius: var(--radius);
+  padding: 1.6rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.02);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+  position: relative;
+}
+.hc-tradeoff-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.05);
+}
+
+.hc-tradeoff-card--adv {
+  border-top: 4px solid var(--teal);
+}
+.hc-tradeoff-card--dis {
+  border-top: 4px solid var(--coral);
+}
+
+.hc-tradeoff-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.8rem;
+}
+
+.hc-tradeoff-title-wrap {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+}
+
+.hc-tradeoff-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.hc-tradeoff-card--adv .hc-tradeoff-icon {
+  background: var(--teal-tint);
+  color: var(--teal-dark);
+}
+.hc-tradeoff-card--dis .hc-tradeoff-icon {
+  background: var(--coral-tint);
+  color: var(--coral-dark);
+}
+
+.hc-tradeoff-title {
+  font-family: var(--display);
+  font-size: 1.05rem;
+  font-weight: 700;
+  margin: 0;
+  color: var(--ink);
+  line-height: 1.25;
+}
+
+.hc-tradeoff-tag {
+  font-size: 0.7rem;
+  font-family: var(--display);
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  padding: 0.2rem 0.55rem;
+  border-radius: 999px;
+  flex-shrink: 0;
+}
+.hc-tradeoff-card--adv .hc-tradeoff-tag {
+  background: var(--teal-tint);
+  color: var(--teal-dark);
+}
+.hc-tradeoff-card--dis .hc-tradeoff-tag {
+  background: var(--coral-tint);
+  color: var(--coral-dark);
+}
+
+.hc-tradeoff-summary {
+  font-size: 0.93rem;
+  color: var(--ink);
+  line-height: 1.55;
+  margin: 0;
+  font-weight: 500;
+}
+
+.hc-tradeoff-deepdive {
+  background: var(--bg);
+  border-radius: var(--radius-sm);
+  padding: 0.85rem 1rem;
+  border-left: 3px solid var(--line);
+  font-size: 0.88rem;
+  color: var(--ink-soft);
+  line-height: 1.55;
+}
+.hc-tradeoff-card--adv .hc-tradeoff-deepdive {
+  border-left-color: var(--teal);
+}
+.hc-tradeoff-card--dis .hc-tradeoff-deepdive {
+  border-left-color: var(--coral);
+}
+
+.hc-tradeoff-deepdive strong {
+  color: var(--ink);
+}
+
+.hc-tradeoff-example {
+  background: rgba(0,0,0,0.02);
+  border-radius: 8px;
+  padding: 0.7rem 0.9rem;
+  font-size: 0.84rem;
+  color: var(--ink-soft);
+  line-height: 1.5;
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+}
+.hc-tradeoff-example svg {
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+/* Scalability & Memory Lab */
+.hc-scale-lab {
+  background: var(--surface);
+  border: 2px solid var(--line);
+  border-radius: var(--radius);
+  padding: 1.8rem;
+  margin: 2rem 0;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.03);
+}
+
+.hc-scale-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin: 1.2rem 0;
+}
+
+.hc-scale-btn {
+  background: var(--bg);
+  border: 1.5px solid var(--line);
+  border-radius: 8px;
+  padding: 0.5rem 1rem;
+  font-family: var(--display);
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: var(--ink);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+.hc-scale-btn:hover {
+  border-color: var(--coral);
+  background: var(--coral-tint);
+}
+.hc-scale-btn.is-active {
+  background: var(--coral);
+  border-color: var(--coral);
+  color: #FFFFFF;
+}
+
+.hc-scale-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 1rem;
+  margin: 1.4rem 0;
+}
+
+.hc-scale-stat-card {
+  background: var(--bg);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  padding: 1.1rem;
+  text-align: center;
+}
+
+.hc-scale-stat-lbl {
+  font-size: 0.72rem;
+  font-family: var(--display);
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--muted);
+  margin-bottom: 0.35rem;
+}
+
+.hc-scale-stat-val {
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: var(--ink);
+}
+
+.hc-scale-verdict-box {
+  padding: 1rem 1.2rem;
+  border-radius: var(--radius-sm);
+  font-size: 0.92rem;
+  line-height: 1.55;
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  transition: all 0.3s ease;
+}
+
+/* Decision Matrix Table */
+.hc-matrix-wrapper {
+  overflow-x: auto;
+  margin: 1.6rem 0;
+  border-radius: var(--radius);
+  border: 1.5px solid var(--line);
+  background: var(--surface);
+}
+
+.hc-matrix-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+  text-align: left;
+}
+
+.hc-matrix-table th {
+  background: var(--bg);
+  padding: 1rem 1.2rem;
+  font-family: var(--display);
+  font-weight: 700;
+  color: var(--ink);
+  border-bottom: 2px solid var(--line);
+}
+
+.hc-matrix-table td {
+  padding: 0.9rem 1.2rem;
+  border-bottom: 1px solid var(--line);
+  color: var(--ink-soft);
+  vertical-align: top;
+  line-height: 1.5;
+}
+
+.hc-matrix-table tr:last-child td {
+  border-bottom: none;
+}
+
+.hc-matrix-table tr:hover td {
+  background: rgba(0,0,0,0.015);
+}
+
+.hc-check-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-size: 0.78rem;
+  font-weight: 800;
+  padding: 0.2rem 0.55rem;
+  border-radius: 999px;
+}
+.hc-check-pill--good {
+  background: var(--teal-tint);
+  color: var(--teal-dark);
+}
+.hc-check-pill--warn {
+  background: var(--coral-tint);
+  color: var(--coral-dark);
+}
+.hc-check-pill--neutral {
+  background: var(--bg);
+  border: 1px solid var(--line);
+  color: var(--ink-soft);
+}
+
+/* Decision Rule of Thumb Banner */
+.hc-rule-thumb-box {
+  background: linear-gradient(135deg, rgba(14, 168, 148, 0.08) 0%, rgba(233, 168, 37, 0.08) 100%);
+  border: 2px solid rgba(14, 168, 148, 0.4);
+  border-radius: var(--radius);
+  padding: 1.6rem 1.8rem;
+  margin: 1.8rem 0;
+}
+.hc-rule-thumb-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1rem;
+  margin-top: 1rem;
+}
+.hc-rule-card {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  padding: 1rem 1.2rem;
+}
+.hc-rule-card__title {
+  font-family: var(--display);
+  font-weight: 800;
+  font-size: 0.95rem;
+  margin: 0 0 0.3rem;
+}
+.hc-rule-card__text {
+  font-size: 0.86rem;
+  color: var(--ink-soft);
+  margin: 0;
+  line-height: 1.5;
+}
+
+/* Quiz option styling */
+.hc-quiz-card {
+  background: var(--surface);
+  border: 1.5px solid var(--line);
+  border-radius: var(--radius);
+  padding: 1.5rem;
+  margin: 1.2rem 0;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.02);
+}
+.hc-quiz-q {
+  font-family: var(--display);
+  font-weight: 700;
+  font-size: 1.05rem;
+  margin: 0 0 1rem;
+  color: var(--ink);
+}
+.hc-quiz-options {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+.hc-quiz-opt {
+  background: var(--bg);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 0.65rem 1rem;
+  text-align: left;
+  font-size: 0.9rem;
+  font-family: var(--body);
+  color: var(--ink);
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+.hc-quiz-opt:hover {
+  background: var(--surface-tint);
+  border-color: var(--coral-tint);
+}
+.hc-quiz-opt.is-correct {
+  background: var(--teal-tint) !important;
+  border-color: var(--teal) !important;
+  color: var(--teal-dark) !important;
+  font-weight: 700;
+}
+.hc-quiz-opt.is-wrong {
+  background: var(--coral-tint) !important;
+  border-color: var(--coral) !important;
+  color: var(--coral-dark) !important;
+}
+.hc-quiz-feedback {
+  margin-top: 0.8rem;
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  font-size: 0.88rem;
+  display: none;
+}
+.hc-quiz-feedback.is-visible { display: block; }
+.hc-quiz-feedback.is-correct {
+  background: var(--teal-tint);
+  border-left: 4px solid var(--teal);
+  color: var(--teal-dark);
+}
+.hc-quiz-feedback.is-wrong {
+  background: var(--coral-tint);
+  border-left: 4px solid var(--coral);
+  color: var(--coral-dark);
+}
+</style>
+</head>
+<body>
+
+<div class="grain" aria-hidden="true"></div>
+
+<div class="progress-rail" aria-hidden="true"><div class="progress-fill" id="progressFill"></div></div>
+
+<header class="top-bar">
+  <div class="top-bar__brand">
+    <span class="course-nav__mark">LM</span>
+    <span class="top-bar__title">Learning Machines</span>
+  </div>
+  <div class="top-bar__controls">
+    <span class="top-bar__time" id="readTime">~8 min read</span>
+    <button class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="courseNav">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="4" x2="20" y1="6" y2="6"/><line x1="4" x2="20" y1="12" y2="12"/><line x1="4" x2="20" y1="18" y2="18"/></svg>
+      <span class="nav-toggle__label">Course map</span>
+    </button>
+  </div>
+</header>
+
+<div class="nav-overlay" id="navOverlay" aria-hidden="true"></div>
+
+<!-- ============ SLIDE-OVER SIDEBAR ============ -->
+<aside class="course-nav" id="courseNav">
+  <div class="course-nav__header">
+    <h2 class="course-nav__title-side">Course map</h2>
+    <button class="nav-close" id="navClose" aria-label="Close nav">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
+    </button>
+  </div>
+  <p class="course-nav__tagline">A slow, careful path through machine learning, start to finish.</p>
+
+  <ol class="course-nav__list">
+    <li class="course-nav__item is-completed">
+      <a href="index.html" class="course-nav__inner-link">
+        <span class="course-nav__num">1</span>
+        <div>
+          <span class="course-nav__name">Introduction</span>
+          <span class="course-nav__state">completed</span>
+        </div>
+      </a>
+    </li>
+    <li class="course-nav__item is-completed">
+      <a href="data-preprocessing.html" class="course-nav__inner-link">
+        <span class="course-nav__num">2</span>
+        <div>
+          <span class="course-nav__name">Data Preprocessing</span>
+          <span class="course-nav__state">completed</span>
+        </div>
+      </a>
+    </li>
+    <li class="course-nav__item is-completed">
+      <a href="eda.html" class="course-nav__inner-link">
+        <span class="course-nav__num">3</span>
+        <div>
+          <span class="course-nav__name">Exploratory Data Analysis</span>
+          <span class="course-nav__state">completed</span>
+        </div>
+      </a>
+    </li>
+    <li class="course-nav__item is-completed">
+      <a href="supervised-learning.html" class="course-nav__inner-link">
+        <span class="course-nav__num">4</span>
+        <div>
+          <span class="course-nav__name">Supervised Learning</span>
+          <span class="course-nav__state">completed</span>
+        </div>
+      </a>
+    </li>
+    <ol class="course-nav__sub-list">
+      <li class="course-nav__sub-item">
+        <a href="supervised-learning.html">
+          <span class="course-nav__sub-num">4.1</span>
+          <div>
+            <span class="course-nav__sub-name">Introduction</span>
+            <span class="course-nav__state">completed</span>
+          </div>
+        </a>
+      </li>
+      <li class="course-nav__sub-item">
+        <a href="classification.html">
+          <span class="course-nav__sub-num">4.2</span>
+          <div>
+            <span class="course-nav__sub-name">Classification &amp; Decision Trees</span>
+            <span class="course-nav__state">completed</span>
+          </div>
+        </a>
+      </li>
+      <li class="course-nav__sub-item">
+        <a href="id3-algorithm.html">
+          <span class="course-nav__sub-num">4.3</span>
+          <div>
+            <span class="course-nav__sub-name">ID3 Algorithm</span>
+            <span class="course-nav__state">completed</span>
+          </div>
+        </a>
+      </li>
+      <li class="course-nav__sub-item">
+        <a href="c45-algorithm.html">
+          <span class="course-nav__sub-num">4.4</span>
+          <div>
+            <span class="course-nav__sub-name">C4.5 Algorithm</span>
+            <span class="course-nav__state">completed</span>
+          </div>
+        </a>
+      </li>
+      <li class="course-nav__sub-item">
+        <a href="cart-algorithm.html">
+          <span class="course-nav__sub-num">4.5</span>
+          <div>
+            <span class="course-nav__sub-name">CART Algorithm</span>
+            <span class="course-nav__state">completed</span>
+          </div>
+        </a>
+      </li>
+      <li class="course-nav__sub-item">
+        <a href="regression-analysis.html">
+          <span class="course-nav__sub-num">4.6</span>
+          <div>
+            <span class="course-nav__sub-name">Introduction to Regression</span>
+            <span class="course-nav__state">completed</span>
+          </div>
+        </a>
+      </li>
+      <li class="course-nav__sub-item">
+        <a href="simple-linear-regression.html">
+          <span class="course-nav__sub-num">4.7</span>
+          <div>
+            <span class="course-nav__sub-name">Simple Linear Regression</span>
+            <span class="course-nav__state">completed</span>
+          </div>
+        </a>
+      </li>
+      <li class="course-nav__sub-item">
+        <a href="polynomial-regression.html">
+          <span class="course-nav__sub-num">4.8</span>
+          <div>
+            <span class="course-nav__sub-name">Polynomial Regression</span>
+            <span class="course-nav__state">completed</span>
+          </div>
+        </a>
+      </li>
+    </ol>
+    <li class="course-nav__item is-active-group">
+      <span class="course-nav__num">5</span>
+      <div>
+        <span class="course-nav__name">Unsupervised Learning</span>
+        <span class="course-nav__state">in progress</span>
+      </div>
+    </li>
+    <ol class="course-nav__sub-list">
+      <li class="course-nav__sub-item">
+        <a href="unsupervised-learning.html">
+          <span class="course-nav__sub-num">5.1</span>
+          <div>
+            <span class="course-nav__sub-name">Introduction</span>
+            <span class="course-nav__state">completed</span>
+          </div>
+        </a>
+      </li>
+      <li class="course-nav__sub-item is-active">
+        <a href="hierarchical-clustering.html">
+          <span class="course-nav__sub-num">5.2</span>
+          <div>
+            <span class="course-nav__sub-name">Hierarchical Clustering</span>
+            <span class="course-nav__state">reading now</span>
+          </div>
+        </a>
+      </li>
+    </ol>
+    <li class="course-nav__item is-locked">
+      <span class="course-nav__num">6</span>
+      <div>
+        <span class="course-nav__name">Reinforcement Learning</span>
+        <span class="course-nav__state">
+          <svg class="course-nav__lock" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          coming soon
+        </span>
+      </div>
+    </li>
+  </ol>
+</aside>
+
+<div class="shell">
+
+  <!-- ============ MAIN ARTICLE ============ -->
+  <main class="lesson">
+
+    <header class="lesson__header">
+      <div class="hc-hero-badge">Module 5.2 &bull; Clustering Deep Dive</div>
+      <span class="lesson__eyebrow-free-title">
+        <h1>Hierarchical Clustering &mdash; Complete Summary</h1>
+        <svg class="title-underline" viewBox="0 0 520 14" preserveAspectRatio="none" aria-hidden="true">
+          <path d="M4 9 C 120 2, 260 13, 400 6 C 440 4, 480 8, 516 5"/>
+        </svg>
+      </span>
+      <p class="lesson__dek">Group similar data points into a tree hierarchy step by step. Master agglomerative vs. divisive paths, dissimilarity math, linkage criteria, and dendrogram cut lines.</p>
+    </header>
+
+    <!-- ============ MASTER MEMORY ANCHOR BANNER ============ -->
+    <section class="block" id="memory-anchor">
+      <div class="hc-memory-banner fade-up animate-on-scroll">
+        <div style="display: flex; align-items: center; gap: 0.6rem; margin-bottom: 0.4rem;">
+          <span class="icon-badge icon-badge--coral" style="width: 1.8rem; height: 1.8rem;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          </span>
+          <h3 style="margin: 0; font-family: var(--display); font-size: 1.15rem; color: var(--coral-dark);">Most Important Things to Remember</h3>
+        </div>
+        <p style="margin: 0; font-size: 0.92rem; color: var(--ink-soft);">
+          If you take away only two ideas from this entire masterclass, remember this pipeline and linkage table:
+        </p>
+
+        <!-- Pipeline Flow -->
+        <div class="hc-pipeline-flow">
+          <span class="hc-pipe-chip">1. Dissimilarity</span>
+          <span class="hc-pipe-arrow">&rarr;</span>
+          <span class="hc-pipe-chip">2. Linkage</span>
+          <span class="hc-pipe-arrow">&rarr;</span>
+          <span class="hc-pipe-chip">3. Merge / Split</span>
+          <span class="hc-pipe-arrow">&rarr;</span>
+          <span class="hc-pipe-chip">4. Dendrogram</span>
+          <span class="hc-pipe-arrow">&rarr;</span>
+          <span class="hc-pipe-chip hc-pipe-chip--highlight">5. Choose Clusters</span>
+        </div>
+
+        <!-- Linkage Cheat Sheet Pills -->
+        <div class="hc-linkage-cheat">
+          <div class="hc-cheat-pill">
+            <span class="hc-cheat-pill__title">Single</span>
+            <span class="hc-cheat-pill__val" style="color: var(--teal-dark);">Closest</span>
+          </div>
+          <div class="hc-cheat-pill">
+            <span class="hc-cheat-pill__title">Complete</span>
+            <span class="hc-cheat-pill__val" style="color: var(--coral-dark);">Farthest</span>
+          </div>
+          <div class="hc-cheat-pill">
+            <span class="hc-cheat-pill__title">Average</span>
+            <span class="hc-cheat-pill__val" style="color: #6D28D9;">Average</span>
+          </div>
+          <div class="hc-cheat-pill">
+            <span class="hc-cheat-pill__title">Ward</span>
+            <span class="hc-cheat-pill__val" style="color: #B45309;">Variance</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ---- Section 1: What is Hierarchical Clustering? ---- -->
+    <section class="block" id="what-is-hierarchical-clustering">
+      <div class="block__body">
+        <h2 class="fade-up animate-on-scroll">
+          <span class="icon-badge icon-badge--teal">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="5" r="3"/><circle cx="5" cy="19" r="3"/><circle cx="19" cy="19" r="3"/><path d="M12 8v4"/><path d="M5 16l5-4"/><path d="M19 16l-5-4"/></svg>
+          </span>
+          1. What is hierarchical clustering?
+        </h2>
+
+        <div class="definition fade-up animate-on-scroll">
+          <div class="definition__label">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+            Definition
+          </div>
+          <p>
+            <strong>Hierarchical clustering</strong> is an <strong>unsupervised learning</strong> method that groups similar data points into clusters and creates a <strong>hierarchy (tree) of clusters</strong>.
+          </p>
+        </div>
+
+        <p class="marginable fade-up animate-on-scroll" data-note="A dendrogram looks like an upside-down family tree: leaves at the bottom represent individual records, and branches merge upwards into common ancestors.">
+          Unlike algorithms that dump your data into a single fixed set of bins (like K-Means with a static \(K\)), hierarchical clustering builds a rich, nested family of clusters. It is usually represented using a <strong>dendrogram</strong> &mdash; an elegant tree diagram that maps out every single merge event and its mathematical distance.
+        </p>
+      </div>
+    </section>
+
+    <!-- ---- Section 2: Why is it Unsupervised? ---- -->
+    <section class="block" id="why-is-it-unsupervised">
+      <div class="block__body">
+        <h2 class="fade-up animate-on-scroll">
+          <span class="icon-badge icon-badge--coral">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+          </span>
+          2. Why is it unsupervised?
+        </h2>
+
+        <p class="fade-up animate-on-scroll">
+          Because there are <strong>no predefined labels or answers</strong>!
+        </p>
+
+        <p class="fade-up animate-on-scroll">
+          In a supervised problem (like diagnosing whether a tumor is benign or malignant), a doctor has already stamped each sample with a known answer. In hierarchical clustering:
+        </p>
+
+        <div class="reg-card fade-up animate-on-scroll" style="background: var(--surface); border: 1.5px solid var(--line); padding: 1.4rem; border-radius: var(--radius-sm); margin: 1rem 0;">
+          <ul style="margin: 0; padding-left: 1.2rem; display: flex; flex-direction: column; gap: 0.5rem; font-size: 0.95rem; color: var(--ink);">
+            <li>The algorithm <strong>only receives raw data features</strong> (e.g. coordinates, measurements, customer spending).</li>
+            <li>No human tells it which group a point belongs to.</li>
+            <li>It discovers clusters purely on its own, based strictly on <strong>similarity / dissimilarity</strong>.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- ---- Section 3: Main Idea ---- -->
+    <section class="block" id="main-idea">
+      <div class="block__body">
+        <h2 class="fade-up animate-on-scroll">
+          <span class="icon-badge icon-badge--gold">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2v20"/><path d="m17 5-5-3-5 3"/><path d="m17 19-5 3-5-3"/></svg>
+          </span>
+          3. Main idea: Merging or Splitting
+        </h2>
+
+        <p class="fade-up animate-on-scroll">
+          Hierarchical clustering works by repeatedly <strong>merging</strong> smaller clusters into larger ones, or <strong>splitting</strong> larger clusters into smaller ones.
+        </p>
+
+        <p class="fade-up animate-on-scroll">
+          This gives rise to two distinct operational approaches:
+        </p>
+
+        <!-- Two Approaches Cards -->
+        <div class="hc-approaches-grid fade-up animate-on-scroll">
+          <!-- Agglomerative -->
+          <div class="hc-approach-card hc-approach-card--agglom">
+            <div class="hc-approach-card__head">
+              <h3 class="hc-approach-card__title">Agglomerative &rarr; Bottom-up</h3>
+              <span style="font-size: 0.72rem; font-weight: 800; background: var(--teal-tint); color: var(--teal-dark); padding: 0.2rem 0.6rem; border-radius: 999px;">Most Popular</span>
+            </div>
+            <p style="font-size: 0.92rem; color: var(--ink-soft); margin-bottom: 0.8rem; line-height: 1.55;">
+              Think of tiny raindrops on a car windshield rolling together to form bigger droplets:
+            </p>
+            <ul style="margin: 0; padding-left: 1.2rem; font-size: 0.9rem; color: var(--ink); display: flex; flex-direction: column; gap: 0.4rem;">
+              <li>Start with <strong>every single point as its own cluster</strong>.</li>
+              <li>Find the closest, most similar pair of clusters and <strong>merge them</strong>.</li>
+              <li>Repeat step-by-step until all points end up in one giant root cluster.</li>
+            </ul>
+          </div>
+
+          <!-- Divisive -->
+          <div class="hc-approach-card hc-approach-card--divis">
+            <div class="hc-approach-card__head">
+              <h3 class="hc-approach-card__title">Divisive &rarr; Top-down</h3>
+              <span style="font-size: 0.72rem; font-weight: 800; background: var(--gold-tint); color: var(--gold-dark); padding: 0.2rem 0.6rem; border-radius: 999px;">Top-Down</span>
+            </div>
+            <p style="font-size: 0.92rem; color: var(--ink-soft); margin-bottom: 0.8rem; line-height: 1.55;">
+              Think of carving a marble block down into intricate statues:
+            </p>
+            <ul style="margin: 0; padding-left: 1.2rem; font-size: 0.9rem; color: var(--ink); display: flex; flex-direction: column; gap: 0.4rem;">
+              <li>Start with <strong>all data points inside one single all-inclusive cluster</strong>.</li>
+              <li>Identify the biggest differences and <strong>split them</strong> step by step.</li>
+              <li>Continue dividing until each point is in its own isolated cluster.</li>
+            </ul>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ---- Section 4: Agglomerative Clustering Steps ---- -->
+    <section class="block" id="agglomerative-steps">
+      <div class="block__body">
+        <h2 class="fade-up animate-on-scroll">
+          <span class="icon-badge icon-badge--teal">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+          </span>
+          4. Agglomerative clustering steps
+        </h2>
+
+        <p class="fade-up animate-on-scroll">
+          Because <strong>Agglomerative (Bottom-up)</strong> clustering is the industry standard used in 95% of real-world projects, let's walk through its exact step-by-step mechanics.
+        </p>
+
+        <p class="fade-up animate-on-scroll">
+          Suppose we have four simple data points: <code style="font-family:'IBM Plex Mono'; font-weight:700;">A, B, C, D</code>.
+        </p>
+
+        <!-- Interactive Stepper Component -->
+        <div class="hc-stepper-box fade-up animate-on-scroll">
+          <div class="hc-stepper-controls">
+            <div>
+              <span style="font-size: 0.75rem; font-family: var(--display); font-weight: 800; text-transform: uppercase; color: var(--teal-dark); letter-spacing: 0.05em;">Step-by-Step Simulation</span>
+              <h3 style="margin: 0.2rem 0 0; font-size: 1.15rem; font-family: var(--display);" id="stepperTitle">Step 0: Initial State</h3>
+            </div>
+            <div style="display: flex; align-items: center; gap: 1rem;">
+              <div class="hc-step-pill-indicator">
+                <button class="hc-step-dot is-active" data-step="0">0</button>
+                <button class="hc-step-dot" data-step="1">1</button>
+                <button class="hc-step-dot" data-step="2">2</button>
+                <button class="hc-step-dot" data-step="3">3</button>
+              </div>
+              <div class="hc-step-btns">
+                <button class="hc-btn-step" id="btnStepPrev" disabled>&larr; Back</button>
+                <button class="hc-btn-step" id="btnStepNext">Next &rarr;</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- SVG Stepper Visual: 2D Points on Left, Growing Dendrogram on Right -->
+          <div style="display: grid; grid-template-columns: 1fr; gap: 1.2rem;" id="stepperGrid">
+            <svg id="svgStepper" viewBox="0 0 640 220" style="width: 100%; height: auto; background: var(--bg); border: 1.5px solid var(--line); border-radius: var(--radius-sm);">
+              <!-- Divider line -->
+              <line x1="320" y1="20" x2="320" y2="200" stroke="#EDE7DE" stroke-dasharray="3 3" />
+              <text x="160" y="25" text-anchor="middle" font-family="Bricolage Grotesque" font-weight="700" font-size="12" fill="#8A8177">DATA SPACE (2D MERGES)</text>
+              <text x="480" y="25" text-anchor="middle" font-family="Bricolage Grotesque" font-weight="700" font-size="12" fill="#8A8177">DENDROGRAM (TREE GROWTH)</text>
+
+              <!-- Left Side: Data Points Space -->
+              <!-- Outer Hull for Step 3: {A,B,C,D} -->
+              <rect id="hullAll" x="50" y="55" width="220" height="135" rx="20" fill="rgba(139, 92, 246, 0.08)" stroke="#8B5CF6" stroke-width="2" stroke-dasharray="4 4" opacity="0" style="transition: opacity 0.3s ease;" />
+
+              <!-- Left Hull for Step 1: {A,B} -->
+              <rect id="hullAB" x="65" y="70" width="90" height="105" rx="16" fill="rgba(14, 168, 148, 0.12)" stroke="#0EA894" stroke-width="2" opacity="0" style="transition: opacity 0.3s ease;" />
+              <!-- Right Hull for Step 2: {C,D} -->
+              <rect id="hullCD" x="165" y="70" width="90" height="105" rx="16" fill="rgba(233, 168, 37, 0.12)" stroke="#E9A825" stroke-width="2" opacity="0" style="transition: opacity 0.3s ease;" />
+
+              <!-- Points A, B, C, D -->
+              <!-- Point A -->
+              <circle cx="90" cy="120" r="14" fill="#0EA894" />
+              <text x="90" y="125" text-anchor="middle" fill="#FFFFFF" font-family="IBM Plex Mono" font-weight="700" font-size="13">A</text>
+              <!-- Point B -->
+              <circle cx="130" cy="120" r="14" fill="#0EA894" />
+              <text x="130" y="125" text-anchor="middle" fill="#FFFFFF" font-family="IBM Plex Mono" font-weight="700" font-size="13">B</text>
+              <!-- Point C -->
+              <circle cx="190" cy="120" r="14" fill="#E9A825" />
+              <text x="190" y="125" text-anchor="middle" fill="#FFFFFF" font-family="IBM Plex Mono" font-weight="700" font-size="13">C</text>
+              <!-- Point D -->
+              <circle cx="230" cy="120" r="14" fill="#E9A825" />
+              <text x="230" y="125" text-anchor="middle" fill="#FFFFFF" font-family="IBM Plex Mono" font-weight="700" font-size="13">D</text>
+
+              <!-- Right Side: Growing Dendrogram -->
+              <!-- Base Leaves A, B, C, D -->
+              <text x="380" y="190" text-anchor="middle" font-family="IBM Plex Mono" font-weight="700" font-size="13" fill="#1B1712">A</text>
+              <text x="430" y="190" text-anchor="middle" font-family="IBM Plex Mono" font-weight="700" font-size="13" fill="#1B1712">B</text>
+              <text x="530" y="190" text-anchor="middle" font-family="IBM Plex Mono" font-weight="700" font-size="13" fill="#1B1712">C</text>
+              <text x="580" y="190" text-anchor="middle" font-family="IBM Plex Mono" font-weight="700" font-size="13" fill="#1B1712">D</text>
+
+              <!-- Branch {A, B} (Height 130) -->
+              <g id="dendroBranchAB" opacity="0" style="transition: opacity 0.3s ease;">
+                <line x1="380" y1="175" x2="380" y2="130" stroke="#0EA894" stroke-width="2.5" />
+                <line x1="430" y1="175" x2="430" y2="130" stroke="#0EA894" stroke-width="2.5" />
+                <line x1="380" y1="130" x2="430" y2="130" stroke="#0EA894" stroke-width="2.5" />
+              </g>
+
+              <!-- Branch {C, D} (Height 130) -->
+              <g id="dendroBranchCD" opacity="0" style="transition: opacity 0.3s ease;">
+                <line x1="530" y1="175" x2="530" y2="130" stroke="#E9A825" stroke-width="2.5" />
+                <line x1="580" y1="175" x2="580" y2="130" stroke="#E9A825" stroke-width="2.5" />
+                <line x1="530" y1="130" x2="580" y2="130" stroke="#E9A825" stroke-width="2.5" />
+              </g>
+
+              <!-- Root Branch {A, B, C, D} (Height 60) -->
+              <g id="dendroBranchRoot" opacity="0" style="transition: opacity 0.3s ease;">
+                <line x1="405" y1="130" x2="405" y2="60" stroke="#8B5CF6" stroke-width="2.5" />
+                <line x1="555" y1="130" x2="555" y2="60" stroke="#8B5CF6" stroke-width="2.5" />
+                <line x1="405" y1="60" x2="555" y2="60" stroke="#8B5CF6" stroke-width="2.5" />
+              </g>
+            </svg>
+          </div>
+
+          <div class="hc-step-readout" id="hcStepDesc">
+            <strong>Initially:</strong> Every point is its own isolated cluster: <code>{A} {B} {C} {D}</code>. Total clusters: <strong>4</strong>.
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ---- Section 5: Dissimilarity ---- -->
+    <section class="block" id="dissimilarity">
+      <div class="block__body">
+        <h2 class="fade-up animate-on-scroll">
+          <span class="icon-badge icon-badge--coral">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="4" y1="20" x2="20" y2="4"/><circle cx="4" cy="20" r="2"/><circle cx="20" cy="4" r="2"/></svg>
+          </span>
+          5. Dissimilarity &mdash; The Distance Metric
+        </h2>
+
+        <p class="fade-up animate-on-scroll">
+          How does the computer decide which pair of points is "closest"? It calculates <strong>dissimilarity</strong> &mdash; the sum of variabilities between data points.
+        </p>
+
+        <p class="fade-up animate-on-scroll">
+          Our goal at every step is simple: <strong>we try to find the clusters with the least dissimilarity</strong>.
+        </p>
+
+        <!-- Formula Presentation Card -->
+        <div class="formula-card fade-up animate-on-scroll">
+          <div class="formula-card__head">
+            <h3 class="formula-card__title">Euclidean Distance Metric</h3>
+            <span class="formula-card__badge">Geometric Standard</span>
+          </div>
+
+          <div class="math-display-box">
+            <div class="math-eq-row" style="font-size: 1.35rem;">
+              d(A, B) = &radic;<span style="border-top: 2px solid var(--ink); padding-top: 2px; margin-left: 2px;">(x&#8321; &minus; x&#8322;)&sup2; + (y&#8321; &minus; y&#8322;)&sup2;</span>
+            </div>
+          </div>
+
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.8rem; margin-top: 1rem;">
+            <div style="background: var(--teal-tint); padding: 0.75rem 1rem; border-radius: 8px; border-left: 3px solid var(--teal); font-size: 0.9rem;">
+              <strong>Small Distance &rarr; More Similar:</strong> Points lie close together in feature space; merge them first!
+            </div>
+            <div style="background: var(--coral-tint); padding: 0.75rem 1rem; border-radius: 8px; border-left: 3px solid var(--coral); font-size: 0.9rem;">
+              <strong>Large Distance &rarr; More Different:</strong> Points have very different values; only merge at higher levels.
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ---- Section 6: Linkage Methods ---- -->
+    <section class="block" id="linkage-methods">
+      <div class="block__body">
+        <h2 class="fade-up animate-on-scroll">
+          <span class="icon-badge icon-badge--gold">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+          </span>
+          6. Linkage: Measuring Distance Between Clusters
+        </h2>
+
+        <p class="fade-up animate-on-scroll">
+          Measuring the distance between two single dots is easy with Euclidean distance. But what happens once <code style="font-family:'IBM Plex Mono'; font-weight:700;">{A, B}</code> is already a cluster with multiple points, and we want to know its distance to cluster <code style="font-family:'IBM Plex Mono'; font-weight:700;">{C, D}</code>?
+        </p>
+
+        <p class="fade-up animate-on-scroll">
+          We need a rule to compute the distance <strong>between entire clusters</strong>. This rule is called the <strong>linkage method</strong>.
+        </p>
+
+        <!-- Linkage Interactive Visual Explorer -->
+        <div class="hc-linkage-container fade-up animate-on-scroll">
+          <div style="text-align: center; margin-bottom: 1.2rem;">
+            <h3 style="margin: 0; font-family: var(--display); font-size: 1.2rem;">Interactive Linkage Explorer</h3>
+            <p style="margin: 0.2rem 0 0; font-size: 0.88rem; color: var(--muted);">Click any linkage method below to inspect how it measures inter-cluster distance.</p>
+          </div>
+
+          <div class="hc-linkage-tabs">
+            <button class="hc-linkage-tab is-active" data-link="single">
+              <span class="hc-linkage-tab__name">Single Linkage</span>
+              <span class="hc-linkage-tab__anchor">Closest pair</span>
+            </button>
+            <button class="hc-linkage-tab" data-link="complete">
+              <span class="hc-linkage-tab__name">Complete Linkage</span>
+              <span class="hc-linkage-tab__anchor">Farthest pair</span>
+            </button>
+            <button class="hc-linkage-tab" data-link="average">
+              <span class="hc-linkage-tab__name">Average Linkage</span>
+              <span class="hc-linkage-tab__anchor">Average pairs</span>
+            </button>
+            <button class="hc-linkage-tab" data-link="ward">
+              <span class="hc-linkage-tab__name">Ward's Method</span>
+              <span class="hc-linkage-tab__anchor">Variance increase</span>
+            </button>
+          </div>
+
+          <!-- Dynamic Linkage Content Area -->
+          <div class="hc-linkage-content" id="hcLinkageContent">
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.8rem;">
+              <h4 style="margin: 0; font-family: var(--display); font-size: 1.15rem; color: var(--ink);" id="linkTitle">Single Linkage &mdash; Minimum Pairwise Distance</h4>
+              <span style="font-family:'IBM Plex Mono'; font-weight:700; font-size: 0.82rem; background: var(--teal-tint); color: var(--teal-dark); padding: 0.2rem 0.6rem; border-radius: 999px;" id="linkFormula">d(C1, C2) = min { d(x, y) }</span>
+            </div>
+            <p style="font-size: 0.94rem; color: var(--ink-soft); line-height: 1.55; margin: 0 0 1rem;" id="linkDesc">
+              Measures the shortest possible distance between any single point in Cluster 1 and any single point in Cluster 2. Think of two friends shaking hands across a room &mdash; that hand contact determines the distance.
+            </p>
+
+            <!-- SVG Diagram of Linkage Calculation -->
+            <svg id="svgLinkageDiag" viewBox="0 0 540 180" style="width: 100%; height: auto; background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius-sm);">
+              <!-- Cluster 1 Envelope -->
+              <ellipse cx="140" cy="90" rx="75" ry="55" fill="rgba(14, 168, 148, 0.08)" stroke="#0EA894" stroke-width="1.5" stroke-dasharray="3 3" />
+              <text x="140" y="30" font-family="Bricolage Grotesque" font-weight="700" font-size="12" fill="#0B7B6B" text-anchor="middle">Cluster 1</text>
+              <!-- Cluster 1 Points -->
+              <circle cx="100" cy="70" r="6" fill="#0EA894" />
+              <circle cx="115" cy="115" r="6" fill="#0EA894" />
+              <circle cx="170" cy="85" r="7" fill="#0EA894" id="ptC1Closest" stroke="#1B1712" stroke-width="1.5" />
+              <circle cx="85" cy="95" r="7" fill="#0EA894" id="ptC1Farthest" stroke="#1B1712" stroke-width="1.5" />
+
+              <!-- Cluster 2 Envelope -->
+              <ellipse cx="400" cy="90" rx="75" ry="55" fill="rgba(233, 168, 37, 0.08)" stroke="#E9A825" stroke-width="1.5" stroke-dasharray="3 3" />
+              <text x="400" y="30" font-family="Bricolage Grotesque" font-weight="700" font-size="12" fill="#A9770B" text-anchor="middle">Cluster 2</text>
+              <!-- Cluster 2 Points -->
+              <circle cx="370" cy="95" r="7" fill="#E9A825" id="ptC2Closest" stroke="#1B1712" stroke-width="1.5" />
+              <circle cx="420" cy="65" r="6" fill="#E9A825" />
+              <circle cx="430" cy="120" r="6" fill="#E9A825" />
+              <circle cx="455" cy="85" r="7" fill="#E9A825" id="ptC2Farthest" stroke="#1B1712" stroke-width="1.5" />
+
+              <!-- Active Linkage Measurement Line -->
+              <g id="linkLinesGroup">
+                <!-- Single Linkage Line -->
+                <line x1="170" y1="85" x2="370" y2="95" stroke="#FF5A3C" stroke-width="3" stroke-dasharray="5 3" />
+                <text x="270" y="80" text-anchor="middle" font-family="IBM Plex Mono" font-weight="700" font-size="12" fill="#D8431F">Shortest Line = Closest Pair</text>
+              </g>
+            </svg>
+          </div>
+
+          <!-- Master Linkage Summary Table -->
+          <table style="width: 100%; border-collapse: collapse; margin-top: 1.4rem; font-size: 0.9rem; background: var(--surface); border: 1px solid var(--line); border-radius: 8px; overflow: hidden;">
+            <thead>
+              <tr style="background: var(--bg); border-bottom: 2px solid var(--line);">
+                <th style="padding: 0.8rem 1rem; text-align: left; font-family: var(--display); font-weight: 700;">Linkage</th>
+                <th style="padding: 0.8rem 1rem; text-align: left; font-family: var(--display); font-weight: 700;">Meaning</th>
+                <th style="padding: 0.8rem 1rem; text-align: left; font-family: var(--display); font-weight: 700;">Key Behavior</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr style="border-bottom: 1px solid var(--line);">
+                <td style="padding: 0.75rem 1rem; font-weight: 700; color: var(--teal-dark);">Single</td>
+                <td style="padding: 0.75rem 1rem;">Closest pair of points</td>
+                <td style="padding: 0.75rem 1rem; color: var(--ink-soft);">Can handle non-spherical shapes, but susceptible to "chaining" artifacts.</td>
+              </tr>
+              <tr style="border-bottom: 1px solid var(--line);">
+                <td style="padding: 0.75rem 1rem; font-weight: 700; color: var(--coral-dark);">Complete</td>
+                <td style="padding: 0.75rem 1rem;">Farthest pair of points</td>
+                <td style="padding: 0.75rem 1rem; color: var(--ink-soft);">Produces tight, compact spheres; very sensitive to noisy outliers.</td>
+              </tr>
+              <tr style="border-bottom: 1px solid var(--line);">
+                <td style="padding: 0.75rem 1rem; font-weight: 700; color: #6D28D9;">Average</td>
+                <td style="padding: 0.75rem 1rem;">Average distance between points</td>
+                <td style="padding: 0.75rem 1rem; color: var(--ink-soft);">Balanced, robust compromise between single and complete linkage.</td>
+              </tr>
+              <tr>
+                <td style="padding: 0.75rem 1rem; font-weight: 700; color: #B45309;">Ward</td>
+                <td style="padding: 0.75rem 1rem;">Merge causing smallest increase in variance</td>
+                <td style="padding: 0.75rem 1rem; color: var(--ink-soft);">Minimizes within-cluster variance; produces cohesive, uniformly-sized clusters.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ---- Section 7: Dendrogram ---- -->
+    <section class="block" id="dendrogram">
+      <div class="block__body">
+        <h2 class="fade-up animate-on-scroll">
+          <span class="icon-badge icon-badge--teal">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/><path d="M7 17V7"/><path d="M12 17V12"/><path d="M17 17v-8"/></svg>
+          </span>
+          7. The Dendrogram: Reading the Cluster Tree
+        </h2>
+
+        <p class="fade-up animate-on-scroll">
+          A <strong>dendrogram</strong> is the signature tree diagram produced by hierarchical clustering. It gives you a complete historical transcript of the algorithm's decisions:
+        </p>
+
+        <div class="reg-card fade-up animate-on-scroll" style="background: var(--surface); border: 1.5px solid var(--line); border-radius: var(--radius-sm); padding: 1.4rem; margin: 1rem 0;">
+          <ul style="margin: 0; padding-left: 1.2rem; display: flex; flex-direction: column; gap: 0.5rem; font-size: 0.95rem; color: var(--ink);">
+            <li><strong>Which points/clusters were merged:</strong> Each horizontal crossbar connects the clusters that joined together.</li>
+            <li><strong>The order of merging:</strong> Joins occurring near the bottom happened earliest; joins higher up happened later.</li>
+            <li><strong>The dissimilarity at which they were merged:</strong> The vertical height of each join directly reflects how different the two groups were!</li>
+          </ul>
+        </div>
+
+        <div class="definition fade-up animate-on-scroll" style="margin: 1.5rem 0;">
+          <div class="definition__label">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg>
+            Golden Rule of Dendrograms
+          </div>
+          <p style="font-size: 1.1rem; font-weight: 700; margin: 0 0 0.3rem; color: var(--ink);">
+            Height of the join = Dissimilarity / Distance.
+          </p>
+          <p style="margin: 0; font-size: 0.95rem; color: var(--ink-soft);">
+            &bull; <strong>Lower join:</strong> Smaller distance &rarr; Items are <em>more similar</em>.<br>
+            &bull; <strong>Higher join:</strong> Larger distance &rarr; Items are <em>more different</em>.
+          </p>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ---- Section 8: How do we choose the number of clusters? ---- -->
+    <section class="block" id="choosing-clusters">
+      <div class="block__body">
+        <h2 class="fade-up animate-on-scroll">
+          <span class="icon-badge icon-badge--coral">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><line x1="20" y1="4" x2="8.12" y2="15.88"/><line x1="14.47" y1="14.48" x2="20" y2="20"/><line x1="8.12" y1="8.12" x2="12" y2="12"/></svg>
+          </span>
+          8. How do we choose the number of clusters?
+        </h2>
+
+        <p class="fade-up animate-on-scroll">
+          We can <strong>cut the dendrogram horizontally</strong>!
+        </p>
+
+        <p class="fade-up animate-on-scroll">
+          When you draw a horizontal cut line across the dendrogram, the number of vertical branches that cross your cut line gives the <strong>number of clusters</strong>.
+        </p>
+
+        <div style="background: var(--teal-tint); border: 1.5px solid var(--teal); border-radius: var(--radius-sm); padding: 1.2rem; margin: 1.2rem 0;" class="fade-up animate-on-scroll">
+          <h4 style="margin: 0 0 0.4rem; font-family: var(--display); color: var(--teal-dark); font-size: 1.05rem;">The Superpower Over K-Means:</h4>
+          <p style="margin: 0; font-size: 0.92rem; color: var(--ink); line-height: 1.55;">
+            In K-Means, you must guess \(K\) <em>before</em> running the algorithm. If you guess poorly, you have to retrain from scratch. In hierarchical clustering, <strong>you do not have to choose \(K\) in advance!</strong> You build the whole hierarchy once, and then you (or a domain expert) can decide where to slice it.
+          </p>
+        </div>
+
+        <!-- Interactive Dendrogram Cut Simulator -->
+        <div class="hc-dendro-box fade-up animate-on-scroll">
+          <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.6rem; margin-bottom: 1rem;">
+            <div>
+              <span class="ul-hero-badge">Interactive Simulator</span>
+              <h3 style="margin: 0.2rem 0 0; font-family: var(--display); font-size: 1.2rem;">Drag the Cut Line to Choose Clusters</h3>
+            </div>
+            <div style="font-size: 0.9rem; font-family: var(--display); font-weight: 700; color: var(--ink);">
+              Resulting Clusters: <span id="lblClusterCount" style="color: var(--coral); font-size: 1.2rem;">2</span>
+            </div>
+          </div>
+
+          <div class="hc-slider-bar">
+            <span style="font-size: 0.85rem; font-family: var(--display); font-weight: 700; color: var(--ink);">Cut Height:</span>
+            <input type="range" id="dendroSlider" class="hc-slider-input" min="30" max="180" value="95" step="1">
+            <span class="hc-slider-val" id="lblCutHeight">h = 95</span>
+          </div>
+
+          <!-- SVG Dendrogram with Interactive Horizontal Cut Line -->
+          <svg id="svgDendroCut" viewBox="0 0 600 230" style="width: 100%; height: auto; background: var(--bg); border: 1.5px solid var(--line); border-radius: var(--radius-sm);">
+            <!-- Y-Axis (Dissimilarity / Height) -->
+            <line x1="60" y1="20" x2="60" y2="200" stroke="#8A8177" stroke-width="1.5" />
+            <text x="45" y="25" text-anchor="end" font-family="IBM Plex Mono" font-size="11" fill="#8A8177">Height (Dissimilarity)</text>
+            <!-- Ticks -->
+            <line x1="55" y1="40" x2="60" y2="40" stroke="#8A8177" />
+            <text x="50" y="44" text-anchor="end" font-family="IBM Plex Mono" font-size="10" fill="#8A8177">160</text>
+            <line x1="55" y1="90" x2="60" y2="90" stroke="#8A8177" />
+            <text x="50" y="94" text-anchor="end" font-family="IBM Plex Mono" font-size="10" fill="#8A8177">110</text>
+            <line x1="55" y1="140" x2="60" y2="140" stroke="#8A8177" />
+            <text x="50" y="144" text-anchor="end" font-family="IBM Plex Mono" font-size="10" fill="#8A8177">60</text>
+            <line x1="55" y1="190" x2="60" y2="190" stroke="#8A8177" />
+            <text x="50" y="194" text-anchor="end" font-family="IBM Plex Mono" font-size="10" fill="#8A8177">10</text>
+
+            <!-- Dendrogram Tree Branches -->
+            <!-- Leaf Labels -->
+            <text x="140" y="215" text-anchor="middle" font-family="IBM Plex Mono" font-weight="700" font-size="14" fill="#1B1712">A</text>
+            <text x="230" y="215" text-anchor="middle" font-family="IBM Plex Mono" font-weight="700" font-size="14" fill="#1B1712">B</text>
+            <text x="370" y="215" text-anchor="middle" font-family="IBM Plex Mono" font-weight="700" font-size="14" fill="#1B1712">C</text>
+            <text x="460" y="215" text-anchor="middle" font-family="IBM Plex Mono" font-weight="700" font-size="14" fill="#1B1712">D</text>
+
+            <!-- Vertical leaf stalks -->
+            <line x1="140" y1="200" x2="140" y2="150" stroke="#1B1712" stroke-width="2.5" id="stalkA" />
+            <line x1="230" y1="200" x2="230" y2="150" stroke="#1B1712" stroke-width="2.5" id="stalkB" />
+            <line x1="370" y1="200" x2="370" y2="150" stroke="#1B1712" stroke-width="2.5" id="stalkC" />
+            <line x1="460" y1="200" x2="460" y2="150" stroke="#1B1712" stroke-width="2.5" id="stalkD" />
+
+            <!-- First merge: A and B at height 150 (dist = 50) -->
+            <line x1="140" y1="150" x2="230" y2="150" stroke="#1B1712" stroke-width="2.5" id="barAB" />
+            <line x1="185" y1="150" x2="185" y2="50" stroke="#1B1712" stroke-width="2.5" id="trunkAB" />
+
+            <!-- Second merge: C and D at height 150 (dist = 50) -->
+            <line x1="370" y1="150" x2="460" y2="150" stroke="#1B1712" stroke-width="2.5" id="barCD" />
+            <line x1="415" y1="150" x2="415" y2="50" stroke="#1B1712" stroke-width="2.5" id="trunkCD" />
+
+            <!-- Root merge: {A,B} and {C,D} at height 50 (dist = 150) -->
+            <line x1="185" y1="50" x2="415" y2="50" stroke="#1B1712" stroke-width="2.5" id="barRoot" />
+
+            <!-- Dynamic Horizontal Cut Line -->
+            <line id="svgCutLine" x1="60" y1="95" x2="550" y2="95" stroke="#FF5A3C" stroke-width="2.5" stroke-dasharray="6 4" />
+            <text id="svgCutText" x="555" y="99" font-family="Bricolage Grotesque" font-weight="800" font-size="12" fill="#FF5A3C">Cut Line</text>
+
+            <!-- Dynamic intersection dots -->
+            <g id="svgCutCrosshairs"></g>
+          </svg>
+
+          <!-- Dynamic Resulting Clusters List -->
+          <div class="hc-cluster-readout-grid" id="clusterPillsContainer">
+            <!-- Will be populated by JS -->
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ---- Section 9 & 10: Advantages & Disadvantages ---- -->
+    <section class="block" id="pros-and-cons">
+      <div class="block__body">
+        <h2 class="fade-up animate-on-scroll">
+          <span class="icon-badge icon-badge--gold">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 8v8"/><path d="M8 12h8"/></svg>
+          </span>
+          9 &amp; 10. Advantages &amp; Disadvantages &mdash; Complete Tradeoff Guide
+        </h2>
+
+        <p class="fade-up animate-on-scroll">
+          Every machine learning algorithm involves fundamental tradeoffs. To know <strong>when</strong> to use Hierarchical Clustering (and when to avoid it), you need a clear, crystal-cut understanding of its superpowers and its gotchas.
+        </p>
+
+        <!-- Interactive Filter Navigation -->
+        <div class="hc-tradeoffs-container fade-up animate-on-scroll">
+          <div class="hc-tradeoff-nav">
+            <button class="hc-tradeoff-tab is-active" data-filter="all">
+              <span>All Insights</span>
+              <span class="hc-tradeoff-tab__count">11</span>
+            </button>
+            <button class="hc-tradeoff-tab" data-filter="adv">
+              <span>6 Core Advantages</span>
+              <span class="hc-tradeoff-tab__count" style="background:var(--teal-tint);color:var(--teal-dark);">6</span>
+            </button>
+            <button class="hc-tradeoff-tab" data-filter="dis">
+              <span>5 Core Disadvantages</span>
+              <span class="hc-tradeoff-tab__count" style="background:var(--coral-tint);color:var(--coral-dark);">5</span>
+            </button>
+            <button class="hc-tradeoff-tab" data-filter="matrix">
+              <span>Hierarchical vs. K-Means Matrix</span>
+            </button>
+            <button class="hc-tradeoff-tab" data-filter="scalability">
+              <span>Scalability Lab: O(N&sup2;) Complexity</span>
+            </button>
+          </div>
+
+          <!-- Cards Grid for Advantages & Disadvantages -->
+          <div class="hc-tradeoff-grid" id="hcTradeoffGrid">
+
+            <!-- ================= ADVANTAGE 1 ================= -->
+            <div class="hc-tradeoff-card hc-tradeoff-card--adv" data-type="adv">
+              <div class="hc-tradeoff-header">
+                <div class="hc-tradeoff-title-wrap">
+                  <div class="hc-tradeoff-icon">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                  </div>
+                  <h3 class="hc-tradeoff-title">1. No Need to Choose \(K\) Beforehand</h3>
+                </div>
+                <span class="hc-tradeoff-tag">Major Superpower</span>
+              </div>
+              <p class="hc-tradeoff-summary">
+                You never have to guess the "right" number of clusters upfront. The algorithm constructs the complete hierarchy first, and you choose \(K\) whenever you want.
+              </p>
+              <div class="hc-tradeoff-deepdive">
+                <strong>Why this is clearer:</strong> In algorithms like K-Means, if you guess \(K=3\) and it turns out \(K=5\) was better, you have to rerun the entire algorithm from scratch. With Hierarchical Clustering, you run the algorithm <em>once</em>. The full tree is built. You can then slice it at height \(h=10\) to get 2 clusters, or slice at \(h=4\) to get 5 clusters in zero seconds.
+              </div>
+              <div class="hc-tradeoff-example">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+                <span><strong>Real-world benefit:</strong> A retail team can use the exact same trained model to present 3 broad customer segments to executives, and then zoom into 12 micro-segments for email marketers!</span>
+              </div>
+            </div>
+
+            <!-- ================= ADVANTAGE 2 ================= -->
+            <div class="hc-tradeoff-card hc-tradeoff-card--adv" data-type="adv">
+              <div class="hc-tradeoff-header">
+                <div class="hc-tradeoff-title-wrap">
+                  <div class="hc-tradeoff-icon">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                  </div>
+                  <h3 class="hc-tradeoff-title">2. Gives a Visual Dendrogram (Complete Interpretability)</h3>
+                </div>
+                <span class="hc-tradeoff-tag">Full Transparency</span>
+              </div>
+              <p class="hc-tradeoff-summary">
+                Produces a clear, readable tree diagram that shows the entire history of how every single point was grouped and merged.
+              </p>
+              <div class="hc-tradeoff-deepdive">
+                <strong>Why this is clearer:</strong> Most clustering models are "black boxes" &mdash; they assign numbers (0, 1, 2) without explaining why two points ended up together. A dendrogram is completely self-documenting. The vertical branch heights directly reveal the exact mathematical distance (dissimilarity) at which merges occurred.
+              </div>
+              <div class="hc-tradeoff-example">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+                <span><strong>Real-world benefit:</strong> In biology, dendrograms form phylogenetic evolutionary trees showing how animal species branched off from common ancestors millions of years ago.</span>
+              </div>
+            </div>
+
+            <!-- ================= ADVANTAGE 3 ================= -->
+            <div class="hc-tradeoff-card hc-tradeoff-card--adv" data-type="adv">
+              <div class="hc-tradeoff-header">
+                <div class="hc-tradeoff-title-wrap">
+                  <div class="hc-tradeoff-icon">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                  </div>
+                  <h3 class="hc-tradeoff-title">3. Shows Relationships &amp; Nested Structure</h3>
+                </div>
+                <span class="hc-tradeoff-tag">Nested Hierarchy</span>
+              </div>
+              <p class="hc-tradeoff-summary">
+                Captures sub-categories inside categories, reflecting the naturally nested way real-world data is structured.
+              </p>
+              <div class="hc-tradeoff-deepdive">
+                <strong>Why this is clearer:</strong> Flat algorithms force every cluster to be an isolated island. But in reality, categories have hierarchies: <em>Mammals &rarr; Canines &rarr; Wolves vs. Dogs</em>. Hierarchical clustering naturally preserves this parent-child lineage so you can see which clusters are closely related "siblings" and which are distant "second cousins".
+              </div>
+              <div class="hc-tradeoff-example">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+                <span><strong>Real-world benefit:</strong> Organizing e-commerce product catalogs (e.g. <em>Electronics &rarr; Audio &rarr; Headphones &rarr; Noise-Cancelling</em>) automatically from text descriptions.</span>
+              </div>
+            </div>
+
+            <!-- ================= ADVANTAGE 4 ================= -->
+            <div class="hc-tradeoff-card hc-tradeoff-card--adv" data-type="adv">
+              <div class="hc-tradeoff-header">
+                <div class="hc-tradeoff-title-wrap">
+                  <div class="hc-tradeoff-icon">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                  </div>
+                  <h3 class="hc-tradeoff-title">4. Works with Any Distance / Dissimilarity Metric</h3>
+                </div>
+                <span class="hc-tradeoff-tag">Metric Agnostic</span>
+              </div>
+              <p class="hc-tradeoff-summary">
+                Not tied to standard Euclidean distance. You can plug in virtually any mathematical formula for "similarity".
+              </p>
+              <div class="hc-tradeoff-deepdive">
+                <strong>Why this is clearer:</strong> K-Means computes cluster centroids using arithmetic averages, which mathematically only works with standard Euclidean distance on continuous numbers. Hierarchical clustering only needs a pairwise distance matrix. You can use <strong>Manhattan distance</strong> (grid walking), <strong>Cosine similarity</strong> (word counts/text documents), or <strong>Jaccard distance</strong> (shared shopping baskets).
+              </div>
+              <div class="hc-tradeoff-example">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+                <span><strong>Real-world benefit:</strong> Clustering legal documents or news articles using TF-IDF text angle (Cosine similarity) where Euclidean distance fails.</span>
+              </div>
+            </div>
+
+            <!-- ================= ADVANTAGE 5 ================= -->
+            <div class="hc-tradeoff-card hc-tradeoff-card--adv" data-type="adv">
+              <div class="hc-tradeoff-header">
+                <div class="hc-tradeoff-title-wrap">
+                  <div class="hc-tradeoff-icon">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                  </div>
+                  <h3 class="hc-tradeoff-title">5. Multi-Level Granularity on the Fly</h3>
+                </div>
+                <span class="hc-tradeoff-tag">Zoom In / Out</span>
+              </div>
+              <p class="hc-tradeoff-summary">
+                Lets you inspect your dataset at microscopic or macroscopic resolution without re-running any training code.
+              </p>
+              <div class="hc-tradeoff-deepdive">
+                <strong>Why this is clearer:</strong> The entire tree is stored in memory. If you want coarse clusters, look near the top. If you want ultra-detailed clusters, look near the leaves. Moving up and down the tree requires zero recalculations &mdash; you simply change the horizontal cut threshold.
+              </div>
+              <div class="hc-tradeoff-example">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+                <span><strong>Real-world benefit:</strong> Perfect for interactive web dashboards where an analyst drags a slider to dynamically inspect clusters at 2, 4, 8, or 16 divisions in real time!</span>
+              </div>
+            </div>
+
+            <!-- ================= ADVANTAGE 6 ================= -->
+            <div class="hc-tradeoff-card hc-tradeoff-card--adv" data-type="adv">
+              <div class="hc-tradeoff-header">
+                <div class="hc-tradeoff-title-wrap">
+                  <div class="hc-tradeoff-icon">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                  </div>
+                  <h3 class="hc-tradeoff-title">6. Works with Non-Spherical Geometric Shapes</h3>
+                </div>
+                <span class="hc-tradeoff-tag">Flexible Geometry</span>
+              </div>
+              <p class="hc-tradeoff-summary">
+                Can detect winding, crescent-shaped, or elongated clusters that fool traditional centroid algorithms.
+              </p>
+              <div class="hc-tradeoff-deepdive">
+                <strong>Why this is clearer:</strong> K-Means always assumes clusters look like round circular spheres around a center dot. If two clusters are intertwined like concentric rings or two crescent moons, K-Means splits them right down the middle incorrectly. In contrast, Hierarchical Clustering (using <strong>Single Linkage</strong>) measures the nearest point, allowing it to follow continuous winding paths!
+              </div>
+              <div class="hc-tradeoff-example">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+                <span><strong>Real-world benefit:</strong> Detecting snake-like geographic rivers, seismic fault lines, or winding roads on satellite imagery.</span>
+              </div>
+            </div>
+
+            <!-- ================= DISADVANTAGE 1 ================= -->
+            <div class="hc-tradeoff-card hc-tradeoff-card--dis" data-type="dis">
+              <div class="hc-tradeoff-header">
+                <div class="hc-tradeoff-title-wrap">
+                  <div class="hc-tradeoff-icon">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                  </div>
+                  <h3 class="hc-tradeoff-title">1. Slow &amp; Expensive for Large Datasets (\(O(N^2)\) Space, \(O(N^3)\) Time)</h3>
+                </div>
+                <span class="hc-tradeoff-tag">Big Data Blocker</span>
+              </div>
+              <p class="hc-tradeoff-summary">
+                Requires computing and storing the distance between <em>every single pair</em> of data points, making it completely unusable on massive databases.
+              </p>
+              <div class="hc-tradeoff-deepdive">
+                <strong>Why this is clearer:</strong> For \(N\) points, you must calculate \(\frac{N(N-1)}{2}\) pairwise distances. For 1,000 points, that's \(\approx 500,000\) numbers (a few megabytes). But for 100,000 points, that's <strong>5,000,000,000 pairs</strong> requiring over <strong>40 Gigabytes of RAM</strong> just to hold the table! The time complexity of \(O(N^3)\) means doubling your data makes the algorithm run up to 8 times slower.
+              </div>
+              <div class="hc-tradeoff-example">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+                <span><strong>Practical rule:</strong> Works beautifully for \(N < 5,000\) records. For datasets above \(50,000\) rows, use K-Means, MiniBatch K-Means, or sample your data first!</span>
+              </div>
+            </div>
+
+            <!-- ================= DISADVANTAGE 2 ================= -->
+            <div class="hc-tradeoff-card hc-tradeoff-card--dis" data-type="dis">
+              <div class="hc-tradeoff-header">
+                <div class="hc-tradeoff-title-wrap">
+                  <div class="hc-tradeoff-icon">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                  </div>
+                  <h3 class="hc-tradeoff-title">2. Sensitive to Noise &amp; Outliers (The "Chaining" Trap)</h3>
+                </div>
+                <span class="hc-tradeoff-tag">Vulnerable to Noise</span>
+              </div>
+              <p class="hc-tradeoff-summary">
+                A few rogue data points or measurement errors can pull clusters out of position or bridge two separate groups together.
+              </p>
+              <div class="hc-tradeoff-deepdive">
+                <strong>Why this is clearer:</strong> Especially with Single Linkage, two completely distinct, healthy clusters can accidentally be merged early if a tiny trail of random noisy outlier points happens to sit between them like stepping stones across a river. This is called the <strong>chaining effect</strong>. In Complete Linkage, outliers cause distant, artificial merges that distort cluster boundaries.
+              </div>
+              <div class="hc-tradeoff-example">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+                <span><strong>Remedy:</strong> Always perform outlier removal during your Exploratory Data Analysis (EDA) before feeding raw records into hierarchical clustering.</span>
+              </div>
+            </div>
+
+            <!-- ================= DISADVANTAGE 3 ================= -->
+            <div class="hc-tradeoff-card hc-tradeoff-card--dis" data-type="dis">
+              <div class="hc-tradeoff-header">
+                <div class="hc-tradeoff-title-wrap">
+                  <div class="hc-tradeoff-icon">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                  </div>
+                  <h3 class="hc-tradeoff-title">3. Irreversible Merges (Greedy No-Backtracking Gotcha)</h3>
+                </div>
+                <span class="hc-tradeoff-tag">Greedy Trap</span>
+              </div>
+              <p class="hc-tradeoff-summary">
+                Once two clusters are joined together, the algorithm can never separate them. Early mistakes persist forever.
+              </p>
+              <div class="hc-tradeoff-deepdive">
+                <strong>Why this is clearer:</strong> Hierarchical clustering is a strictly <strong>greedy algorithm</strong>: at each step, it asks "what is the best merge right this second?" and commits permanently. Unlike K-Means, which shuffles points between clusters back and forth until the overall global variance is minimized, hierarchical clustering never backtracks. If an early merge was a mistake caused by local noise, that error is locked in permanently.
+              </div>
+              <div class="hc-tradeoff-example">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+                <span><strong>Analogy:</strong> Like cementing two bricks together: once set, you cannot unstick them to test if one would fit better with another wall!</span>
+              </div>
+            </div>
+
+            <!-- ================= DISADVANTAGE 4 ================= -->
+            <div class="hc-tradeoff-card hc-tradeoff-card--dis" data-type="dis">
+              <div class="hc-tradeoff-header">
+                <div class="hc-tradeoff-title-wrap">
+                  <div class="hc-tradeoff-icon">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                  </div>
+                  <h3 class="hc-tradeoff-title">4. Results Depend Heavily on the Chosen Linkage Method</h3>
+                </div>
+                <span class="hc-tradeoff-tag">Subjective Choice</span>
+              </div>
+              <p class="hc-tradeoff-summary">
+                Running the exact same data through Single, Complete, Average, or Ward's linkage can produce four completely different dendrograms.
+              </p>
+              <div class="hc-tradeoff-deepdive">
+                <strong>Why this is clearer:</strong> There is no single "theoretically true" linkage method. Single linkage produces long stringy chains; Complete linkage forces compact equal spheres; Ward's linkage penalizes cluster variance. If a data scientist blindly uses the default linkage without understanding its geometric bias, they may draw completely false conclusions about how their customers or samples are grouped.
+              </div>
+              <div class="hc-tradeoff-example">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+                <span><strong>Best practice:</strong> Start with <strong>Ward's linkage</strong> as the default baseline for natural, compact clusters, and compare against Complete linkage for validation.</span>
+              </div>
+            </div>
+
+            <!-- ================= DISADVANTAGE 5 ================= -->
+            <div class="hc-tradeoff-card hc-tradeoff-card--dis" data-type="dis">
+              <div class="hc-tradeoff-header">
+                <div class="hc-tradeoff-title-wrap">
+                  <div class="hc-tradeoff-icon">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                  </div>
+                  <h3 class="hc-tradeoff-title">5. Dendrograms Become an Unreadable "Hairball" on Large Data</h3>
+                </div>
+                <span class="hc-tradeoff-tag">Visual Ceiling</span>
+              </div>
+              <p class="hc-tradeoff-summary">
+                The visual beauty of a dendrogram evaporates as soon as you have more than a few hundred rows of data.
+              </p>
+              <div class="hc-tradeoff-deepdive">
+                <strong>Why this is clearer:</strong> On a classroom dataset with 20 points, the dendrogram is crisp and gorgeous. But if your dataset has 10,000 points, the bottom of the diagram becomes an illegible solid black blur of overlapping lines. You cannot read point names, you cannot distinguish individual stalks, and the visual interpretability advantage is lost.
+              </div>
+              <div class="hc-tradeoff-example">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+                <span><strong>Workaround:</strong> In Python (<code style="font-family:'IBM Plex Mono'; font-size:0.8rem;">scipy.cluster.hierarchy.dendrogram</code>), you must use truncation (<code style="font-family:'IBM Plex Mono'; font-size:0.8rem;">truncate_mode='lastp'</code>) to display only the top 15-20 branches.</span>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- ================= SCALABILITY LAB CONTAINER ================= -->
+          <div class="hc-scale-lab" id="hcScalabilityLab">
+            <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.6rem;">
+              <div>
+                <span class="ul-hero-badge" style="background:var(--coral-tint); color:var(--coral-dark);">Interactive Complexity Lab</span>
+                <h3 style="margin: 0.2rem 0 0; font-family: var(--display); font-size: 1.25rem;">Why \(O(N^2)\) Space Kills Large Datasets</h3>
+              </div>
+              <p style="margin: 0; font-size: 0.88rem; color: var(--muted);">Click a dataset size below to see pair calculations and memory demand:</p>
+            </div>
+
+            <!-- Size Selector Pills -->
+            <div class="hc-scale-pills">
+              <button class="hc-scale-btn is-active" data-n="100">100 Records</button>
+              <button class="hc-scale-btn" data-n="1000">1,000 Records</button>
+              <button class="hc-scale-btn" data-n="10000">10,000 Records</button>
+              <button class="hc-scale-btn" data-n="50000">50,000 Records</button>
+              <button class="hc-scale-btn" data-n="500000">500,000 Records</button>
+            </div>
+
+            <!-- Live Metrics Grid -->
+            <div class="hc-scale-stats-grid">
+              <div class="hc-scale-stat-card">
+                <div class="hc-scale-stat-lbl">Dataset Size (\(N\))</div>
+                <div class="hc-scale-stat-val" id="lblScaleN" style="color:var(--ink);">100</div>
+              </div>
+              <div class="hc-scale-stat-card">
+                <div class="hc-scale-stat-lbl">Pairwise Distances \(\frac{N(N-1)}{2}\)</div>
+                <div class="hc-scale-stat-val" id="lblScalePairs" style="color:var(--coral-dark);">4,950</div>
+              </div>
+              <div class="hc-scale-stat-card">
+                <div class="hc-scale-stat-lbl">RAM for Distance Matrix</div>
+                <div class="hc-scale-stat-val" id="lblScaleRAM" style="color:var(--teal-dark);">~40 KB</div>
+              </div>
+              <div class="hc-scale-stat-card">
+                <div class="hc-scale-stat-lbl">Estimated Compute Speed</div>
+                <div class="hc-scale-stat-val" id="lblScaleTime" style="color:var(--gold-dark);">&lt; 0.01 sec</div>
+              </div>
+            </div>
+
+            <!-- Dynamic Verdict Callout -->
+            <div class="hc-scale-verdict-box" id="hcScaleVerdict" style="background:var(--teal-tint); border:1.5px solid var(--teal); color:var(--teal-dark);">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+              <div>
+                <strong>Lightweight &amp; Instant:</strong> At 100 rows, Hierarchical Clustering computes in a fraction of a millisecond. Memory demand is practically zero. Ideal for small, exploratory datasets!
+              </div>
+            </div>
+          </div>
+
+          <!-- ================= DECISION MATRIX TABLE CONTAINER ================= -->
+          <div id="hcDecisionMatrixSection" style="margin-top: 2rem;">
+            <div style="margin-bottom: 1rem;">
+              <span class="ul-hero-badge" style="background:var(--teal-tint); color:var(--teal-dark);">Head-to-Head Comparison</span>
+              <h3 style="margin: 0.2rem 0 0; font-family: var(--display); font-size: 1.25rem;">Hierarchical Clustering vs. K-Means: The Definitive Matrix</h3>
+              <p style="margin: 0.2rem 0 0; font-size: 0.9rem; color: var(--ink-soft);">
+                When in an interview or evaluating a data science project, this table tells you exactly which algorithm to pick:
+              </p>
+            </div>
+
+            <div class="hc-matrix-wrapper">
+              <table class="hc-matrix-table">
+                <thead>
+                  <tr>
+                    <th style="width: 20%;">Evaluation Feature</th>
+                    <th style="width: 38%; color: var(--coral-dark);">Hierarchical Clustering</th>
+                    <th style="width: 38%; color: var(--teal-dark);">K-Means Clustering</th>
+                    <th style="width: 4%;">Winner</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><strong>Choosing \(K\) (Clusters)</strong></td>
+                    <td><span class="hc-check-pill hc-check-pill--good">Decided After</span> Built once; choose \(K\) by cutting the tree anytime.</td>
+                    <td><span class="hc-check-pill hc-check-pill--warn">Strictly Upfront</span> Must guess \(K\) before running; re-run if wrong.</td>
+                    <td style="font-weight: 800; color: var(--teal-dark);">Hierarchical</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Big Data Scalability</strong></td>
+                    <td><span class="hc-check-pill hc-check-pill--warn">Slow (\(O(N^2)\) to \(O(N^3)\))</span> Fails on &gt; 20,000 rows due to pairwise distance matrix.</td>
+                    <td><span class="hc-check-pill hc-check-pill--good">Fast (\(O(K \cdot N \cdot i)\))</span> Easily scales to millions of data records.</td>
+                    <td style="font-weight: 800; color: var(--teal-dark);">K-Means</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Memory Footprint</strong></td>
+                    <td><span class="hc-check-pill hc-check-pill--warn">Heavy (\(O(N^2)\))</span> Needs gigabytes of RAM to store all pairwise distances.</td>
+                    <td><span class="hc-check-pill hc-check-pill--good">Tiny (\(O(N)\))</span> Only stores coordinates and cluster centroid centers.</td>
+                    <td style="font-weight: 800; color: var(--teal-dark);">K-Means</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Interpretability &amp; Visuals</strong></td>
+                    <td><span class="hc-check-pill hc-check-pill--good">Dendrogram Tree</span> Transparent step-by-step genealogy with distance heights.</td>
+                    <td><span class="hc-check-pill hc-check-pill--neutral">Flat Labels</span> Merely outputs cluster numbers (0, 1, 2) without lineage.</td>
+                    <td style="font-weight: 800; color: var(--teal-dark);">Hierarchical</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Distance Metrics</strong></td>
+                    <td><span class="hc-check-pill hc-check-pill--good">Any Metric</span> Works with Euclidean, Manhattan, Cosine (text), Jaccard, etc.</td>
+                    <td><span class="hc-check-pill hc-check-pill--warn">Strictly Euclidean</span> Requires computing coordinate averages (centroids).</td>
+                    <td style="font-weight: 800; color: var(--teal-dark);">Hierarchical</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Cluster Geometries</strong></td>
+                    <td><span class="hc-check-pill hc-check-pill--good">Arbitrary Shapes</span> Single linkage can follow curved chains, snakes, and rings.</td>
+                    <td><span class="hc-check-pill hc-check-pill--warn">Spherical Only</span> Assumes round, convex circular clusters around centers.</td>
+                    <td style="font-weight: 800; color: var(--teal-dark);">Hierarchical</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Reversibility</strong></td>
+                    <td><span class="hc-check-pill hc-check-pill--warn">Greedy &amp; Irreversible</span> Early bad merges cannot be undone.</td>
+                    <td><span class="hc-check-pill hc-check-pill--good">Iterative Shuffle</span> Reassigns points every epoch to minimize error.</td>
+                    <td style="font-weight: 800; color: var(--teal-dark);">K-Means</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <!-- Practical Rule of Thumb Banner -->
+            <div class="hc-rule-thumb-box">
+              <div style="display: flex; align-items: center; gap: 0.6rem;">
+                <span class="icon-badge icon-badge--teal" style="width: 1.8rem; height: 1.8rem;">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                </span>
+                <h4 style="margin: 0; font-family: var(--display); font-size: 1.15rem; color: var(--teal-dark);">The Practical Rule of Thumb</h4>
+              </div>
+              <div class="hc-rule-thumb-grid">
+                <div class="hc-rule-card">
+                  <div class="hc-rule-card__title" style="color:var(--coral-dark);">Choose Hierarchical If:</div>
+                  <p class="hc-rule-card__text">
+                    &bull; Your dataset is under <strong>5,000 &ndash; 10,000 rows</strong>.<br>
+                    &bull; You do not know how many clusters exist beforehand.<br>
+                    &bull; You need an explainable tree (dendrogram) or nested sub-categories.<br>
+                    &bull; You are using text or non-Euclidean distance.
+                  </p>
+                </div>
+                <div class="hc-rule-card">
+                  <div class="hc-rule-card__title" style="color:var(--teal-dark);">Choose K-Means If:</div>
+                  <p class="hc-rule-card__text">
+                    &bull; You have large data: <strong>50,000 to millions of rows</strong>.<br>
+                    &bull; You already have a clear target \(K\) in mind (e.g. 5 customer tiers).<br>
+                    &bull; Fast production inference and low memory footprint are essential.<br>
+                    &bull; Clusters are reasonably round or spherical.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ---- Section 12: Simple Real-World Example ---- -->
+    <section class="block" id="customer-example">
+      <div class="block__body">
+        <h2 class="fade-up animate-on-scroll">
+          <span class="icon-badge icon-badge--teal">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          </span>
+          12. Simple Real-World Example: Customer Segmentation
+        </h2>
+
+        <p class="fade-up animate-on-scroll">
+          Imagine an e-commerce platform with customer demographic data: <strong>Age</strong>, <strong>Income</strong>, and <strong>Spending Score</strong>.
+        </p>
+
+        <p class="fade-up animate-on-scroll">
+          Without any marketing labels, hierarchical clustering scans the feature space and discovers natural behavioral personas:
+        </p>
+
+        <!-- Customer Segmentation Interactive Showcase -->
+        <div class="hc-customer-box fade-up animate-on-scroll">
+          <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.6rem;">
+            <div>
+              <span class="ul-hero-badge" style="background: var(--teal-tint); color: var(--teal-dark);">Real-World Discovery</span>
+              <h3 style="margin: 0.2rem 0 0; font-family: var(--display); font-size: 1.2rem;">Uncovered Customer Clusters</h3>
+            </div>
+            <p style="margin: 0; font-size: 0.88rem; color: var(--muted);">Click any cluster card to inspect persona details.</p>
+          </div>
+
+          <div class="hc-customer-cards">
+            <!-- Cluster 1 -->
+            <div class="hc-cust-card hc-cust-card--1 is-active" data-cluster="1">
+              <span style="font-size: 0.72rem; font-family: var(--display); font-weight: 800; text-transform: uppercase; color: var(--teal-dark);">Cluster 1</span>
+              <h4 style="margin: 0.3rem 0; font-family: var(--display); font-size: 1.05rem;">Budget Youth</h4>
+              <p style="font-size: 0.88rem; color: var(--ink-soft); margin: 0 0 0.6rem;">
+                <strong>Profile:</strong> Young + Low income + Low spending.
+              </p>
+              <div style="font-size: 0.82rem; background: var(--bg); padding: 0.4rem 0.6rem; border-radius: 6px; font-family: 'IBM Plex Mono';">
+                Age: 19-24 &bull; Inc: $22k &bull; Score: 25
+              </div>
+            </div>
+
+            <!-- Cluster 2 -->
+            <div class="hc-cust-card hc-cust-card--2" data-cluster="2">
+              <span style="font-size: 0.72rem; font-family: var(--display); font-weight: 800; text-transform: uppercase; color: var(--coral-dark);">Cluster 2</span>
+              <h4 style="margin: 0.3rem 0; font-family: var(--display); font-size: 1.05rem;">Young Trendsetters</h4>
+              <p style="font-size: 0.88rem; color: var(--ink-soft); margin: 0 0 0.6rem;">
+                <strong>Profile:</strong> Young + High income + High spending.
+              </p>
+              <div style="font-size: 0.82rem; background: var(--bg); padding: 0.4rem 0.6rem; border-radius: 6px; font-family: 'IBM Plex Mono';">
+                Age: 25-34 &bull; Inc: $95k &bull; Score: 88
+              </div>
+            </div>
+
+            <!-- Cluster 3 -->
+            <div class="hc-cust-card hc-cust-card--3" data-cluster="3">
+              <span style="font-size: 0.72rem; font-family: var(--display); font-weight: 800; text-transform: uppercase; color: var(--gold-dark);">Cluster 3</span>
+              <h4 style="margin: 0.3rem 0; font-family: var(--display); font-size: 1.05rem;">Prudent Wealth</h4>
+              <p style="font-size: 0.88rem; color: var(--ink-soft); margin: 0 0 0.6rem;">
+                <strong>Profile:</strong> Older + High income + Medium spending.
+              </p>
+              <div style="font-size: 0.82rem; background: var(--bg); padding: 0.4rem 0.6rem; border-radius: 6px; font-family: 'IBM Plex Mono';">
+                Age: 52-65 &bull; Inc: $110k &bull; Score: 52
+              </div>
+            </div>
+          </div>
+
+          <div style="background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius-sm); padding: 1.1rem; margin-top: 1.2rem; font-size: 0.92rem; color: var(--ink-soft);">
+            <strong style="color: var(--ink);">The Key Takeaway:</strong> The machine learning algorithm <strong>did not know these groups beforehand</strong>. It discovered them purely from the mathematical proximity of points in the 3D space of Age, Income, and Spending!
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ---- Section 13: Knowledge Check Quiz ---- -->
+    <section class="block" id="quiz">
+      <div class="block__body">
+        <h2 class="fade-up animate-on-scroll">
+          <span class="icon-badge icon-badge--coral">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+          </span>
+          Mastery Check: Hierarchical Clustering
+        </h2>
+
+        <!-- Quiz 1 -->
+        <div class="hc-quiz-card fade-up animate-on-scroll" id="quizHc1">
+          <div class="hc-quiz-q">1. Which linkage method measures the distance between clusters using their closest pair of points?</div>
+          <div class="hc-quiz-options">
+            <button class="hc-quiz-opt" data-correct="true">A) Single Linkage</button>
+            <button class="hc-quiz-opt" data-correct="false">B) Complete Linkage</button>
+            <button class="hc-quiz-opt" data-correct="false">C) Ward's Method</button>
+            <button class="hc-quiz-opt" data-correct="false">D) Average Linkage</button>
+          </div>
+          <div class="hc-quiz-feedback"></div>
+        </div>
+
+        <!-- Quiz 2 -->
+        <div class="hc-quiz-card fade-up animate-on-scroll" id="quizHc2">
+          <div class="hc-quiz-q">2. What does the height of a join in a dendrogram represent?</div>
+          <div class="hc-quiz-options">
+            <button class="hc-quiz-opt" data-correct="false">A) The number of training epochs elapsed.</button>
+            <button class="hc-quiz-opt" data-correct="true">B) The dissimilarity/distance between the two clusters being merged.</button>
+            <button class="hc-quiz-opt" data-correct="false">C) The classification accuracy on the test set.</button>
+          </div>
+          <div class="hc-quiz-feedback"></div>
+        </div>
+
+        <!-- Quiz 3 -->
+        <div class="hc-quiz-card fade-up animate-on-scroll" id="quizHc3">
+          <div class="hc-quiz-q">3. Why is hierarchical clustering considered more flexible than K-Means regarding the number of clusters?</div>
+          <div class="hc-quiz-options">
+            <button class="hc-quiz-opt" data-correct="false">A) It guarantees 100% accuracy on every dataset.</button>
+            <button class="hc-quiz-opt" data-correct="true">B) You do not have to choose \(K\) in advance; you build the full hierarchy and cut it horizontally at any level.</button>
+            <button class="hc-quiz-opt" data-correct="false">C) It runs faster than K-Means on million-row tables.</button>
+          </div>
+          <div class="hc-quiz-feedback"></div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ============ LESSON FOOTER ============ -->
+    <footer class="lesson__footer">
+      <a href="unsupervised-learning.html" class="lesson__footer-prev" id="prevLessonLink">
+        <span class="lesson__footer-prev-arrow">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5"/><path d="m12 19-7-7 7-7"/></svg>
+        </span>
+        <div class="lesson__footer-prev-text">
+          <span class="lesson__footer-prev-label">Previous part</span>
+          <span class="lesson__footer-prev-name">5.1 Introduction to Unsupervised Learning</span>
+        </div>
+      </a>
+
+      <div class="lesson__footer-progress">Part 2 of 2 &bull; Unsupervised Learning</div>
+
+      <div class="lesson__footer-next">
+        <div class="lesson__footer-next-text">
+          <span class="lesson__footer-next-label">Next module</span>
+          <span class="lesson__footer-next-name">6. Reinforcement Learning &ndash; coming soon</span>
+        </div>
+      </div>
+    </footer>
+
+  </main>
+</div>
+
+<script src="main.js"></script>
+<script src="glossary.js"></script>
+<script>
+(function() {
+  "use strict";
+
+  // --- 1. Agglomerative Stepper Simulation ---
+  var currentStep = 0;
+  var stepDots = document.querySelectorAll(".hc-step-dot");
+  var btnPrev = document.getElementById("btnStepPrev");
+  var btnNext = document.getElementById("btnStepNext");
+  var stepperTitle = document.getElementById("stepperTitle");
+  var stepDesc = document.getElementById("hcStepDesc");
+
+  var hullAB = document.getElementById("hullAB");
+  var hullCD = document.getElementById("hullCD");
+  var hullAll = document.getElementById("hullAll");
+  var dendroBranchAB = document.getElementById("dendroBranchAB");
+  var dendroBranchCD = document.getElementById("dendroBranchCD");
+  var dendroBranchRoot = document.getElementById("dendroBranchRoot");
+
+  var stepData = [
+    {
+      title: "Step 0: Initial State",
+      desc: "<strong>Initially:</strong> Every point is its own isolated cluster: <code>{A} {B} {C} {D}</code>. Total clusters: <strong>4</strong>.",
+      ab: 0, cd: 0, root: 0
+    },
+    {
+      title: "Step 1: Merge Closest Pair {A, B}",
+      desc: "<strong>Step 1:</strong> Calculate Euclidean distances between all pairs. The closest pair is <strong>A and B</strong>. We merge them: <code>{A,B} {C} {D}</code>. Total clusters: <strong>3</strong>.",
+      ab: 1, cd: 0, root: 0
+    },
+    {
+      title: "Step 2: Merge Next Closest Pair {C, D}",
+      desc: "<strong>Step 2:</strong> Next closest remaining pair is <strong>C and D</strong>. We merge them: <code>{A,B} {C,D}</code>. Total clusters: <strong>2</strong>.",
+      ab: 1, cd: 1, root: 0
+    },
+    {
+      title: "Step 3: Merge Root Cluster {A, B, C, D}",
+      desc: "<strong>Step 3:</strong> Finally, only two clusters remain: <code>{A,B}</code> and <code>{C,D}</code>. We merge them into one single root cluster: <code>{A,B,C,D}</code>. The complete hierarchy is built!",
+      ab: 1, cd: 1, root: 1
+    }
+  ];
+
+  function renderStep(step) {
+    currentStep = step;
+    var d = stepData[step];
+    if (stepperTitle) stepperTitle.textContent = d.title;
+    if (stepDesc) stepDesc.innerHTML = d.desc;
+
+    // Update buttons & dots
+    if (btnPrev) btnPrev.disabled = step === 0;
+    if (btnNext) btnNext.disabled = step === 3;
+
+    stepDots.forEach(function(dot, idx) {
+      dot.classList.toggle("is-active", idx === step);
+    });
+
+    // Update SVG elements
+    if (hullAB) hullAB.setAttribute("opacity", d.ab.toString());
+    if (dendroBranchAB) dendroBranchAB.setAttribute("opacity", d.ab.toString());
+
+    if (hullCD) hullCD.setAttribute("opacity", d.cd.toString());
+    if (dendroBranchCD) dendroBranchCD.setAttribute("opacity", d.cd.toString());
+
+    if (hullAll) hullAll.setAttribute("opacity", d.root.toString());
+    if (dendroBranchRoot) dendroBranchRoot.setAttribute("opacity", d.root.toString());
+  }
+
+  stepDots.forEach(function(dot) {
+    dot.addEventListener("click", function() {
+      var s = parseInt(dot.getAttribute("data-step"), 10);
+      renderStep(s);
+    });
+  });
+
+  if (btnPrev) btnPrev.addEventListener("click", function() {
+    if (currentStep > 0) renderStep(currentStep - 1);
+  });
+  if (btnNext) btnNext.addEventListener("click", function() {
+    if (currentStep < 3) renderStep(currentStep + 1);
+  });
+
+  // --- 2. Linkage Methods Interactive Visual Explorer ---
+  var linkageTabs = document.querySelectorAll(".hc-linkage-tab");
+  var linkTitle = document.getElementById("linkTitle");
+  var linkFormula = document.getElementById("linkFormula");
+  var linkDesc = document.getElementById("linkDesc");
+  var linkLinesGroup = document.getElementById("linkLinesGroup");
+
+  var ptC1Closest = document.getElementById("ptC1Closest");
+  var ptC1Farthest = document.getElementById("ptC1Farthest");
+  var ptC2Closest = document.getElementById("ptC2Closest");
+  var ptC2Farthest = document.getElementById("ptC2Farthest");
+
+  var linkageInfo = {
+    single: {
+      title: "Single Linkage &mdash; Minimum Pairwise Distance",
+      formula: "d(C1, C2) = min { d(x, y) }",
+      desc: "Measures the distance between the <strong>closest pair of points</strong> in the two clusters. Highly effective for elongated or snake-like shapes, but vulnerable to 'chaining' where noise bridges separate groups.",
+      svgLines: '<line x1="170" y1="85" x2="370" y2="95" stroke="#FF5A3C" stroke-width="3" stroke-dasharray="5 3" />' +
+                '<text x="270" y="80" text-anchor="middle" font-family="IBM Plex Mono" font-weight="700" font-size="12" fill="#D8431F">Shortest Line = Closest Pair</text>'
+    },
+    complete: {
+      title: "Complete Linkage &mdash; Maximum Pairwise Distance",
+      formula: "d(C1, C2) = max { d(x, y) }",
+      desc: "Measures the distance between the <strong>farthest pair of points</strong> in the two clusters. Produces compact, tight, spherical clusters, but is sensitive to distant outliers.",
+      svgLines: '<line x1="85" y1="95" x2="455" y2="85" stroke="#FF5A3C" stroke-width="3" stroke-dasharray="5 3" />' +
+                '<text x="270" y="80" text-anchor="middle" font-family="IBM Plex Mono" font-weight="700" font-size="12" fill="#D8431F">Longest Line = Farthest Pair</text>'
+    },
+    average: {
+      title: "Average Linkage &mdash; Mean Pairwise Distance",
+      formula: "d(C1, C2) = average { d(x, y) }",
+      desc: "Computes the <strong>average distance between all possible pairs</strong> across both clusters. Provides a well-rounded compromise that resists outliers better than Single or Complete.",
+      svgLines: '<line x1="170" y1="85" x2="370" y2="95" stroke="#8A8177" stroke-width="1.5" stroke-dasharray="2 2" opacity="0.6" />' +
+                '<line x1="100" y1="70" x2="420" y2="65" stroke="#8A8177" stroke-width="1.5" stroke-dasharray="2 2" opacity="0.6" />' +
+                '<line x1="115" y1="115" x2="430" y2="120" stroke="#8A8177" stroke-width="1.5" stroke-dasharray="2 2" opacity="0.6" />' +
+                '<line x1="85" y1="95" x2="455" y2="85" stroke="#8A8177" stroke-width="1.5" stroke-dasharray="2 2" opacity="0.6" />' +
+                '<text x="270" y="80" text-anchor="middle" font-family="IBM Plex Mono" font-weight="700" font-size="12" fill="#6D28D9">Average of All Cross-Pair Distances</text>'
+    },
+    ward: {
+      title: "Ward's Method &mdash; Minimum Variance Increase",
+      formula: "ΔVariance = ESS(C1 ∪ C2) - ESS(C1) - ESS(C2)",
+      desc: "Instead of raw distance, Ward evaluates what happens if we merge C1 and C2: how much does the <strong>within-cluster variance (Error Sum of Squares)</strong> increase? It chooses the merge causing the smallest variance growth, generating beautifully balanced, cohesive groups.",
+      svgLines: '<circle cx="140" cy="90" r="8" fill="#1B1712" />' +
+                '<circle cx="400" cy="90" r="8" fill="#1B1712" />' +
+                '<line x1="140" y1="90" x2="400" y2="90" stroke="#B45309" stroke-width="3" stroke-dasharray="4 4" />' +
+                '<text x="270" y="80" text-anchor="middle" font-family="IBM Plex Mono" font-weight="700" font-size="12" fill="#B45309">Minimizes Increase in Within-Cluster Variance</text>'
+    }
+  };
+
+  linkageTabs.forEach(function(tab) {
+    tab.addEventListener("click", function() {
+      linkageTabs.forEach(function(t) { t.classList.remove("is-active"); });
+      tab.classList.add("is-active");
+
+      var key = tab.getAttribute("data-link");
+      var data = linkageInfo[key];
+      if (!data) return;
+
+      if (linkTitle) linkTitle.innerHTML = data.title;
+      if (linkFormula) linkFormula.innerHTML = data.formula;
+      if (linkDesc) linkDesc.innerHTML = data.desc;
+      if (linkLinesGroup) linkLinesGroup.innerHTML = data.svgLines;
+    });
+  });
+
+  // --- 3. Dendrogram Interactive Horizontal Cut Line Simulator ---
+  var dendroSlider = document.getElementById("dendroSlider");
+  var lblCutHeight = document.getElementById("lblCutHeight");
+  var lblClusterCount = document.getElementById("lblClusterCount");
+  var svgCutLine = document.getElementById("svgCutLine");
+  var svgCutText = document.getElementById("svgCutText");
+  var crosshairsGroup = document.getElementById("svgCutCrosshairs");
+  var pillsContainer = document.getElementById("clusterPillsContainer");
+
+  // Dendrogram branches in SVG coordinates:
+  // Root join is at y = 50 (height ~ 150)
+  // Sub-joins {A,B} and {C,D} are at y = 150 (height ~ 50)
+  // Leaves are at y = 200 (height 0)
+
+  function updateCut(yVal) {
+    if (lblCutHeight) lblCutHeight.textContent = "h = " + (200 - yVal);
+    if (svgCutLine) {
+      svgCutLine.setAttribute("y1", yVal);
+      svgCutLine.setAttribute("y2", yVal);
+    }
+    if (svgCutText) {
+      svgCutText.setAttribute("y", yVal + 4);
+    }
+
+    // Determine cluster partition based on yVal
+    var clusterCount = 1;
+    var clusters = [];
+    var crosshairPoints = [];
+
+    if (yVal < 50) {
+      // Above the root join
+      clusterCount = 1;
+      clusters = [
+        { name: "Cluster 1", members: "{A, B, C, D}", color: "#8B5CF6" }
+      ];
+      // 0 cuts below the root, or 1 trunk cut if we consider trunk
+      crosshairPoints = [{ x: 300, y: yVal }];
+    } else if (yVal >= 50 && yVal < 150) {
+      // Between root join (50) and sub-joins (150)
+      clusterCount = 2;
+      clusters = [
+        { name: "Cluster 1", members: "{A, B}", color: "#0EA894" },
+        { name: "Cluster 2", members: "{C, D}", color: "#E9A825" }
+      ];
+      crosshairPoints = [{ x: 185, y: yVal }, { x: 415, y: yVal }];
+    } else {
+      // Below sub-joins (150)
+      clusterCount = 4;
+      clusters = [
+        { name: "Cluster 1", members: "{A}", color: "#0EA894" },
+        { name: "Cluster 2", members: "{B}", color: "#0B7B6B" },
+        { name: "Cluster 3", members: "{C}", color: "#E9A825" },
+        { name: "Cluster 4", members: "{D}", color: "#A9770B" }
+      ];
+      crosshairPoints = [{ x: 140, y: yVal }, { x: 230, y: yVal }, { x: 370, y: yVal }, { x: 460, y: yVal }];
+    }
+
+    if (lblClusterCount) lblClusterCount.textContent = clusterCount;
+
+    // Render crosshair dots on cut line
+    if (crosshairsGroup) {
+      crosshairsGroup.innerHTML = "";
+      crosshairPoints.forEach(function(pt) {
+        var circle = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+        circle.setAttribute("cx", pt.x);
+        circle.setAttribute("cy", pt.y);
+        circle.setAttribute("r", "5.5");
+        circle.setAttribute("fill", "#FF5A3C");
+        circle.setAttribute("stroke", "#FFFFFF");
+        circle.setAttribute("stroke-width", "2");
+        crosshairsGroup.appendChild(circle);
+      });
+    }
+
+    // Render cluster pill cards
+    if (pillsContainer) {
+      pillsContainer.innerHTML = "";
+      clusters.forEach(function(c) {
+        var card = document.createElement("div");
+        card.className = "hc-cluster-chip";
+        card.style.borderColor = c.color;
+        card.innerHTML = '<span class="hc-cluster-chip__num" style="color:' + c.color + '">' + c.name + '</span>' +
+                         '<div class="hc-cluster-chip__members">' + c.members + '</div>';
+        pillsContainer.appendChild(card);
+      });
+    }
+  }
+
+  if (dendroSlider) {
+    dendroSlider.addEventListener("input", function() {
+      updateCut(parseInt(dendroSlider.value, 10));
+    });
+    // Initialize
+    updateCut(95);
+  }
+
+  // --- 4. Customer Segmentation Card Interactivity ---
+  var custCards = document.querySelectorAll(".hc-cust-card");
+  custCards.forEach(function(card) {
+    card.addEventListener("click", function() {
+      custCards.forEach(function(c) { c.classList.remove("is-active"); });
+      card.classList.add("is-active");
+    });
+  });
+
+  // --- 5. Interactive Quiz Logic ---
+  var quizzes = [
+    {
+      id: "quizHc1",
+      feedback: "Spot on! Single linkage computes the distance between the closest (minimum distance) pair of points between two clusters."
+    },
+    {
+      id: "quizHc2",
+      feedback: "Exactly right! In a dendrogram, vertical height represents the dissimilarity / distance between the two merged clusters. Low height = highly similar."
+    },
+    {
+      id: "quizHc3",
+      feedback: "Great job! In hierarchical clustering, you build the entire tree once without knowing K upfront. Then you simply slice the dendrogram with a horizontal cut line to produce as many clusters as desired."
+    }
+  ];
+
+  quizzes.forEach(function(q) {
+    var card = document.getElementById(q.id);
+    if (!card) return;
+    var opts = card.querySelectorAll(".hc-quiz-opt");
+    var feedbackBox = card.querySelector(".hc-quiz-feedback");
+
+    opts.forEach(function(opt) {
+      opt.addEventListener("click", function() {
+        var isCorrect = opt.getAttribute("data-correct") === "true";
+        opts.forEach(function(o) {
+          o.classList.remove("is-correct", "is-wrong");
+          o.disabled = true;
+        });
+
+        if (isCorrect) {
+          opt.classList.add("is-correct");
+          feedbackBox.className = "hc-quiz-feedback is-visible is-correct";
+          feedbackBox.innerHTML = "<strong>Correct!</strong> " + q.feedback;
+        } else {
+          opt.classList.add("is-wrong");
+          feedbackBox.className = "hc-quiz-feedback is-visible is-wrong";
+          feedbackBox.innerHTML = "<strong>Not quite.</strong> Review the summary section above and try again!";
+        }
+      });
+    });
+  });
+
+  // --- 6. Enhanced Advantages & Disadvantages Filter Tabs ---
+  var tradeoffTabs = document.querySelectorAll(".hc-tradeoff-tab");
+  var tradeoffCards = document.querySelectorAll(".hc-tradeoff-card");
+  var cardGrid = document.getElementById("hcTradeoffGrid");
+  var scaleLab = document.getElementById("hcScalabilityLab");
+  var matrixSection = document.getElementById("hcDecisionMatrixSection");
+
+  tradeoffTabs.forEach(function(tab) {
+    tab.addEventListener("click", function() {
+      tradeoffTabs.forEach(function(t) { t.classList.remove("is-active"); });
+      tab.classList.add("is-active");
+
+      var filter = tab.getAttribute("data-filter");
+
+      if (filter === "all") {
+        if (cardGrid) cardGrid.style.display = "grid";
+        if (scaleLab) scaleLab.style.display = "block";
+        if (matrixSection) matrixSection.style.display = "block";
+        tradeoffCards.forEach(function(c) { c.style.display = "flex"; });
+      } else if (filter === "adv") {
+        if (cardGrid) cardGrid.style.display = "grid";
+        if (scaleLab) scaleLab.style.display = "none";
+        if (matrixSection) matrixSection.style.display = "none";
+        tradeoffCards.forEach(function(c) {
+          c.style.display = c.getAttribute("data-type") === "adv" ? "flex" : "none";
+        });
+      } else if (filter === "dis") {
+        if (cardGrid) cardGrid.style.display = "grid";
+        if (scaleLab) scaleLab.style.display = "none";
+        if (matrixSection) matrixSection.style.display = "none";
+        tradeoffCards.forEach(function(c) {
+          c.style.display = c.getAttribute("data-type") === "dis" ? "flex" : "none";
+        });
+      } else if (filter === "matrix") {
+        if (cardGrid) cardGrid.style.display = "none";
+        if (scaleLab) scaleLab.style.display = "none";
+        if (matrixSection) {
+          matrixSection.style.display = "block";
+          matrixSection.scrollIntoView({ behavior: "smooth", block: "nearest" });
+        }
+      } else if (filter === "scalability") {
+        if (cardGrid) cardGrid.style.display = "none";
+        if (scaleLab) {
+          scaleLab.style.display = "block";
+          scaleLab.scrollIntoView({ behavior: "smooth", block: "nearest" });
+        }
+        if (matrixSection) matrixSection.style.display = "none";
+      }
+    });
+  });
+
+  // --- 7. Scalability & Memory Complexity Lab ---
+  var scaleButtons = document.querySelectorAll(".hc-scale-btn");
+  var lblScaleN = document.getElementById("lblScaleN");
+  var lblScalePairs = document.getElementById("lblScalePairs");
+  var lblScaleRAM = document.getElementById("lblScaleRAM");
+  var lblScaleTime = document.getElementById("lblScaleTime");
+  var scaleVerdict = document.getElementById("hcScaleVerdict");
+
+  var scaleConfigs = {
+    100: {
+      n: "100",
+      pairs: "4,950",
+      ram: "~40 KB",
+      time: "< 0.01 sec",
+      verdictClass: "background:var(--teal-tint); border:1.5px solid var(--teal); color:var(--teal-dark);",
+      iconSvg: '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>',
+      html: "<strong>Lightweight &amp; Instant:</strong> At 100 rows, Hierarchical Clustering computes in a fraction of a millisecond. Memory demand is practically zero. Ideal for small, exploratory datasets!"
+    },
+    1000: {
+      n: "1,000",
+      pairs: "499,500",
+      ram: "~4 MB",
+      time: "~0.05 sec",
+      verdictClass: "background:var(--teal-tint); border:1.5px solid var(--teal); color:var(--teal-dark);",
+      iconSvg: '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>',
+      html: "<strong>Smooth &amp; Fast:</strong> 1,000 records requires half a million pair comparisons. Modern laptops compute this easily with minimal memory footprint."
+    },
+    10000: {
+      n: "10,000",
+      pairs: "49,995,000",
+      ram: "~400 MB",
+      time: "~3.5 sec",
+      verdictClass: "background:var(--gold-tint); border:1.5px solid var(--gold); color:var(--gold-dark);",
+      iconSvg: '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>',
+      html: "<strong>Warning &bull; Noticeable Delay:</strong> 10,000 records jumps to 50 million distance calculations. The distance matrix demands nearly 400 MB of RAM. The delay is now noticeable to users."
+    },
+    50000: {
+      n: "50,000",
+      pairs: "1,249,975,000",
+      ram: "~10 GB",
+      time: "2 – 5 min",
+      verdictClass: "background:var(--coral-tint); border:1.5px solid var(--coral); color:var(--coral-dark);",
+      iconSvg: '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>',
+      html: "<strong>Danger Zone &bull; Out-Of-Memory Risk:</strong> Over 1.25 billion pairwise calculations! The distance matrix alone eats 10 GB of RAM. Most standard consumer laptops will freeze or crash with memory thrashing."
+    },
+    500000: {
+      n: "500,000",
+      pairs: "124,999,750,000",
+      ram: "~1 TB (Terabyte)",
+      time: "Hours / Crash",
+      verdictClass: "background:rgba(220,38,38,0.12); border:1.5px solid #DC2626; color:#DC2626;",
+      iconSvg: '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
+      html: "<strong>Fatal Memory Crash:</strong> Requires 1 Terabyte of RAM just to initialize the matrix! Standard Hierarchical Clustering cannot run here. <em>You must use K-Means (which scales linearly in seconds) or MiniBatch K-Means!</em>"
+    }
+  };
+
+  scaleButtons.forEach(function(btn) {
+    btn.addEventListener("click", function() {
+      scaleButtons.forEach(function(b) { b.classList.remove("is-active"); });
+      btn.classList.add("is-active");
+
+      var nKey = parseInt(btn.getAttribute("data-n"), 10);
+      var conf = scaleConfigs[nKey];
+      if (!conf) return;
+
+      if (lblScaleN) lblScaleN.textContent = conf.n;
+      if (lblScalePairs) lblScalePairs.textContent = conf.pairs;
+      if (lblScaleRAM) lblScaleRAM.textContent = conf.ram;
+      if (lblScaleTime) lblScaleTime.textContent = conf.time;
+
+      if (scaleVerdict) {
+        scaleVerdict.style.cssText = conf.verdictClass;
+        scaleVerdict.innerHTML = conf.iconSvg + "<div>" + conf.html + "</div>";
+      }
+    });
+  });
+
+})();
+</script>
+
+</body>
+</html>

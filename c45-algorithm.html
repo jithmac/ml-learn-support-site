@@ -1,0 +1,1050 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>C4.5 Algorithm &ndash; Learning Machines</title>
+<meta name="description" content="The C4.5 decision tree algorithm: Gain Ratio, handling continuous numerical features, midpoint cutoff thresholds, and post-pruning.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,600;12..96,700&family=Figtree:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="grain" aria-hidden="true"></div>
+
+<div class="progress-rail" aria-hidden="true"><div class="progress-fill" id="progressFill"></div></div>
+
+<header class="top-bar">
+  <div class="top-bar__brand">
+    <span class="course-nav__mark">LM</span>
+    <span class="top-bar__title">Learning Machines</span>
+  </div>
+  <div class="top-bar__controls">
+    <span class="top-bar__time" id="readTime">~8 min read</span>
+    <button class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="courseNav">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="4" x2="20" y1="6" y2="6"/><line x1="4" x2="20" y1="12" y2="12"/><line x1="4" x2="20" y1="18" y2="18"/></svg>
+      <span class="nav-toggle__label">Course map</span>
+    </button>
+  </div>
+</header>
+
+<div class="nav-overlay" id="navOverlay" aria-hidden="true"></div>
+<!-- ============ SLIDE-OVER SIDEBAR ============ -->
+<aside class="course-nav" id="courseNav">
+  <div class="course-nav__header">
+    <h2 class="course-nav__title-side">Course map</h2>
+    <button class="nav-close" id="navClose" aria-label="Close nav">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
+    </button>
+  </div>
+  <p class="course-nav__tagline">A slow, careful path through machine learning, start to finish.</p>
+
+  <ol class="course-nav__list">
+    <li class="course-nav__item is-completed">
+      <a href="index.html" class="course-nav__inner-link">
+        <span class="course-nav__num">1</span>
+        <div>
+          <span class="course-nav__name">Introduction</span>
+          <span class="course-nav__state">completed</span>
+        </div>
+      </a>
+    </li>
+    <li class="course-nav__item is-completed">
+      <a href="data-preprocessing.html" class="course-nav__inner-link">
+        <span class="course-nav__num">2</span>
+        <div>
+          <span class="course-nav__name">Data Preprocessing</span>
+          <span class="course-nav__state">completed</span>
+        </div>
+      </a>
+    </li>
+    <li class="course-nav__item is-completed">
+      <a href="eda.html" class="course-nav__inner-link">
+        <span class="course-nav__num">3</span>
+        <div>
+          <span class="course-nav__name">Exploratory Data Analysis</span>
+          <span class="course-nav__state">completed</span>
+        </div>
+      </a>
+    </li>
+    <li class="course-nav__item is-active-group">
+      <span class="course-nav__num">4</span>
+      <div>
+        <span class="course-nav__name">Supervised Learning</span>
+        <span class="course-nav__state">in progress</span>
+      </div>
+    </li>
+    <ol class="course-nav__sub-list">
+      <li class="course-nav__sub-item is-completed">
+        <a href="supervised-learning.html">
+          <span class="course-nav__sub-num">4.1</span>
+          <div>
+            <span class="course-nav__sub-name">Introduction</span>
+            <span class="course-nav__state">completed</span>
+          </div>
+        </a>
+      </li>
+      <li class="course-nav__sub-item is-completed">
+        <a href="classification.html">
+          <span class="course-nav__sub-num">4.2</span>
+          <div>
+            <span class="course-nav__sub-name">Classification &amp; Decision Trees</span>
+            <span class="course-nav__state">completed</span>
+          </div>
+        </a>
+      </li>
+      <li class="course-nav__sub-item is-completed">
+        <a href="id3-algorithm.html">
+          <span class="course-nav__sub-num">4.3</span>
+          <div>
+            <span class="course-nav__sub-name">ID3 Algorithm</span>
+            <span class="course-nav__state">completed</span>
+          </div>
+        </a>
+      </li>
+      <li class="course-nav__sub-item is-active">
+        <a href="c45-algorithm.html">
+          <span class="course-nav__sub-num">4.4</span>
+          <div>
+            <span class="course-nav__sub-name">C4.5 Algorithm</span>
+            <span class="course-nav__state">reading now</span>
+          </div>
+        </a>
+      </li>
+      <li class="course-nav__sub-item ">
+        <a href="cart-algorithm.html">
+          <span class="course-nav__sub-num">4.5</span>
+          <div>
+            <span class="course-nav__sub-name">CART Algorithm</span>
+            <span class="course-nav__state">available now</span>
+          </div>
+        </a>
+      </li>
+      <li class="course-nav__sub-item ">
+        <a href="regression-analysis.html">
+          <span class="course-nav__sub-num">4.6</span>
+          <div>
+            <span class="course-nav__sub-name">Introduction to Regression</span>
+            <span class="course-nav__state">available now</span>
+          </div>
+        </a>
+      </li>
+      <li class="course-nav__sub-item">
+        <a href="simple-linear-regression.html">
+          <span class="course-nav__sub-num">4.7</span>
+          <div>
+            <span class="course-nav__sub-name">Simple Linear Regression</span>
+            <span class="course-nav__state">available now</span>
+          </div>
+        </a>
+      </li>
+      <li class="course-nav__sub-item">
+        <a href="polynomial-regression.html">
+          <span class="course-nav__sub-num">4.8</span>
+          <div>
+            <span class="course-nav__sub-name">Polynomial Regression</span>
+            <span class="course-nav__state">available now</span>
+          </div>
+        </a>
+      </li>
+    </ol>
+    <li class="course-nav__item">
+      <a href="unsupervised-learning.html" class="course-nav__inner-link">
+        <span class="course-nav__num">5</span>
+        <div>
+          <span class="course-nav__name">Unsupervised Learning</span>
+          <span class="course-nav__state">available now</span>
+        </div>
+      </a>
+    </li>
+    <ol class="course-nav__sub-list">
+      <li class="course-nav__sub-item">
+        <a href="unsupervised-learning.html">
+          <span class="course-nav__sub-num">5.1</span>
+          <div>
+            <span class="course-nav__sub-name">Introduction</span>
+            <span class="course-nav__state">available now</span>
+          </div>
+        </a>
+      </li>
+      <li class="course-nav__sub-item">
+        <a href="hierarchical-clustering.html">
+          <span class="course-nav__sub-num">5.2</span>
+          <div>
+            <span class="course-nav__sub-name">Hierarchical Clustering</span>
+            <span class="course-nav__state">available now</span>
+          </div>
+        </a>
+      </li>
+    </ol>
+    <li class="course-nav__item is-locked">
+      <span class="course-nav__num">6</span>
+      <div>
+        <span class="course-nav__name">Reinforcement Learning</span>
+        <span class="course-nav__state">
+          <svg class="course-nav__lock" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          coming soon
+        </span>
+      </div>
+    </li>
+  </ol>
+</aside>
+<div class="shell">
+
+  <!-- ============ MAIN ARTICLE ============ -->
+  <main class="lesson">
+
+    <header class="lesson__header">
+      <span class="lesson__eyebrow-free-title">
+        <h1>Decision Trees: C4.5 Algorithm</h1>
+        <svg class="title-underline" viewBox="0 0 520 14" preserveAspectRatio="none" aria-hidden="true">
+          <path d="M4 9 C 120 2, 260 13, 400 6 C 440 4, 480 8, 516 5"/>
+        </svg>
+      </span>
+      <p class="lesson__dek">Solving ID3's limitations: Gain Ratio penalty for many-valued attributes, continuous numerical thresholds, and tree pruning to stop overfitting.</p>
+    </header>
+
+    <!-- ---- Section 8: Problems with ID3 & The C4.5 Solution ---- -->
+    <section class="block" id="problems-with-id3">
+      <div class="block__body">
+        <h2 class="fade-up animate-on-scroll">
+          <span class="icon-badge icon-badge--coral">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+          </span>
+          Problems with ID3 &amp; The C4.5 Solution
+        </h2>
+
+        <!-- Definition / Core Principle Card -->
+        <div class="definition fade-up animate-on-scroll">
+          <div class="definition__label">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+            Why ID3 Struggles in Practice
+          </div>
+          <p>
+            Even though the <strong>ID3 algorithm</strong> was a big step forward for decision trees, it has three big problems in real life: 
+            <strong>it favors attributes with many values</strong>, <strong>it cannot easily handle continuous numbers</strong>, and <strong>it easily overfits</strong>. 
+            To fix these issues, Ross Quinlan created the improved <strong>C4.5 algorithm</strong>.
+          </p>
+        </div>
+
+        <p class="fade-up animate-on-scroll">
+          In our simple tennis example with 10 rows, ID3 works great. But with real-world data, ID3 runs into serious issues. Let's look at the <strong>three main problems</strong> with ID3, and how C4.5 fixes each one.
+        </p>
+
+        <!-- Container for the 3 ID3 Problems -->
+        <div class="id3-problems-container">
+
+          <!-- Problem 1 Card: Multi-Valued Attributes -->
+          <div class="id3-prob-card id3-prob-card--cardinality fade-up animate-on-scroll">
+            <div class="id3-prob-header">
+              <div class="id3-prob-title-grp">
+                <span class="id3-prob-num">1</span>
+                <div>
+                  <h3 class="id3-prob-title">Information Gain Favors Many-Valued Attributes</h3>
+                  <span style="font-size: 0.8rem; color: var(--muted); font-family: 'IBM Plex Mono', monospace;">The Many-Values Trap</span>
+                </div>
+              </div>
+              <span class="id3-prob-badge id3-prob-badge--coral">Unfair Bias</span>
+            </div>
+
+            <p class="id3-prob-lead">
+              ID3 picks the feature with the highest <strong>Information Gain</strong>. But this rule has a serious flaw: it unfairly favors features that have a lot of different values (like ID numbers), even when those features are useless for making predictions.
+            </p>
+
+            <div class="id3-prob-content-grid">
+              <!-- Left Box: How the math breaks down -->
+              <div class="id3-prob-box">
+                <div class="id3-prob-box__title">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z"/></svg>
+                  How Information Gain Works
+                </div>
+                <p>
+                  The general idea behind Information Gain is:
+                </p>
+                <div class="id3-prob-math-row">
+                  <strong>Information Gain = Entropy Before Split &minus; Entropy After Split</strong>
+                </div>
+                <p>
+                  Now imagine a feature with lots of unique values, like <code>Student_ID</code>, <code>Phone_Number</code>, or <code>Date</code>. When you split on this feature, it breaks the data into many tiny groups—and each group has <strong>only 1 student</strong> (or very few).
+                </p>
+              </div>
+
+              <!-- Right Box: The Illusion of Purity -->
+              <div class="id3-prob-box">
+                <div class="id3-prob-box__title">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="10"/><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/></svg>
+                  The Fake High Gain
+                </div>
+                <p>
+                  When a group has only 1 data point, there is no uncertainty at all. That means the entropy of every group drops straight to 0:
+                </p>
+                <div class="id3-prob-math-row">
+                  1 student per group &rarr; <strong>Entropy = 0</strong><br>
+                  Entropy after split = <strong>0</strong><br>
+                  Information Gain = Entropy Before &minus; 0 = <strong>Huge Fake Gain!</strong>
+                </div>
+                <p>
+                  This is completely misleading. ID3 thinks <code>Student_ID</code> is the best feature in the whole dataset, simply because it split the data into tiny single-item groups.
+                </p>
+              </div>
+            </div>
+
+            <div class="id3-prob-verdict id3-prob-verdict--coral">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" style="flex-shrink:0;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+              <span><strong>Why this is a problem:</strong> Many smaller partitions create an artificially higher Information Gain. The tree simply memorizes every student by their ID. When a new student arrives with a new ID, the tree cannot classify them at all!</span>
+            </div>
+          </div>
+
+          <!-- Problem 2 Card: Continuous Attributes -->
+          <div class="id3-prob-card id3-prob-card--continuous fade-up animate-on-scroll">
+            <div class="id3-prob-header">
+              <div class="id3-prob-title-grp">
+                <span class="id3-prob-num">2</span>
+                <div>
+                  <h3 class="id3-prob-title">ID3 Cannot Practically Use Continuous Attributes</h3>
+                  <span style="font-size: 0.8rem; color: var(--muted); font-family: 'IBM Plex Mono', monospace;">Working with Numbers</span>
+                </div>
+              </div>
+              <span class="id3-prob-badge id3-prob-badge--gold">Impractical for Numbers</span>
+            </div>
+
+            <p class="id3-prob-lead">
+              ID3 was only designed to work with fixed categories (like <code>Outlook = {Sunny, Overcast, Rain}</code>). In real life, most data consists of continuous numbers (like <code>Temperature = 24.3&deg;C</code>, <code>Age = 25</code>, or <code>Salary = $50,000</code>).
+            </p>
+
+            <div class="id3-prob-content-grid">
+              <!-- Left Box -->
+              <div class="id3-prob-box">
+                <div class="id3-prob-box__title">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M18 20V10"/><path d="M12 20V4"/><path d="M6 20v-6"/></svg>
+                  Too Many Branches &amp; Partitions
+                </div>
+                <p>
+                  If you try to give continuous numbers to ID3 directly, it treats every single number as its own separate category:
+                </p>
+                <div class="id3-prob-math-row">
+                  1,000 different temperatures &rarr; <strong>1,000 separate branches!</strong><br>
+                  Each branch gets only 1 or 2 rows.
+                </div>
+                <p>
+                  Entropy cannot practically be calculated this way. It creates too many branches, too many tiny partitions, and makes the Information Gain calculation completely impractical.
+                </p>
+              </div>
+
+              <!-- Right Box -->
+              <div class="id3-prob-box">
+                <div class="id3-prob-box__title">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="10"/><path d="m15 9-6 6"/><path d="m9 9 6 6"/></svg>
+                  No Built-in Cutoff Points
+                </div>
+                <p>
+                  To use numbers properly, an algorithm must find a sensible cutoff threshold (such as <code>Temperature &le; 25&deg;C</code> vs. <code>Temperature &gt; 25&deg;C</code>).
+                </p>
+                <p style="margin-top: 0.6rem;">
+                  ID3 has <strong>no way to find cutoff points automatically</strong>. It cannot sort numbers or create binary splits, so it cannot handle continuous data on its own.
+                </p>
+              </div>
+            </div>
+
+            <div class="id3-prob-verdict id3-prob-verdict--gold">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" style="flex-shrink:0;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+              <span><strong>Why this is a problem:</strong> Real data is full of numbers. Because ID3 creates too many branches and cannot practically get entropy for continuous attributes, it cannot be used on numerical datasets without manual grouping beforehand.</span>
+            </div>
+          </div>
+
+          <!-- Problem 3 Card: Overfitting -->
+          <div class="id3-prob-card id3-prob-card--overfit fade-up animate-on-scroll">
+            <div class="id3-prob-header">
+              <div class="id3-prob-title-grp">
+                <span class="id3-prob-num">3</span>
+                <div>
+                  <h3 class="id3-prob-title">Overfitting: Trees Become Too Specific</h3>
+                  <span style="font-size: 0.8rem; color: var(--muted); font-family: 'IBM Plex Mono', monospace;">Fails on New Data</span>
+                </div>
+              </div>
+              <span class="id3-prob-badge id3-prob-badge--red">Generalization Failure</span>
+            </div>
+
+            <p class="id3-prob-lead">
+              <strong>Overfitting</strong> happens when a decision tree becomes too specific to the training data. It memorizes everything—including noise, mistakes, and unusual exceptions—so it fails to make good predictions on new, unseen data.
+            </p>
+
+            <div class="id3-prob-content-grid">
+              <!-- Left Box -->
+              <div class="id3-prob-box">
+                <div class="id3-prob-box__title">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
+                  Always Chasing Highest Gain
+                </div>
+                <p>
+                  ID3 always searches for the highest Information Gain. It keeps splitting greedily until every single leaf is 100% pure (Entropy = 0) or it runs out of features.
+                </p>
+                <div class="id3-prob-math-row">
+                  Greedy splits on noise &rarr; <strong>Overly complex trees</strong><br>
+                  Training accuracy = <strong>100% (Pure Memorization!)</strong>
+                </div>
+                <p>
+                  If one student in the training data was sick and unexpectedly failed the exam despite studying hard, ID3 creates extra branches just to isolate that single unusual row.
+                </p>
+              </div>
+
+              <!-- Right Box -->
+              <div class="id3-prob-box">
+                <div class="id3-prob-box__title">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+                  No Way to Prune (Trim) Branches
+                </div>
+                <p>
+                  Because the tree is shaped around every little quirk and noise in the training set, it fails when you test it on new, unseen data.
+                </p>
+                <p style="margin-top: 0.6rem;">
+                  ID3 has <strong>no pruning mechanism</strong>. It cannot stop early, and it cannot cut back branches that are too specific or only fit noise.
+                </p>
+              </div>
+            </div>
+
+            <div class="id3-prob-verdict id3-prob-verdict--red">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" style="flex-shrink:0;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+              <span><strong>Why this is a problem:</strong> Overfitting creates trees that are too specific to the given dataset. By always chasing the highest Information Gain, ID3 includes noise in the tree, making it fail on general, unseen data.</span>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- =========================================================================
+             THE SOLUTION: C4.5 ALGORITHM SHOWCASE
+             ========================================================================= -->
+        <div class="c45-solution-card fade-up animate-on-scroll" id="c45Solution">
+          <div class="c45-hero-head">
+            <div>
+              <span class="id3-stat-pill" style="background: var(--teal-tint); color: var(--teal-dark); border-color: rgba(14, 168, 148, 0.4); margin-bottom: 0.6rem; display: inline-block;">
+                ✨ The Solution
+              </span>
+              <h3 class="c45-hero-title">The Solution: The C4.5 Algorithm</h3>
+              <p class="c45-hero-desc">
+                To fix all these problems with ID3, Ross Quinlan created the <strong>C4.5 algorithm</strong> in 1993. C4.5 keeps the good ideas of ID3, but fixes its three biggest weaknesses:
+              </p>
+            </div>
+            <span class="dt-algo-badge dt-algo-badge--gold" style="font-size: 0.82rem; padding: 0.35rem 0.85rem;">
+              Ross Quinlan (1993)
+            </span>
+          </div>
+
+          <!-- 3-Pillar Fixes Grid -->
+          <div class="c45-fixes-grid">
+
+            <!-- Fix 1: Gain Ratio -->
+            <div class="c45-fix-card">
+              <div class="c45-fix-head">
+                <div class="c45-fix-icon">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3"><path d="M16 3h5v5"/><path d="M8 21H3v-5"/><path d="M21 3l-7.5 7.5"/><path d="M3 21l7.5-7.5"/></svg>
+                </div>
+                <h4 class="c45-fix-title">1. Gain Ratio</h4>
+              </div>
+              <span class="c45-fix-tag">Fixes Many-Valued Attributes</span>
+              <p class="c45-fix-text">
+                Instead of simple Information Gain, C4.5 uses <strong>Gain Ratio</strong>. It penalizes attributes that split data into too many tiny pieces (like <code>Student_ID</code>), so they don't get chosen unfairly.
+              </p>
+              <div class="c45-fix-formula">
+                <strong>Gain Ratio = Information Gain / Split Info</strong><br>
+                <span style="font-size: 0.73rem; color: var(--muted);">Penalizes attributes with too many tiny groups.</span>
+              </div>
+            </div>
+
+            <!-- Fix 2: Continuous Attributes -->
+            <div class="c45-fix-card">
+              <div class="c45-fix-head">
+                <div class="c45-fix-icon">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3"><line x1="4" y1="21" x2="4" y2="14"/><line x1="4" y1="10" x2="4" y2="3"/><line x1="12" y1="21" x2="12" y2="12"/><line x1="12" y1="8" x2="12" y2="3"/><line x1="20" y1="21" x2="20" y2="16"/><line x1="20" y1="12" x2="20" y2="3"/><line x1="1" y1="14" x2="7" y2="14"/><line x1="9" y1="8" x2="15" y2="8"/><line x1="17" y1="16" x2="23" y2="16"/></svg>
+                </div>
+                <h4 class="c45-fix-title">2. Handles Numbers</h4>
+              </div>
+              <span class="c45-fix-tag">Fixes Continuous Attributes</span>
+              <p class="c45-fix-text">
+                C4.5 can handle numbers easily. It sorts the numbers from smallest to largest and tests smart cutoff points (for example, <code>Age &le; 30</code> vs <code>Age &gt; 30</code>). This turns continuous numbers into a simple yes/no split.
+              </p>
+              <div class="c45-fix-formula">
+                <strong>Tests: Feature &le; Cutoff Point</strong><br>
+                <span style="font-size: 0.73rem; color: var(--muted);">Finds the best cutoff point automatically.</span>
+              </div>
+            </div>
+
+            <!-- Fix 3: Post-Pruning -->
+            <div class="c45-fix-card">
+              <div class="c45-fix-head">
+                <div class="c45-fix-icon">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3"><circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><line x1="20" y1="4" x2="8.12" y2="15.88"/><line x1="14.47" y1="14.48" x2="20" y2="20"/><line x1="8.12" y1="8.12" x2="12" y2="12"/></svg>
+                </div>
+                <h4 class="c45-fix-title">3. Tree Pruning</h4>
+              </div>
+              <span class="c45-fix-tag">Fixes Overfitting</span>
+              <p class="c45-fix-text">
+                C4.5 stops the tree from becoming too specific. After growing the full tree, it cuts off (prunes) branches that only fit noise or don't help with accuracy. This keeps the tree simpler so it works much better on new data.
+              </p>
+              <div class="c45-fix-formula">
+                <strong>Cuts off branches that fit noise</strong><br>
+                <span style="font-size: 0.73rem; color: var(--muted);">Keeps the tree simpler and more accurate on new data.</span>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Comprehensive Comparison Table -->
+          <div class="id3-c45-table-wrap">
+            <div class="id3-c45-table-head">
+              <h4>Simple Comparison: ID3 vs. C4.5</h4>
+              <p>How C4.5 improves on the main problems of ID3:</p>
+            </div>
+            <div class="id3-c45-table-responsive">
+              <table class="id3-c45-table">
+                <thead>
+                  <tr>
+                    <th style="width: 25%;">Feature</th>
+                    <th style="width: 37%;">ID3 Algorithm (Older)</th>
+                    <th style="width: 38%;">C4.5 Algorithm (Improved)</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><strong>Splitting Rule</strong></td>
+                    <td>
+                      <span class="id3-c45-badge-id3">Information Gain</span><br>
+                      Favors features with many values.
+                    </td>
+                    <td>
+                      <span class="id3-c45-badge-c45">Gain Ratio</span><br>
+                      Penalizes features with too many values.
+                    </td>
+                  </tr>
+                  <tr>
+                    <td><strong>Many-Valued Features (like ID)</strong></td>
+                    <td>
+                      ❌ <strong>Vulnerable:</strong> Picks IDs with fake high gain, making useless 1-row branches.
+                    </td>
+                    <td>
+                      ✔️ <strong>Protected:</strong> Penalizes IDs so they are not chosen unfairly.
+                    </td>
+                  </tr>
+                  <tr>
+                    <td><strong>Continuous Numbers (like Age, Price)</strong></td>
+                    <td>
+                      ❌ <strong>Not supported:</strong> Creates too many branches; cannot handle numbers directly.
+                    </td>
+                    <td>
+                      ✔️ <strong>Fully supported:</strong> Automatically finds cutoff points (like <code>Age &le; 30</code>).
+                    </td>
+                  </tr>
+                  <tr>
+                    <td><strong>Overfitting (Too Specific)</strong></td>
+                    <td>
+                      ❌ <strong>No pruning:</strong> Grows too deep, memorizes noise, and fails on new data.
+                    </td>
+                    <td>
+                      ✔️ <strong>Pruning:</strong> Cuts off branches that only fit noise, keeping the tree simple.
+                    </td>
+                  </tr>
+                  <tr>
+                    <td><strong>Missing Values</strong></td>
+                    <td>
+                      ❌ <strong>Fails:</strong> Cannot handle rows with missing data.
+                    </td>
+                    <td>
+                      ✔️ <strong>Handled:</strong> Can handle missing data safely.
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Final Takeaway Note -->
+          <div style="margin-top: 1.5rem; background: rgba(14, 168, 148, 0.08); border-left: 3px solid var(--teal); border-radius: 6px; padding: 0.85rem 1.2rem; font-size: 0.9rem; color: var(--ink); line-height: 1.6;">
+            <strong>Key Takeaway:</strong> ID3 proved that computers could build decision trees using entropy. But <strong>C4.5 made them practical for real-world use</strong> by handling numbers, stopping overfitting with pruning, and fixing the bias toward many-valued features.
+          </div>
+
+        </div>
+
+        <!-- =========================================================================
+             PRACTICAL NUMERICAL EXAMPLE: C4.5 IN ACTION
+             ========================================================================= -->
+        <div class="c45-example-wrap fade-up animate-on-scroll" id="c45NumericalExample">
+          <div class="c45-example-head">
+            <span class="id3-stat-pill" style="background: var(--gold-tint); color: var(--gold-dark); border-color: rgba(233, 168, 37, 0.4); margin-bottom: 0.6rem; display: inline-block;">
+              📊 Step-by-Step Walkthrough
+            </span>
+            <h3 class="c45-example-title">A Simple Example: How C4.5 Handles Continuous Numbers</h3>
+            <p class="c45-example-desc">
+              Let's walk through a simple 6-row dataset with continuous temperature numbers. We will see exactly how C4.5 finds a cutoff threshold, calculates <strong>SplitInfo</strong> and <strong>Gain Ratio</strong>, avoids the ID trap, and builds a clean decision tree.
+            </p>
+          </div>
+
+          <!-- Step 1: The Sample Dataset -->
+          <div class="c45-step-card">
+            <div class="c45-step-head">
+              <span class="c45-step-badge">1</span>
+              <h4 class="c45-step-title">The Sample Dataset (6 Days)</h4>
+            </div>
+            <p style="font-size: 0.92rem; color: var(--ink-soft); margin: 0 0 0.8rem;">
+              Here is our small dataset. Notice that <code>Temperature (&deg;C)</code> is a <strong>continuous number</strong>, <code>Wind</code> is categorical, and <code>Day_ID</code> is a unique identifier:
+            </p>
+
+            <table class="c45-data-table">
+              <thead>
+                <tr>
+                  <th>Day_ID</th>
+                  <th>Temperature (&deg;C)</th>
+                  <th>Wind</th>
+                  <th>Play Tennis (Target)</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><code>D1</code></td>
+                  <td><strong>15 &deg;C</strong></td>
+                  <td>Weak</td>
+                  <td><span class="id3-tag id3-tag--no">✖ No</span></td>
+                </tr>
+                <tr>
+                  <td><code>D2</code></td>
+                  <td><strong>18 &deg;C</strong></td>
+                  <td>Strong</td>
+                  <td><span class="id3-tag id3-tag--no">✖ No</span></td>
+                </tr>
+                <tr>
+                  <td><code>D3</code></td>
+                  <td><strong>21 &deg;C</strong></td>
+                  <td>Weak</td>
+                  <td><span class="id3-tag id3-tag--yes">✔ Yes</span></td>
+                </tr>
+                <tr>
+                  <td><code>D4</code></td>
+                  <td><strong>24 &deg;C</strong></td>
+                  <td>Strong</td>
+                  <td><span class="id3-tag id3-tag--no">✖ No</span></td>
+                </tr>
+                <tr>
+                  <td><code>D5</code></td>
+                  <td><strong>27 &deg;C</strong></td>
+                  <td>Weak</td>
+                  <td><span class="id3-tag id3-tag--yes">✔ Yes</span></td>
+                </tr>
+                <tr>
+                  <td><code>D6</code></td>
+                  <td><strong>30 &deg;C</strong></td>
+                  <td>Weak</td>
+                  <td><span class="id3-tag id3-tag--yes">✔ Yes</span></td>
+                </tr>
+              </tbody>
+            </table>
+
+            <div style="background: var(--surface); border: 1px dashed var(--line); border-radius: 8px; padding: 0.75rem 1rem; font-family: 'IBM Plex Mono', monospace; font-size: 0.84rem; color: var(--ink);">
+              <strong>Total Dataset:</strong> 6 Days &rarr; 3 Yes, 3 No.<br>
+              <strong>Baseline Entropy:</strong> E(S) = &minus;[ (3/6)log<sub>2</sub>(3/6) + (3/6)log<sub>2</sub>(3/6) ] = <strong>1.0000 bit</strong>
+            </div>
+          </div>
+
+          <!-- Step 2: How Threshold Value is Derived -->
+          <div class="c45-step-card">
+            <div class="c45-step-head">
+              <span class="c45-step-badge">2</span>
+              <h4 class="c45-step-title">How the Threshold (Cutoff Point) is Derived</h4>
+            </div>
+            <p style="font-size: 0.92rem; color: var(--ink-soft); line-height: 1.6; margin: 0 0 1rem;">
+              How does C4.5 turn continuous numbers into a simple yes/no test? It derives a <strong>Threshold</strong> in three simple steps:
+            </p>
+
+            <ol style="font-size: 0.9rem; color: var(--ink-soft); line-height: 1.7; padding-left: 1.2rem; margin: 0 0 1rem;">
+              <li><strong>Sort the numbers:</strong> Sort <code>Temperature</code> in ascending order.</li>
+              <li><strong>Find where the outcome changes:</strong> Look at adjacent rows where <code>Play</code> switches between <em>No</em> and <em>Yes</em>.</li>
+              <li><strong>Compute midpoint candidate thresholds:</strong> Take the average between adjacent values: <code>Threshold = (Val₁ + Val₂) / 2</code>.</li>
+            </ol>
+
+            <!-- Visual Number Track -->
+            <div style="font-weight: 700; font-size: 0.85rem; color: var(--ink); margin-bottom: 0.4rem;">
+              Visualizing the Sorted Numbers &amp; Candidate Cutoff Thresholds:
+            </div>
+            <div class="c45-threshold-track">
+              <div class="c45-number-point c45-number-point--no">
+                <div style="font-weight: 700; font-size: 1rem;">15&deg;C</div>
+                <div style="font-size: 0.72rem; color: var(--coral-dark); font-weight: 700;">No (D1)</div>
+              </div>
+
+              <div class="c45-number-point c45-number-point--no">
+                <div style="font-weight: 700; font-size: 1rem;">18&deg;C</div>
+                <div style="font-size: 0.72rem; color: var(--coral-dark); font-weight: 700;">No (D2)</div>
+              </div>
+
+              <!-- Cut 1 -->
+              <div class="c45-threshold-cut">
+                <div class="c45-threshold-line"></div>
+                <div class="c45-threshold-label">Cut 1: 19.5&deg;C</div>
+              </div>
+
+              <div class="c45-number-point c45-number-point--yes">
+                <div style="font-weight: 700; font-size: 1rem;">21&deg;C</div>
+                <div style="font-size: 0.72rem; color: var(--teal-dark); font-weight: 700;">Yes (D3)</div>
+              </div>
+
+              <!-- Cut 2 -->
+              <div class="c45-threshold-cut">
+                <div class="c45-threshold-line"></div>
+                <div class="c45-threshold-label">Cut 2: 22.5&deg;C</div>
+              </div>
+
+              <div class="c45-number-point c45-number-point--no">
+                <div style="font-weight: 700; font-size: 1rem;">24&deg;C</div>
+                <div style="font-size: 0.72rem; color: var(--coral-dark); font-weight: 700;">No (D4)</div>
+              </div>
+
+              <!-- Cut 3 -->
+              <div class="c45-threshold-cut">
+                <div class="c45-threshold-line"></div>
+                <div class="c45-threshold-label">Cut 3: 25.5&deg;C</div>
+              </div>
+
+              <div class="c45-number-point c45-number-point--yes">
+                <div style="font-weight: 700; font-size: 1rem;">27&deg;C</div>
+                <div style="font-size: 0.72rem; color: var(--teal-dark); font-weight: 700;">Yes (D5)</div>
+              </div>
+
+              <div class="c45-number-point c45-number-point--yes">
+                <div style="font-weight: 700; font-size: 1rem;">30&deg;C</div>
+                <div style="font-size: 0.72rem; color: var(--teal-dark); font-weight: 700;">Yes (D6)</div>
+              </div>
+            </div>
+
+            <div style="background: var(--surface); border: 1px dashed var(--line); border-radius: 8px; padding: 0.8rem 1rem; font-size: 0.86rem; line-height: 1.6; color: var(--ink);">
+              Among the candidate thresholds, <strong>Threshold = 19.5&deg;C</strong> produces the cleanest division:<br>
+              &bull; <strong>Left (&le; 19.5&deg;C):</strong> { D1 (15&deg;C, No), D2 (18&deg;C, No) } &rarr; <strong>2 No, 0 Yes (100% Pure! Entropy = 0.0000)</strong><br>
+              &bull; <strong>Right (&gt; 19.5&deg;C):</strong> { D3, D4, D5, D6 } &rarr; <strong>3 Yes, 1 No (Entropy = 0.8113)</strong><br>
+              &bull; <strong>Information Gain:</strong> Gain = 1.0000 &minus; [ (2/6)(0) + (4/6)(0.8113) ] = <strong>0.4591 bits</strong>
+            </div>
+          </div>
+
+          <!-- Step 3 & 4: What SplitInfo and Gain Ratio Are -->
+          <div class="c45-step-card">
+            <div class="c45-step-head">
+              <span class="c45-step-badge">3</span>
+              <h4 class="c45-step-title">What is SplitInfo and Gain Ratio?</h4>
+            </div>
+
+            <!-- Mindset Comparison Callout: ID3 vs C4.5 Question -->
+            <div style="background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius-sm); padding: 1.1rem 1.3rem; margin-bottom: 1.4rem;">
+              <div style="font-family: var(--display); font-weight: 700; font-size: 0.95rem; color: var(--ink); margin-bottom: 0.7rem;">
+                💬 The Fundamental Difference in Question:
+              </div>
+              <div class="c45-mindset-grid">
+                <div style="background: var(--coral-tint); border-left: 3px solid var(--coral); border-radius: 6px; padding: 0.75rem 1rem;">
+                  <span style="font-family: 'IBM Plex Mono', monospace; font-size: 0.74rem; font-weight: 700; color: var(--coral-dark); text-transform: uppercase;">ID3 asks:</span>
+                  <div style="font-size: 0.92rem; font-weight: 600; color: var(--ink); margin-top: 0.25rem; line-height: 1.5;">
+                    &ldquo;Which split gives me the most information?&rdquo;
+                  </div>
+                </div>
+                <div style="background: var(--teal-tint); border-left: 3px solid var(--teal); border-radius: 6px; padding: 0.75rem 1rem;">
+                  <span style="font-family: 'IBM Plex Mono', monospace; font-size: 0.74rem; font-weight: 700; color: var(--teal-dark); text-transform: uppercase;">C4.5 asks:</span>
+                  <div style="font-size: 0.92rem; font-weight: 600; color: var(--ink); margin-top: 0.25rem; line-height: 1.5;">
+                    &ldquo;Which split gives me a good amount of information relative to how much splitting it creates?&rdquo;
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="id3-prob-content-grid" style="margin-top: 0;">
+              <!-- SplitInfo Box -->
+              <div class="id3-prob-box">
+                <div class="id3-prob-box__title" style="color: var(--gold-dark);">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M16 3h5v5"/><path d="M8 21H3v-5"/><path d="M21 3l-7.5 7.5"/><path d="M3 21l7.5-7.5"/></svg>
+                  What is SplitInfo?
+                </div>
+                <p>
+                  <strong>SplitInfo</strong> measures <em>how fragmented the split is</em>. It ignores the target classes and only looks at how many branches the data is chopped into.
+                </p>
+                <div class="id3-prob-math-row" style="margin: 0.6rem 0;">
+                  <strong>SplitInfo = &minus; &sum; ( |Sᵢ| / |S| ) log₂( |Sᵢ| / |S| )</strong>
+                </div>
+                <p>
+                  &bull; <strong>2 balanced groups:</strong> SplitInfo is small (~1.0 bit).<br>
+                  &bull; <strong>Many tiny groups (like IDs):</strong> SplitInfo is huge! It acts as a <strong>penalty</strong> for over-splitting.
+                </p>
+              </div>
+
+              <!-- Gain Ratio Box -->
+              <div class="id3-prob-box">
+                <div class="id3-prob-box__title" style="color: var(--teal-dark);">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg>
+                  What is Gain Ratio?
+                </div>
+                <p>
+                  <strong>Gain Ratio</strong> is simply Information Gain divided by SplitInfo:
+                </p>
+                <div class="id3-prob-math-row" style="margin: 0.6rem 0;">
+                  <strong>Gain Ratio = Information Gain / SplitInfo</strong>
+                </div>
+                <p>
+                  This balances the score: if a feature gets a high Information Gain just by splitting data into dozens of tiny pieces, its huge SplitInfo divides and lowers its score!
+                </p>
+              </div>
+            </div>
+
+            <!-- Creative Spotlight: The Secret Behind SplitInfo -->
+            <div class="splitinfo-aha-box">
+              <div class="splitinfo-aha-head">
+                <span class="icon-badge icon-badge--gold" style="width: 1.8rem; height: 1.8rem;">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+                </span>
+                <h4 class="splitinfo-aha-title">💡 The "Aha!" Insight: Same Exact Equation, Different Lens!</h4>
+              </div>
+
+              <p style="font-size: 0.9rem; color: var(--ink-soft); line-height: 1.6; margin: 0;">
+                Notice something remarkable? <strong>SplitInfo uses the exact same mathematical entropy formula as Information Gain</strong>: 
+                <code style="font-size: 0.84rem; background: var(--surface); padding: 0.15rem 0.4rem; border-radius: 4px; border: 1px solid var(--line);">&minus;&sum; pᵢ log₂(pᵢ)</code>. 
+                The difference is purely <em>what</em> it measures:
+              </p>
+
+              <div class="splitinfo-twin-grid">
+                <!-- Twin 1: Information Gain (Target Entropy) -->
+                <div class="splitinfo-twin-box splitinfo-twin-box--target">
+                  <span class="splitinfo-twin-tag splitinfo-twin-tag--target">1. Information Gain = Target Entropy</span>
+                  <div style="font-weight: 700; font-size: 0.95rem; color: var(--ink); margin-bottom: 0.4rem;">
+                    Measures spread of the <span style="color: var(--coral-dark);">Target Variable</span>
+                  </div>
+                  <p style="font-size: 0.85rem; color: var(--ink-soft); line-height: 1.55; margin: 0 0 0.6rem;">
+                    Calculates the entropy of <strong>different target classes</strong> (e.g. <em>Yes</em> vs. <em>No</em>) inside each group:
+                  </p>
+                  <div style="background: var(--bg); border: 1px dashed var(--line); border-radius: 6px; padding: 0.5rem 0.7rem; font-family: 'IBM Plex Mono', monospace; font-size: 0.78rem; color: var(--ink);">
+                    pᵢ = Proportion of <strong>Target Classes</strong><br>
+                    p₁ = P(Play = Yes), &nbsp; p₂ = P(Play = No)
+                  </div>
+                  <div style="margin-top: 0.5rem; font-size: 0.8rem; color: var(--muted); font-style: italic;">
+                    &ldquo;How mixed or pure are the answers we want to predict?&rdquo;
+                  </div>
+                </div>
+
+                <!-- Twin 2: SplitInfo (Branch Entropy) -->
+                <div class="splitinfo-twin-box splitinfo-twin-box--branch">
+                  <span class="splitinfo-twin-tag splitinfo-twin-tag--branch">2. SplitInfo = Branch Entropy</span>
+                  <div style="font-weight: 700; font-size: 0.95rem; color: var(--ink); margin-bottom: 0.4rem;">
+                    Measures spread of the <span style="color: var(--gold-dark);">Attribute Branches</span>
+                  </div>
+                  <p style="font-size: 0.85rem; color: var(--ink-soft); line-height: 1.55; margin: 0 0 0.6rem;">
+                    Completely ignores the target classes! Instead, calculates the entropy of <strong>each branch on the same attribute</strong>:
+                  </p>
+                  <div style="background: var(--bg); border: 1px dashed var(--line); border-radius: 6px; padding: 0.5rem 0.7rem; font-family: 'IBM Plex Mono', monospace; font-size: 0.78rem; color: var(--ink);">
+                    pᵢ = Proportion of data in <strong>Branch i</strong><br>
+                    p₁ = |Branch₁| / |S|, &nbsp; p₂ = |Branch₂| / |S|
+                  </div>
+                  <div style="margin-top: 0.5rem; font-size: 0.8rem; color: var(--muted); font-style: italic;">
+                    &ldquo;How scattered or fragmented are the branches of this split?&rdquo;
+                  </div>
+                </div>
+              </div>
+
+              <div style="margin-top: 0.9rem; font-size: 0.86rem; color: var(--ink); line-height: 1.55;">
+                🎯 <strong>Why this is brilliant:</strong> If an attribute splits data into 6 tiny single-item branches (like <code>Day_ID</code>), the branches are <em>maximally fragmented</em>. Its branch entropy is at the maximum possible value (<code>log₂(6) = 2.585 bits</code>), creating a heavy penalty that protects against bad splits!
+              </div>
+            </div>
+
+            <!-- Math Calculation for Temp <= 19.5 -->
+            <div style="margin-top: 1rem; background: var(--surface); border: 1px dashed var(--line); border-radius: 8px; padding: 0.8rem 1rem; font-family: 'IBM Plex Mono', monospace; font-size: 0.82rem; color: var(--ink); line-height: 1.6;">
+              <strong>Calculation for Temperature &le; 19.5&deg;C:</strong><br>
+              &bull; <strong>Branch 1 (&le; 19.5&deg;C):</strong> has 2 rows &rarr; p₁ = 2/6 = 1/3<br>
+              &bull; <strong>Branch 2 (&gt; 19.5&deg;C):</strong> has 4 rows &rarr; p₂ = 4/6 = 2/3<br>
+              &bull; <strong>SplitInfo (Branch Entropy)</strong> = &minus;[ (1/3)log₂(1/3) + (2/3)log₂(2/3) ] = <strong>0.9183 bits</strong><br>
+              &bull; <strong>Gain Ratio</strong> = Information Gain / SplitInfo = 0.4591 / 0.9183 = <strong>0.5000</strong>
+            </div>
+          </div>
+
+          <!-- Step 4: How Gain Ratio Fixes the Information Gain Problem -->
+          <div class="c45-step-card">
+            <div class="c45-step-head">
+              <span class="c45-step-badge">4</span>
+              <h4 class="c45-step-title">How Gain Ratio Fixes the Problem with Information Gain</h4>
+            </div>
+            <p style="font-size: 0.92rem; color: var(--ink-soft); line-height: 1.6; margin: 0 0 0.8rem;">
+              Now look at what happens when we compare <code>Day_ID</code> against <code>Temperature &le; 19.5&deg;C</code>. This is where the magic of Gain Ratio reveals itself:
+            </p>
+
+            <div class="c45-callout-compare">
+              <!-- ID3 Trap Box -->
+              <div class="c45-compare-box c45-compare-box--loser">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+                  <span style="font-weight: 700; color: var(--coral-dark);">Under ID3 (Information Gain Alone)</span>
+                  <span class="id3-prob-badge id3-prob-badge--coral">ID3 gets tricked!</span>
+                </div>
+                <p style="font-size: 0.86rem; color: var(--ink-soft); line-height: 1.55; margin: 0 0 0.6rem;">
+                  <code>Day_ID</code> splits our 6 rows into 6 individual groups of 1 row each. Every single group has Entropy = 0:
+                </p>
+                <div style="font-family: 'IBM Plex Mono', monospace; font-size: 0.8rem; background: var(--bg); padding: 0.6rem; border-radius: 6px; line-height: 1.5; color: var(--ink);">
+                  &bull; Gain(Day_ID) = 1.0000 &minus; 0 = <strong>1.0000 bit</strong><br>
+                  &bull; Gain(Temp &le; 19.5) = <strong>0.4591 bits</strong><br>
+                  <strong>Result:</strong> ID3 picks <code>Day_ID</code> because 1.0000 &gt; 0.4591. The tree is completely useless on new days!
+                </div>
+              </div>
+
+              <!-- C4.5 Solution Box -->
+              <div class="c45-compare-box c45-compare-box--winner">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+                  <span style="font-weight: 700; color: var(--teal-dark);">Under C4.5 (Gain Ratio with Penalty)</span>
+                  <span class="id3-stat-pill" style="background: var(--teal); color: #fff; border-color: var(--teal); font-size: 0.72rem; padding: 0.2rem 0.6rem;">C4.5 Fixes It!</span>
+                </div>
+                <p style="font-size: 0.86rem; color: var(--ink-soft); line-height: 1.55; margin: 0 0 0.6rem;">
+                  C4.5 calculates SplitInfo for <code>Day_ID</code>. Because it splits into 6 pieces, its penalty is huge:
+                </p>
+                <div style="font-family: 'IBM Plex Mono', monospace; font-size: 0.8rem; background: var(--bg); padding: 0.6rem; border-radius: 6px; line-height: 1.5; color: var(--ink);">
+                  &bull; SplitInfo(Day_ID) = log₂(6) = <strong>2.5850 bits</strong><br>
+                  &bull; <strong>Gain Ratio(Day_ID)</strong> = 1.0000 / 2.5850 = <strong>0.3868</strong><br>
+                  &bull; <strong>Gain Ratio(Temp &le; 19.5)</strong> = 0.4591 / 0.9183 = <strong>0.5000</strong><br>
+                  <strong>Result:</strong> 0.5000 &gt; 0.3868 &rarr; C4.5 picks <code>Temperature &le; 19.5&deg;C</code>!
+                </div>
+              </div>
+            </div>
+
+            <div style="margin-top: 1rem; background: rgba(14, 168, 148, 0.08); border-left: 3px solid var(--teal); border-radius: 6px; padding: 0.75rem 1rem; font-size: 0.88rem; color: var(--ink); line-height: 1.6;">
+              <strong>Key Insight:</strong> Gain Ratio completely eliminates the multi-valued attribute trap. The high SplitInfo penalty ensures that meaningless identifiers (like <code>Day_ID</code> or <code>Student_ID</code>) cannot win simply by creating tiny single-item groups.
+            </div>
+          </div>
+
+          <!-- Step 5: Completing the Tree & The Final Decision Tree -->
+          <div class="c45-step-card" style="margin-bottom: 0;">
+            <div class="c45-step-head">
+              <span class="c45-step-badge">5</span>
+              <h4 class="c45-step-title">The Final Trained Decision Tree</h4>
+            </div>
+            <p style="font-size: 0.92rem; color: var(--ink-soft); line-height: 1.6; margin: 0 0 0.8rem;">
+              After choosing <code>Temperature &le; 19.5&deg;C</code> as the root split:
+            </p>
+            <ul style="font-size: 0.88rem; color: var(--ink-soft); line-height: 1.6; margin: 0 0 1.2rem; padding-left: 1.2rem;">
+              <li><strong>Left Branch (&le; 19.5&deg;C):</strong> 100% pure (D1, D2 &rarr; 2 No, 0 Yes). Stops immediately as a leaf node: <strong>Play = NO</strong>.</li>
+              <li><strong>Right Branch (&gt; 19.5&deg;C):</strong> 4 rows (D3, D4, D5, D6). C4.5 evaluates the remaining feature <code>Wind</code>:
+                <ul>
+                  <li><code>Wind = Weak</code> (D3, D5, D6) &rarr; 3 Yes, 0 No &rarr; <strong>Play = YES</strong> (100% pure leaf)</li>
+                  <li><code>Wind = Strong</code> (D4) &rarr; 0 Yes, 1 No &rarr; <strong>Play = NO</strong> (100% pure leaf)</li>
+                </ul>
+              </li>
+            </ul>
+
+            <!-- Final SVG Decision Tree Diagram -->
+            <div class="c45-tree-container">
+              <svg viewBox="0 0 740 360" width="100%" height="360" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                  <filter id="c45Shadow" x="-10%" y="-10%" width="120%" height="130%">
+                    <feDropShadow dx="0" dy="3" stdDeviation="4" flood-color="#000000" flood-opacity="0.08"/>
+                  </filter>
+                  <marker id="c45Arrow" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                    <path d="M 0 1 L 10 5 L 0 9 z" fill="#8A8177"/>
+                  </marker>
+                </defs>
+
+                <!-- Root Connector Lines -->
+                <!-- Root to Left Leaf (180, 180) -->
+                <path d="M 330 65 L 180 180" stroke="#8A8177" stroke-width="2.5" fill="none" marker-end="url(#c45Arrow)"/>
+                <!-- Root to Right Internal (540, 180) -->
+                <path d="M 410 65 L 540 180" stroke="#8A8177" stroke-width="2.5" fill="none" marker-end="url(#c45Arrow)"/>
+
+                <!-- Branch Labels from Root -->
+                <!-- Left Branch Label: <= 19.5 -->
+                <rect x="200" y="105" width="106" height="24" rx="12" fill="#FBFAF8" stroke="#EDE7DE" stroke-width="1.5"/>
+                <text x="253" y="121" fill="#514A42" font-family="'IBM Plex Mono', monospace" font-size="11" font-weight="700" text-anchor="middle">Yes (&le; 19.5&deg;C)</text>
+
+                <!-- Right Branch Label: > 19.5 -->
+                <rect x="445" y="105" width="106" height="24" rx="12" fill="#FBFAF8" stroke="#EDE7DE" stroke-width="1.5"/>
+                <text x="498" y="121" fill="#514A42" font-family="'IBM Plex Mono', monospace" font-size="11" font-weight="700" text-anchor="middle">No (&gt; 19.5&deg;C)</text>
+
+                <!-- Root Node: Temperature <= 19.5°C? -->
+                <g filter="url(#c45Shadow)">
+                  <rect x="270" y="15" width="200" height="52" rx="12" fill="#1B1712"/>
+                  <text x="370" y="38" fill="#FFFFFF" font-family="'Bricolage Grotesque', sans-serif" font-size="15" font-weight="700" text-anchor="middle">🌡️ Temp &le; 19.5&deg;C?</text>
+                  <text x="370" y="55" fill="#E9A825" font-family="'IBM Plex Mono', monospace" font-size="11" font-weight="700" text-anchor="middle">ROOT (Gain Ratio = 0.500)</text>
+                </g>
+
+                <!-- Left Leaf Node: Play = NO -->
+                <g filter="url(#c45Shadow)">
+                  <rect x="105" y="180" width="150" height="52" rx="12" fill="#FF5A3C"/>
+                  <text x="180" y="204" fill="#FFFFFF" font-family="'Bricolage Grotesque', sans-serif" font-size="16" font-weight="800" text-anchor="middle">✖ Play: NO</text>
+                  <text x="180" y="221" fill="#FFE7DE" font-family="'IBM Plex Mono', monospace" font-size="11" font-weight="600" text-anchor="middle">D1, D2 (100% Pure)</text>
+                </g>
+
+                <!-- Right Internal Node: Wind? -->
+                <g filter="url(#c45Shadow)">
+                  <rect x="465" y="180" width="150" height="50" rx="10" fill="#FFFFFF" stroke="#E9A825" stroke-width="2.5"/>
+                  <text x="540" y="203" fill="#1B1712" font-family="'Bricolage Grotesque', sans-serif" font-size="15" font-weight="700" text-anchor="middle">💨 Wind?</text>
+                  <text x="540" y="219" fill="#A9770B" font-family="'IBM Plex Mono', monospace" font-size="11" font-weight="700" text-anchor="middle">4 rows (D3, D4, D5, D6)</text>
+                </g>
+
+                <!-- Connectors from Wind (540, 230) -->
+                <!-- To Weak Leaf (450, 290) -->
+                <path d="M 500 230 L 440 288" stroke="#8A8177" stroke-width="2.5" fill="none" marker-end="url(#c45Arrow)"/>
+                <!-- To Strong Leaf (630, 290) -->
+                <path d="M 580 230 L 640 288" stroke="#8A8177" stroke-width="2.5" fill="none" marker-end="url(#c45Arrow)"/>
+
+                <!-- Sub-branch labels for Wind -->
+                <rect x="430" y="248" width="70" height="22" rx="11" fill="#FBFAF8" stroke="#EDE7DE" stroke-width="1.5"/>
+                <text x="465" y="263" fill="#514A42" font-family="'IBM Plex Mono', monospace" font-size="10.5" font-weight="700" text-anchor="middle">Weak (3)</text>
+
+                <rect x="580" y="248" width="76" height="22" rx="11" fill="#FBFAF8" stroke="#EDE7DE" stroke-width="1.5"/>
+                <text x="618" y="263" fill="#514A42" font-family="'IBM Plex Mono', monospace" font-size="10.5" font-weight="700" text-anchor="middle">Strong (1)</text>
+
+                <!-- Sub-leaf 1: Play = YES -->
+                <g filter="url(#c45Shadow)">
+                  <rect x="365" y="290" width="150" height="50" rx="10" fill="#0EA894"/>
+                  <text x="440" y="314" fill="#FFFFFF" font-family="'Bricolage Grotesque', sans-serif" font-size="15" font-weight="800" text-anchor="middle">✔ Play: YES</text>
+                  <text x="440" y="329" fill="#DFF7F3" font-family="'IBM Plex Mono', monospace" font-size="10.5" font-weight="600" text-anchor="middle">D3, D5, D6 (Pure)</text>
+                </g>
+
+                <!-- Sub-leaf 2: Play = NO -->
+                <g filter="url(#c45Shadow)">
+                  <rect x="565" y="290" width="150" height="50" rx="10" fill="#FF5A3C"/>
+                  <text x="640" y="314" fill="#FFFFFF" font-family="'Bricolage Grotesque', sans-serif" font-size="15" font-weight="800" text-anchor="middle">✖ Play: NO</text>
+                  <text x="640" y="329" fill="#FFE7DE" font-family="'IBM Plex Mono', monospace" font-size="10.5" font-weight="600" text-anchor="middle">D4 (Pure)</text>
+                </g>
+              </svg>
+            </div>
+
+            <!-- Summary Rules -->
+            <div style="margin-top: 1.2rem; background: var(--bg); border: 1px solid var(--line); border-radius: 8px; padding: 0.9rem 1.2rem; font-family: 'IBM Plex Mono', monospace; font-size: 0.84rem; color: var(--ink-soft); line-height: 1.7;">
+              <strong>Learned C4.5 Rules:</strong><br>
+              1. <code>IF (Temperature &le; 19.5&deg;C) &rarr; Play = NO</code> (Days: D1, D2)<br>
+              2. <code>IF (Temperature &gt; 19.5&deg;C) AND (Wind == Weak) &rarr; Play = YES</code> (Days: D3, D5, D6)<br>
+              3. <code>IF (Temperature &gt; 19.5&deg;C) AND (Wind == Strong) &rarr; Play = NO</code> (Day: D4)
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ============ LESSON FOOTER ============ -->
+    <footer class="lesson__footer">
+      <a href="id3-algorithm.html" class="lesson__footer-prev" id="prevLessonLink">
+        <span class="lesson__footer-prev-arrow">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5"/><path d="m12 19-7-7 7-7"/></svg>
+        </span>
+        <div class="lesson__footer-prev-text">
+          <span class="lesson__footer-prev-label">Previous part</span>
+          <span class="lesson__footer-prev-name">4.3 ID3 Algorithm</span>
+        </div>
+      </a>
+
+      <div class="lesson__footer-progress">Part 4 of 6 &bull; Supervised Learning</div>
+
+      <a href="cart-algorithm.html" class="lesson__footer-next" id="nextLessonLink">
+        <div class="lesson__footer-next-text">
+          <span class="lesson__footer-next-label">Next part</span>
+          <span class="lesson__footer-next-name">4.5 CART Algorithm</span>
+        </div>
+        <span class="lesson__footer-arrow">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+        </span>
+      </a>
+    </footer>
+
+  </main>
+</div>
+
+<script src="main.js"></script>
+</body>
+</html>

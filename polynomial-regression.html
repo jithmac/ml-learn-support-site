@@ -1,0 +1,1520 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Polynomial Regression &ndash; Learning Machines</title>
+<meta name="description" content="A very simple, beginner-friendly guide to Polynomial Regression. Learn why we use it for curved relationships, how polynomial features work, and how higher degrees can cause overfitting.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,600;12..96,700;12..96,800&family=Figtree:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600;700&display=swap" rel="stylesheet">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="stylesheet" href="style.css">
+<style>
+/* Custom styling specifically tuned for Polynomial Regression */
+.poly-hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: var(--teal-tint);
+  border: 1px solid rgba(14, 168, 148, 0.3);
+  color: var(--teal-dark);
+  font-family: var(--display);
+  font-size: 0.8rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 0.4rem 0.9rem;
+  border-radius: 999px;
+  margin-bottom: 1.2rem;
+}
+
+/* 5 Core Ideas Summary Banner */
+.poly-summary-box {
+  background: linear-gradient(135deg, rgba(14, 168, 148, 0.08) 0%, rgba(233, 168, 37, 0.08) 100%);
+  border: 2px solid rgba(14, 168, 148, 0.3);
+  border-radius: var(--radius);
+  padding: 1.8rem 2rem;
+  margin: 2rem 0;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+}
+
+.poly-summary-list {
+  list-style: none;
+  padding: 0;
+  margin: 1.2rem 0 0 0;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.9rem;
+}
+
+@media (min-width: 640px) {
+  .poly-summary-list {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.poly-summary-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 0.85rem 1rem;
+}
+
+.poly-summary-num {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: var(--teal);
+  color: #fff;
+  font-size: 0.82rem;
+  font-weight: 800;
+  font-family: var(--display);
+  flex-shrink: 0;
+}
+
+/* Interactive Anatomy Token Explorer */
+.poly-anatomy-bar {
+  background: var(--surface);
+  border: 2px solid var(--line);
+  border-radius: var(--radius);
+  padding: 2rem 1.6rem;
+  margin: 2rem 0;
+  text-align: center;
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.03);
+}
+
+.poly-equation-interactive {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.6rem 0.8rem;
+  font-family: "IBM Plex Mono", monospace;
+  font-size: clamp(1.3rem, 3.8vw, 2.2rem);
+  font-weight: 700;
+  margin: 1.4rem 0;
+}
+
+.poly-token {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  cursor: pointer;
+  padding: 0.4rem 0.75rem;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+  user-select: none;
+}
+
+.poly-token:hover,
+.poly-token.is-active {
+  transform: translateY(-3px) scale(1.05);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+}
+
+.poly-token-y {
+  color: var(--coral-dark);
+  background: var(--coral-tint);
+  border: 1.5px solid rgba(255, 90, 60, 0.4);
+}
+
+.poly-token-b0 {
+  color: #6D28D9;
+  background: rgba(139, 92, 246, 0.1);
+  border: 1.5px solid rgba(139, 92, 246, 0.4);
+}
+
+.poly-token-b1 {
+  color: var(--teal-dark);
+  background: var(--teal-tint);
+  border: 1.5px solid rgba(14, 168, 148, 0.4);
+}
+
+.poly-token-b2 {
+  color: #B45309;
+  background: var(--gold-tint);
+  border: 1.5px solid rgba(233, 168, 37, 0.5);
+}
+
+.poly-token__subtext {
+  font-size: 0.68rem;
+  font-family: var(--display);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin-top: 0.25rem;
+}
+
+.poly-token-detail {
+  background: var(--bg);
+  border: 1.5px solid var(--line);
+  border-radius: var(--radius-sm);
+  padding: 1.4rem 1.6rem;
+  text-align: left;
+  margin-top: 1.4rem;
+  min-height: 90px;
+  transition: all 0.25s ease;
+}
+
+.poly-token-detail__title {
+  font-family: var(--display);
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--ink);
+  margin-bottom: 0.35rem;
+}
+
+.poly-token-detail__desc {
+  font-size: 0.95rem;
+  color: var(--ink-soft);
+  margin: 0;
+  line-height: 1.6;
+}
+
+/* Feature transformation table */
+.poly-feature-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1.4rem 0;
+  background: var(--surface);
+  border: 1.5px solid var(--line);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  font-size: 0.92rem;
+}
+
+.poly-feature-table th {
+  background: var(--surface-tint);
+  padding: 1rem 1.2rem;
+  text-align: left;
+  font-family: var(--display);
+  font-weight: 700;
+  border-bottom: 2px solid var(--line);
+  color: var(--ink);
+}
+
+.poly-feature-table td {
+  padding: 0.85rem 1.2rem;
+  border-bottom: 1px solid var(--line);
+  color: var(--ink-soft);
+  font-family: "IBM Plex Mono", monospace;
+}
+
+.poly-feature-table tr:last-child td {
+  border-bottom: none;
+}
+
+.poly-feature-table tr:hover td {
+  background: rgba(0, 0, 0, 0.02);
+}
+
+/* Interactive Curve & Overfitting Simulator */
+.poly-sim-box {
+  background: var(--surface);
+  border: 2px solid var(--line);
+  border-radius: var(--radius);
+  padding: 1.8rem;
+  margin: 2rem 0;
+  box-shadow: 0 6px 24px rgba(0,0,0,0.03);
+}
+
+.poly-sim-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  margin-bottom: 1.4rem;
+  align-items: center;
+}
+
+.poly-btn-degree {
+  background: var(--bg);
+  border: 1.5px solid var(--line);
+  border-radius: 8px;
+  padding: 0.55rem 1rem;
+  font-family: var(--display);
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: var(--ink-soft);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.poly-btn-degree:hover {
+  border-color: var(--teal);
+  color: var(--teal-dark);
+  transform: translateY(-1px);
+}
+
+.poly-btn-degree.is-active {
+  background: var(--teal);
+  color: #fff;
+  border-color: var(--teal);
+  box-shadow: 0 3px 10px rgba(14, 168, 148, 0.25);
+}
+
+.poly-btn-degree.is-active.poly-btn--warn {
+  background: var(--coral);
+  border-color: var(--coral);
+  box-shadow: 0 3px 10px rgba(255, 90, 60, 0.25);
+}
+
+.poly-chart-area {
+  position: relative;
+  background: var(--bg);
+  border: 1.5px solid var(--line);
+  border-radius: var(--radius-sm);
+  padding: 1.2rem;
+  overflow: hidden;
+}
+
+.poly-status-card {
+  margin-top: 1.2rem;
+  padding: 1.1rem 1.3rem;
+  border-radius: 10px;
+  border: 1.5px solid var(--line);
+  background: var(--surface);
+  transition: all 0.25s ease;
+}
+
+.poly-status-badge {
+  display: inline-block;
+  font-family: var(--display);
+  font-size: 0.76rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 0.25rem 0.65rem;
+  border-radius: 999px;
+  margin-bottom: 0.5rem;
+}
+
+/* Quiz block styling */
+.poly-quiz-card {
+  background: var(--surface);
+  border: 1.5px solid var(--line);
+  border-radius: var(--radius);
+  padding: 1.6rem;
+  margin: 1.4rem 0;
+}
+
+.poly-quiz-q {
+  font-family: var(--display);
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--ink);
+  margin-bottom: 1rem;
+}
+
+.poly-quiz-options {
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+}
+
+.poly-quiz-opt {
+  display: flex;
+  align-items: center;
+  text-align: left;
+  background: var(--bg);
+  border: 1.5px solid var(--line);
+  border-radius: 8px;
+  padding: 0.75rem 1rem;
+  font-size: 0.92rem;
+  color: var(--ink);
+  cursor: pointer;
+  transition: all 0.15s ease;
+  width: 100%;
+}
+
+.poly-quiz-opt:hover:not(:disabled) {
+  border-color: var(--teal);
+  background: var(--surface-tint);
+}
+
+.poly-quiz-opt.is-correct {
+  background: var(--teal-tint) !important;
+  border-color: var(--teal) !important;
+  color: var(--teal-dark) !important;
+  font-weight: 700;
+}
+
+.poly-quiz-opt.is-wrong {
+  background: var(--coral-tint) !important;
+  border-color: var(--coral) !important;
+  color: var(--coral-dark) !important;
+}
+
+.poly-quiz-feedback {
+  margin-top: 0.85rem;
+  padding: 0.85rem 1.1rem;
+  border-radius: 8px;
+  font-size: 0.88rem;
+  line-height: 1.55;
+  display: none;
+}
+
+.poly-quiz-feedback.is-visible {
+  display: block;
+}
+
+.poly-quiz-feedback.is-correct {
+  background: var(--teal-tint);
+  border-left: 4px solid var(--teal);
+  color: var(--teal-dark);
+}
+
+.poly-quiz-feedback.is-wrong {
+  background: var(--coral-tint);
+  border-left: 4px solid var(--coral);
+  color: var(--coral-dark);
+}
+
+/* Formula code styling */
+.poly-code-inline {
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 0.92em;
+  background: var(--surface-tint);
+  padding: 0.15rem 0.45rem;
+  border-radius: 5px;
+  border: 1px solid rgba(0,0,0,0.06);
+  color: var(--ink);
+}
+</style>
+</head>
+<body>
+
+<div class="grain" aria-hidden="true"></div>
+
+<div class="progress-rail" aria-hidden="true"><div class="progress-fill" id="progressFill"></div></div>
+
+<header class="top-bar">
+  <div class="top-bar__brand">
+    <span class="course-nav__mark">LM</span>
+    <span class="top-bar__title">Learning Machines</span>
+  </div>
+  <div class="top-bar__controls">
+    <span class="top-bar__time" id="readTime">~5 min read</span>
+    <button class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="courseNav">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="4" x2="20" y1="6" y2="6"/><line x1="4" x2="20" y1="12" y2="12"/><line x1="4" x2="20" y1="18" y2="18"/></svg>
+      <span class="nav-toggle__label">Course map</span>
+    </button>
+  </div>
+</header>
+
+<div class="nav-overlay" id="navOverlay" aria-hidden="true"></div>
+
+<!-- ============ SLIDE-OVER SIDEBAR ============ -->
+<aside class="course-nav" id="courseNav">
+  <div class="course-nav__header">
+    <h2 class="course-nav__title-side">Course map</h2>
+    <button class="nav-close" id="navClose" aria-label="Close nav">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
+    </button>
+  </div>
+  <p class="course-nav__tagline">A slow, careful path through machine learning, start to finish.</p>
+
+  <ol class="course-nav__list">
+    <li class="course-nav__item is-completed">
+      <a href="index.html" class="course-nav__inner-link">
+        <span class="course-nav__num">1</span>
+        <div>
+          <span class="course-nav__name">Introduction</span>
+          <span class="course-nav__state">completed</span>
+        </div>
+      </a>
+    </li>
+    <li class="course-nav__item is-completed">
+      <a href="data-preprocessing.html" class="course-nav__inner-link">
+        <span class="course-nav__num">2</span>
+        <div>
+          <span class="course-nav__name">Data Preprocessing</span>
+          <span class="course-nav__state">completed</span>
+        </div>
+      </a>
+    </li>
+    <li class="course-nav__item is-completed">
+      <a href="eda.html" class="course-nav__inner-link">
+        <span class="course-nav__num">3</span>
+        <div>
+          <span class="course-nav__name">Exploratory Data Analysis</span>
+          <span class="course-nav__state">completed</span>
+        </div>
+      </a>
+    </li>
+    <li class="course-nav__item is-active-group">
+      <span class="course-nav__num">4</span>
+      <div>
+        <span class="course-nav__name">Supervised Learning</span>
+        <span class="course-nav__state">in progress</span>
+      </div>
+    </li>
+    <ol class="course-nav__sub-list">
+      <li class="course-nav__sub-item is-completed">
+        <a href="supervised-learning.html">
+          <span class="course-nav__sub-num">4.1</span>
+          <div>
+            <span class="course-nav__sub-name">Introduction</span>
+            <span class="course-nav__state">completed</span>
+          </div>
+        </a>
+      </li>
+      <li class="course-nav__sub-item is-completed">
+        <a href="classification.html">
+          <span class="course-nav__sub-num">4.2</span>
+          <div>
+            <span class="course-nav__sub-name">Classification &amp; Decision Trees</span>
+            <span class="course-nav__state">completed</span>
+          </div>
+        </a>
+      </li>
+      <li class="course-nav__sub-item is-completed">
+        <a href="id3-algorithm.html">
+          <span class="course-nav__sub-num">4.3</span>
+          <div>
+            <span class="course-nav__sub-name">ID3 Algorithm</span>
+            <span class="course-nav__state">completed</span>
+          </div>
+        </a>
+      </li>
+      <li class="course-nav__sub-item is-completed">
+        <a href="c45-algorithm.html">
+          <span class="course-nav__sub-num">4.4</span>
+          <div>
+            <span class="course-nav__sub-name">C4.5 Algorithm</span>
+            <span class="course-nav__state">completed</span>
+          </div>
+        </a>
+      </li>
+      <li class="course-nav__sub-item is-completed">
+        <a href="cart-algorithm.html">
+          <span class="course-nav__sub-num">4.5</span>
+          <div>
+            <span class="course-nav__sub-name">CART Algorithm</span>
+            <span class="course-nav__state">completed</span>
+          </div>
+        </a>
+      </li>
+      <li class="course-nav__sub-item is-completed">
+        <a href="regression-analysis.html">
+          <span class="course-nav__sub-num">4.6</span>
+          <div>
+            <span class="course-nav__sub-name">Introduction to Regression</span>
+            <span class="course-nav__state">completed</span>
+          </div>
+        </a>
+      </li>
+      <li class="course-nav__sub-item is-completed">
+        <a href="simple-linear-regression.html">
+          <span class="course-nav__sub-num">4.7</span>
+          <div>
+            <span class="course-nav__sub-name">Simple Linear Regression</span>
+            <span class="course-nav__state">completed</span>
+          </div>
+        </a>
+      </li>
+      <li class="course-nav__sub-item is-active">
+        <a href="polynomial-regression.html">
+          <span class="course-nav__sub-num">4.8</span>
+          <div>
+            <span class="course-nav__sub-name">Polynomial Regression</span>
+            <span class="course-nav__state">reading now</span>
+          </div>
+        </a>
+      </li>
+    </ol>
+    <li class="course-nav__item">
+      <a href="unsupervised-learning.html" class="course-nav__inner-link">
+        <span class="course-nav__num">5</span>
+        <div>
+          <span class="course-nav__name">Unsupervised Learning</span>
+          <span class="course-nav__state">available now</span>
+        </div>
+      </a>
+    </li>
+    <ol class="course-nav__sub-list">
+      <li class="course-nav__sub-item">
+        <a href="unsupervised-learning.html">
+          <span class="course-nav__sub-num">5.1</span>
+          <div>
+            <span class="course-nav__sub-name">Introduction</span>
+            <span class="course-nav__state">available now</span>
+          </div>
+        </a>
+      </li>
+      <li class="course-nav__sub-item">
+        <a href="hierarchical-clustering.html">
+          <span class="course-nav__sub-num">5.2</span>
+          <div>
+            <span class="course-nav__sub-name">Hierarchical Clustering</span>
+            <span class="course-nav__state">available now</span>
+          </div>
+        </a>
+      </li>
+    </ol>
+    <li class="course-nav__item is-locked">
+      <span class="course-nav__num">6</span>
+      <div>
+        <span class="course-nav__name">Reinforcement Learning</span>
+        <span class="course-nav__state">
+          <svg class="course-nav__lock" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          coming soon
+        </span>
+      </div>
+    </li>
+  </ol>
+</aside>
+
+<div class="shell">
+
+  <!-- ============ MAIN ARTICLE ============ -->
+  <main class="lesson">
+
+    <header class="lesson__header">
+      <div class="poly-hero-badge">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 20c4-8 8-12 18-12"/></svg>
+        Part 4.8 &bull; Regression Beyond Straight Lines
+      </div>
+      <span class="lesson__eyebrow-free-title">
+        <h1>Polynomial Regression</h1>
+        <svg class="title-underline" viewBox="0 0 520 14" preserveAspectRatio="none" aria-hidden="true">
+          <path d="M4 9 C 120 2, 260 13, 400 6 C 440 4, 480 8, 516 5"/>
+        </svg>
+      </span>
+      <p class="lesson__dek">What do we do when data does not move along a straight line? Learn the simple trick of bending curves with polynomial features.</p>
+    </header>
+
+    <!-- =========================================================================
+         THE CORE IDEA IN 30 SECONDS
+         ========================================================================= -->
+    <div class="poly-summary-box fade-up animate-on-scroll">
+      <div style="display: flex; align-items: center; gap: 0.6rem; margin-bottom: 0.4rem;">
+        <span style="font-size: 1.4rem;">💡</span>
+        <h2 style="font-size: 1.25rem; margin: 0; color: var(--ink);">The Core Idea in Plain English</h2>
+      </div>
+      <p style="margin: 0; font-size: 0.95rem; color: var(--ink-soft); line-height: 1.6;">
+        Linear regression draws a straight line. But what if the data bends? <strong>Polynomial regression</strong> lets us draw smooth curves while still using standard linear regression math. Here is everything you need to know:
+      </p>
+
+      <ul class="poly-summary-list">
+        <li class="poly-summary-item">
+          <span class="poly-summary-num">1</span>
+          <div>
+            <strong style="color: var(--ink);">Curved relationship</strong>
+            <div style="font-size: 0.85rem; color: var(--ink-soft);">Used when the relationship between X and Y forms a curve, not a straight line.</div>
+          </div>
+        </li>
+        <li class="poly-summary-item">
+          <span class="poly-summary-num">2</span>
+          <div>
+            <strong style="color: var(--ink);">Create powers of X</strong>
+            <div style="font-size: 0.85rem; color: var(--ink-soft);">We create polynomial features such as <span class="poly-code-inline">X²</span>, <span class="poly-code-inline">X³</span>, etc.</div>
+          </div>
+        </li>
+        <li class="poly-summary-item">
+          <span class="poly-summary-num">3</span>
+          <div>
+            <strong style="color: var(--ink);">Run linear regression</strong>
+            <div style="font-size: 0.85rem; color: var(--ink-soft);">We simply train regular linear regression on those powered features!</div>
+          </div>
+        </li>
+        <li class="poly-summary-item">
+          <span class="poly-summary-num">4</span>
+          <div>
+            <strong style="color: var(--ink);">Simple formula</strong>
+            <div style="font-size: 0.85rem; color: var(--ink-soft);">Example: <span class="poly-code-inline">Y = β₀ + β₁X + β₂X²</span></div>
+          </div>
+        </li>
+        <li class="poly-summary-item" style="grid-column: 1 / -1;">
+          <span class="poly-summary-num">5</span>
+          <div>
+            <strong style="color: var(--ink);">Beware of overfitting</strong>
+            <div style="font-size: 0.85rem; color: var(--ink-soft);">Higher degrees give more complex curves, but making the degree too high can cause <strong>overfitting</strong> (memorizing noise).</div>
+          </div>
+        </li>
+      </ul>
+    </div>
+
+    <!-- =========================================================================
+         TOPIC 1: WHEN TO USE IT (CURVED X-Y RELATIONSHIPS)
+         ========================================================================= -->
+    <section class="block" id="curved-relationship">
+      <div class="block__body">
+        <h2 class="fade-up animate-on-scroll">
+          <span class="icon-badge icon-badge--coral">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg>
+          </span>
+          1. Used When the X&ndash;Y Relationship is Curved
+        </h2>
+
+        <p class="fade-up animate-on-scroll">
+          In <a href="simple-linear-regression.html">Simple Linear Regression</a>, we assume the relationship between input <span class="poly-code-inline">X</span> and output <span class="poly-code-inline">Y</span> is a straight line.
+        </p>
+
+        <p class="fade-up animate-on-scroll">
+          However, real life is rarely a straight ruler. Many real things naturally bend, accelerate, or level off:
+        </p>
+
+        <!-- 3 Real-World Examples Grid -->
+        <div class="reg-grid-3 fade-up animate-on-scroll">
+          <div class="reg-card" style="border-top: 4px solid var(--coral);">
+            <div class="reg-badge reg-badge--coral" style="align-self: flex-start; margin-bottom: 0.5rem;">Car Physics</div>
+            <h3 style="font-family: var(--display); font-size: 1.05rem; margin: 0 0 0.4rem;">Speed vs Stopping Distance</h3>
+            <p style="font-size: 0.88rem; color: var(--ink-soft); margin: 0; line-height: 1.55;">
+              If you double your driving speed, your stopping distance doesn't just double &mdash; it <strong>quadruples</strong> (4x longer)! Kinetic energy grows with speed squared (<span class="poly-code-inline">Speed²</span>). A straight line would dangerously underestimate your stopping distance.
+            </p>
+          </div>
+
+          <div class="reg-card" style="border-top: 4px solid var(--teal);">
+            <div class="reg-badge reg-badge--teal" style="align-self: flex-start; margin-bottom: 0.5rem;">Career Growth</div>
+            <h3 style="font-family: var(--display); font-size: 1.05rem; margin: 0 0 0.4rem;">Experience vs Salary</h3>
+            <p style="font-size: 0.88rem; color: var(--ink-soft); margin: 0; line-height: 1.55;">
+              In your early career years, salary jumps quickly with every year of experience. Later in your career, salaries tend to stabilize and level off. This forms a curved ceiling.
+            </p>
+          </div>
+
+          <div class="reg-card" style="border-top: 4px solid var(--gold);">
+            <div class="reg-badge reg-badge--gold" style="align-self: flex-start; margin-bottom: 0.5rem;">Biology &amp; Farming</div>
+            <h3 style="font-family: var(--display); font-size: 1.05rem; margin: 0 0 0.4rem;">Fertilizer vs Crop Yield</h3>
+            <p style="font-size: 0.88rem; color: var(--ink-soft); margin: 0; line-height: 1.55;">
+              A little fertilizer boosts plant growth. But adding too much fertilizer burns the roots, and the harvest drops! The curve goes up, reaches a peak, and then bends back down like an upside-down U.
+            </p>
+          </div>
+        </div>
+
+        <!-- Visual Comparison: Straight Line vs Curved Fit -->
+        <div class="reg-card fade-up animate-on-scroll" style="margin-top: 1.6rem; padding: 1.6rem;">
+          <div style="font-family: var(--display); font-weight: 700; font-size: 1.1rem; color: var(--ink); margin-bottom: 0.5rem;">
+            Straight Line vs Curve on Curved Data
+          </div>
+          <p style="font-size: 0.9rem; color: var(--ink-soft); margin: 0 0 1.2rem;">
+            Notice what happens when we force a straight line to fit curved dots:
+          </p>
+
+          <div style="display: grid; grid-template-columns: 1fr; gap: 1.2rem;">
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.4rem;">
+              
+              <!-- Bad Fit (Straight) -->
+              <div style="background: var(--bg); border: 1.5px solid var(--line); border-radius: 10px; padding: 1rem; text-align: center;">
+                <div style="font-family: var(--display); font-weight: 700; font-size: 0.92rem; color: var(--coral-dark); margin-bottom: 0.5rem;">
+                  ❌ Simple Linear Regression (Straight Line)
+                </div>
+                <svg viewBox="0 0 300 170" style="width: 100%; max-width: 280px; height: auto; display: block; margin: 0 auto; background: var(--surface); border-radius: 6px; border: 1px solid var(--line);">
+                  <!-- Axes -->
+                  <line x1="30" y1="140" x2="280" y2="140" stroke="#8A8177" stroke-width="1.5"/>
+                  <line x1="30" y1="140" x2="30" y2="20" stroke="#8A8177" stroke-width="1.5"/>
+                  <!-- Curved Data Dots -->
+                  <circle cx="50" cy="130" r="4.5" fill="#FF5A3C"/>
+                  <circle cx="80" cy="120" r="4.5" fill="#FF5A3C"/>
+                  <circle cx="115" cy="105" r="4.5" fill="#FF5A3C"/>
+                  <circle cx="155" cy="85" r="4.5" fill="#FF5A3C"/>
+                  <circle cx="195" cy="60" r="4.5" fill="#FF5A3C"/>
+                  <circle cx="235" cy="30" r="4.5" fill="#FF5A3C"/>
+                  <!-- Stiff straight line -->
+                  <line x1="40" y1="145" x2="250" y2="35" stroke="#6D28D9" stroke-width="2.5" stroke-dasharray="5 4"/>
+                </svg>
+                <div style="font-size: 0.8rem; color: var(--coral-dark); font-weight: 600; margin-top: 0.6rem;">
+                  Underfitting: A straight ruler misses the curve!
+                </div>
+              </div>
+
+              <!-- Good Fit (Curve) -->
+              <div style="background: var(--bg); border: 1.5px solid var(--line); border-radius: 10px; padding: 1rem; text-align: center;">
+                <div style="font-family: var(--display); font-weight: 700; font-size: 0.92rem; color: var(--teal-dark); margin-bottom: 0.5rem;">
+                  ✅ Polynomial Regression (Degree 2 Curve)
+                </div>
+                <svg viewBox="0 0 300 170" style="width: 100%; max-width: 280px; height: auto; display: block; margin: 0 auto; background: var(--surface); border-radius: 6px; border: 1px solid var(--line);">
+                  <!-- Axes -->
+                  <line x1="30" y1="140" x2="280" y2="140" stroke="#8A8177" stroke-width="1.5"/>
+                  <line x1="30" y1="140" x2="30" y2="20" stroke="#8A8177" stroke-width="1.5"/>
+                  <!-- Curved Data Dots -->
+                  <circle cx="50" cy="130" r="4.5" fill="#0EA894"/>
+                  <circle cx="80" cy="120" r="4.5" fill="#0EA894"/>
+                  <circle cx="115" cy="105" r="4.5" fill="#0EA894"/>
+                  <circle cx="155" cy="85" r="4.5" fill="#0EA894"/>
+                  <circle cx="195" cy="60" r="4.5" fill="#0EA894"/>
+                  <circle cx="235" cy="30" r="4.5" fill="#0EA894"/>
+                  <!-- Fitted smooth parabola curve -->
+                  <path d="M 40 134 Q 130 115 250 25" fill="none" stroke="#0EA894" stroke-width="3"/>
+                </svg>
+                <div style="font-size: 0.8rem; color: var(--teal-dark); font-weight: 600; margin-top: 0.6rem;">
+                  Good Fit: The curve bends smoothly along the dots!
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- =========================================================================
+         TOPIC 2: WE CREATE POLYNOMIAL FEATURES (X², X³, ...)
+         ========================================================================= -->
+    <section class="block" id="polynomial-features">
+      <div class="block__body">
+        <h2 class="fade-up animate-on-scroll">
+          <span class="icon-badge icon-badge--teal">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M7 17l10-10"/><path d="M12 7h5v5"/></svg>
+          </span>
+          2. We Create Polynomial Features Such as X², X³, &hellip;
+        </h2>
+
+        <p class="fade-up animate-on-scroll">
+          Here is the biggest surprise about polynomial regression:
+        </p>
+
+        <div class="reg-callout reg-callout--teal fade-up animate-on-scroll">
+          <div style="font-family: var(--display); font-weight: 700; font-size: 1.05rem; color: var(--teal-dark); margin-bottom: 0.35rem;">
+            ✨ The Big Secret
+          </div>
+          <p style="margin: 0; font-size: 0.94rem; color: var(--ink-soft); line-height: 1.6;">
+            We do <strong>not</strong> invent a whole new complicated machine learning algorithm! Instead, we just do a simple math trick to our <strong>data columns</strong>: we take our input number <span class="poly-code-inline">X</span>, square it to get <span class="poly-code-inline">X²</span>, and cube it to get <span class="poly-code-inline">X³</span>.
+          </p>
+        </div>
+
+        <p class="fade-up animate-on-scroll">
+          Let's see this in a simple table. Imagine we are measuring car speed <span class="poly-code-inline">X</span> and stopping distance <span class="poly-code-inline">Y</span>:
+        </p>
+
+        <!-- Feature Transformation Table -->
+        <div class="fade-up animate-on-scroll" style="overflow-x: auto;">
+          <table class="poly-feature-table">
+            <thead>
+              <tr>
+                <th style="font-family: var(--display); font-size: 0.85rem;">Car Test</th>
+                <th>Original Input (X)<br><span style="font-size: 0.75rem; font-weight: normal; color: var(--muted);">Speed (mph)</span></th>
+                <th style="background: var(--gold-tint);">New Feature: X²<br><span style="font-size: 0.75rem; font-weight: normal; color: var(--gold-dark);">Speed squared</span></th>
+                <th>New Feature: X³<br><span style="font-size: 0.75rem; font-weight: normal; color: var(--muted);">Speed cubed</span></th>
+                <th style="background: var(--coral-tint);">Output (Y)<br><span style="font-size: 0.75rem; font-weight: normal; color: var(--coral-dark);">Stopping Distance (ft)</span></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Car #1</strong></td>
+                <td>10</td>
+                <td style="background: rgba(233, 168, 37, 0.08); font-weight: 700; color: var(--gold-dark);">100</td>
+                <td>1,000</td>
+                <td style="background: rgba(255, 90, 60, 0.08); font-weight: 700; color: var(--coral-dark);">15</td>
+              </tr>
+              <tr>
+                <td><strong>Car #2</strong></td>
+                <td>20</td>
+                <td style="background: rgba(233, 168, 37, 0.08); font-weight: 700; color: var(--gold-dark);">400</td>
+                <td>8,000</td>
+                <td style="background: rgba(255, 90, 60, 0.08); font-weight: 700; color: var(--coral-dark);">40</td>
+              </tr>
+              <tr>
+                <td><strong>Car #3</strong></td>
+                <td>30</td>
+                <td style="background: rgba(233, 168, 37, 0.08); font-weight: 700; color: var(--gold-dark);">900</td>
+                <td>27,000</td>
+                <td style="background: rgba(255, 90, 60, 0.08); font-weight: 700; color: var(--coral-dark);">75</td>
+              </tr>
+              <tr>
+                <td><strong>Car #4</strong></td>
+                <td>40</td>
+                <td style="background: rgba(233, 168, 37, 0.08); font-weight: 700; color: var(--gold-dark);">1,600</td>
+                <td>64,000</td>
+                <td style="background: rgba(255, 90, 60, 0.08); font-weight: 700; color: var(--coral-dark);">120</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <p class="fade-up animate-on-scroll" style="font-size: 0.92rem; color: var(--ink-soft);">
+          Notice that by simply calculating <span class="poly-code-inline">X²</span>, we now have extra columns of information that describe how fast <span class="poly-code-inline">X</span> accelerates!
+        </p>
+
+      </div>
+    </section>
+
+    <!-- =========================================================================
+         TOPIC 3: THEN WE USE LINEAR REGRESSION ON THOSE FEATURES
+         ========================================================================= -->
+    <section class="block" id="linear-regression-on-features">
+      <div class="block__body">
+        <h2 class="fade-up animate-on-scroll">
+          <span class="icon-badge icon-badge--gold">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+          </span>
+          3. Then We Use Linear Regression on Those Features
+        </h2>
+
+        <p class="fade-up animate-on-scroll">
+          You might ask: <em>&ldquo;If the line on the graph is curved, why is it still called <strong>linear</strong> regression?&rdquo;</em>
+        </p>
+
+        <p class="fade-up animate-on-scroll">
+          This is one of the most common interview questions in machine learning. Here is the answer in plain English:
+        </p>
+
+        <!-- 2 Side-by-Side Cards: Feature view vs Parameter view -->
+        <div class="reg-grid-2 fade-up animate-on-scroll" style="margin: 1.6rem 0;">
+          
+          <div class="reg-card" style="border-top: 4px solid var(--teal);">
+            <div class="reg-badge reg-badge--teal" style="margin-bottom: 0.5rem; align-self: flex-start;">Perspective 1: In the Features</div>
+            <h3 style="font-family: var(--display); font-size: 1.1rem; margin: 0 0 0.5rem;">It is Non-linear in X</h3>
+            <p style="font-size: 0.88rem; color: var(--ink-soft); line-height: 1.55; margin: 0 0 0.8rem;">
+              When you look at the graph of <span class="poly-code-inline">Y</span> against <span class="poly-code-inline">X</span>, the line curves because of the power <span class="poly-code-inline">X²</span>.
+            </p>
+            <div style="background: var(--bg); border: 1px solid var(--line); border-radius: 6px; padding: 0.65rem 0.85rem; font-size: 0.82rem; color: var(--ink);">
+              📈 <strong>Visual Shape:</strong> A curved parabola on a 2D plot.
+            </div>
+          </div>
+
+          <div class="reg-card" style="border-top: 4px solid #6D28D9;">
+            <div class="reg-badge" style="background: rgba(139, 92, 246, 0.12); color: #6D28D9; margin-bottom: 0.5rem; align-self: flex-start;">Perspective 2: In the Parameters (The Math)</div>
+            <h3 style="font-family: var(--display); font-size: 1.1rem; margin: 0 0 0.5rem;">It is Linear in &beta; (Beta)</h3>
+            <p style="font-size: 0.88rem; color: var(--ink-soft); line-height: 1.55; margin: 0 0 0.8rem;">
+              Look at the weights: <span class="poly-code-inline">&beta;₀</span>, <span class="poly-code-inline">&beta;₁</span>, <span class="poly-code-inline">&beta;₂</span>. None of them are squared or multiplied together!
+            </p>
+            <div style="background: var(--bg); border: 1px solid var(--line); border-radius: 6px; padding: 0.65rem 0.85rem; font-size: 0.82rem; color: var(--ink);">
+              🧮 <strong>Math Truth:</strong> The machine learning algorithm solves it using the exact same fast, standard linear regression formulas!
+            </div>
+          </div>
+
+        </div>
+
+        <!-- The Substitution Insight Box -->
+        <div class="reg-callout reg-callout--coral fade-up animate-on-scroll">
+          <div style="font-family: var(--display); font-weight: 700; font-size: 1.02rem; color: var(--coral-dark); margin-bottom: 0.4rem;">
+            💡 Think of it like Multiple Linear Regression
+          </div>
+          <p style="margin: 0 0 0.8rem; font-size: 0.92rem; color: var(--ink-soft); line-height: 1.6;">
+            If we give new names to the columns: let <span class="poly-code-inline">Z₁ = X</span> and let <span class="poly-code-inline">Z₂ = X²</span>, then the equation becomes:
+          </p>
+          <div style="font-family: 'IBM Plex Mono', monospace; font-size: 1.15rem; font-weight: 700; background: var(--surface); padding: 0.6rem 1rem; border-radius: 6px; border: 1px solid var(--line); text-align: center; color: var(--ink); margin-bottom: 0.8rem;">
+            Y = β₀ + β₁Z₁ + β₂Z₂
+          </div>
+          <p style="margin: 0; font-size: 0.88rem; color: var(--ink-soft); line-height: 1.55;">
+            To the computer, <span class="poly-code-inline">Z₁</span> and <span class="poly-code-inline">Z₂</span> are just two ordinary variables &mdash; exactly like Multiple Linear Regression!
+          </p>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- =========================================================================
+         TOPIC 4: EXAMPLE EQUATION (Y = β₀ + β₁X + β₂X²)
+         ========================================================================= -->
+    <section class="block" id="example-equation">
+      <div class="block__body">
+        <h2 class="fade-up animate-on-scroll">
+          <span class="icon-badge icon-badge--teal">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="4" y1="9" x2="20" y2="9"/><line x1="4" y1="15" x2="20" y2="15"/><line x1="10" y1="3" x2="8" y2="21"/><line x1="16" y1="3" x2="14" y2="21"/></svg>
+          </span>
+          4. Example Equation: Y = &beta;₀ + &beta;₁X + &beta;₂X²
+        </h2>
+
+        <p class="fade-up animate-on-scroll">
+          This is a <strong>Degree 2 (quadratic)</strong> polynomial regression model. Tap each colored piece below to see what it does:
+        </p>
+
+        <!-- Interactive Equation Token Explorer -->
+        <div class="poly-anatomy-bar fade-up animate-on-scroll">
+          <div style="font-size: 0.78rem; font-family: var(--display); font-weight: 800; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 0.6rem;">
+            Interactive Equation Anatomy (Tap any piece)
+          </div>
+
+          <div class="poly-equation-interactive">
+            <span class="poly-token poly-token-y is-active" data-term="y">
+              <span>Y</span>
+              <span class="poly-token__subtext">Output</span>
+            </span>
+
+            <span style="color: var(--muted);">=</span>
+
+            <span class="poly-token poly-token-b0" data-term="b0">
+              <span>β₀</span>
+              <span class="poly-token__subtext">Intercept</span>
+            </span>
+
+            <span style="color: var(--muted);">+</span>
+
+            <span class="poly-token poly-token-b1" data-term="b1">
+              <span>β₁X</span>
+              <span class="poly-token__subtext">Linear Term</span>
+            </span>
+
+            <span style="color: var(--muted);">+</span>
+
+            <span class="poly-token poly-token-b2" data-term="b2">
+              <span>β₂X²</span>
+              <span class="poly-token__subtext">Curve Maker</span>
+            </span>
+          </div>
+
+          <!-- Dynamic Token Detail Box -->
+          <div class="poly-token-detail">
+            <div class="poly-token-detail__title" id="polyDetailTitle">
+              <span style="color: var(--coral-dark);">Y</span> &mdash; The Output Variable (Dependent)
+            </div>
+            <p class="poly-token-detail__desc" id="polyDetailDesc">
+              The number you want to predict (such as stopping distance, house price, or salary). Its value depends on the input X.
+            </p>
+          </div>
+        </div>
+
+        <!-- How β₂ controls the curve -->
+        <div class="reg-card fade-up animate-on-scroll" style="margin-top: 1.6rem; padding: 1.6rem;">
+          <div style="font-family: var(--display); font-weight: 700; font-size: 1.05rem; color: var(--ink); margin-bottom: 0.8rem;">
+            How β₂ Creates the Bend:
+          </div>
+
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1.2rem;">
+            
+            <div style="background: var(--bg); border: 1px solid var(--line); border-radius: 8px; padding: 1rem;">
+              <div style="font-weight: 700; color: var(--teal-dark); font-size: 0.95rem; margin-bottom: 0.3rem;">
+                When β₂ &gt; 0 (Positive)
+              </div>
+              <p style="font-size: 0.86rem; color: var(--ink-soft); margin: 0; line-height: 1.5;">
+                The curve bends <strong>upwards</strong> like a smiling cup (&cup;). Growth gets faster and faster as X gets larger.
+              </p>
+            </div>
+
+            <div style="background: var(--bg); border: 1px solid var(--line); border-radius: 8px; padding: 1rem;">
+              <div style="font-weight: 700; color: var(--coral-dark); font-size: 0.95rem; margin-bottom: 0.3rem;">
+                When β₂ &lt; 0 (Negative)
+              </div>
+              <p style="font-size: 0.86rem; color: var(--ink-soft); margin: 0; line-height: 1.5;">
+                The curve bends <strong>downwards</strong> like an umbrella or hill (&cap;). It rises to a peak and then heads down.
+              </p>
+            </div>
+
+            <div style="background: var(--bg); border: 1px solid var(--line); border-radius: 8px; padding: 1rem;">
+              <div style="font-weight: 700; color: var(--muted); font-size: 0.95rem; margin-bottom: 0.3rem;">
+                When β₂ = 0 (Zero)
+              </div>
+              <p style="font-size: 0.86rem; color: var(--ink-soft); margin: 0; line-height: 1.5;">
+                The curve disappears! You are left with <span class="poly-code-inline">Y = β₀ + β₁X</span>, which is a normal straight line.
+              </p>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- =========================================================================
+         TOPIC 5: HIGHER DEGREE & OVERFITTING
+         ========================================================================= -->
+    <section class="block" id="higher-degree-overfitting">
+      <div class="block__body">
+        <h2 class="fade-up animate-on-scroll">
+          <span class="icon-badge icon-badge--coral">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+          </span>
+          5. Higher Degree &rarr; More Complex Curves, But Can Cause Overfitting
+        </h2>
+
+        <p class="fade-up animate-on-scroll">
+          What is the <strong>degree</strong> of a polynomial? It is simply the highest power of <span class="poly-code-inline">X</span> in the equation:
+        </p>
+
+        <!-- Degree list -->
+        <div class="fade-up animate-on-scroll" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem; margin: 1.4rem 0;">
+          <div style="background: var(--surface); border: 1.5px solid var(--line); border-radius: 8px; padding: 1rem;">
+            <div style="font-family: var(--display); font-weight: 800; font-size: 0.85rem; color: var(--muted); text-transform: uppercase;">Degree 1 (Linear)</div>
+            <div style="font-family: 'IBM Plex Mono', monospace; font-size: 1rem; font-weight: 700; color: var(--ink); margin: 0.3rem 0;">Y = β₀ + β₁X</div>
+            <div style="font-size: 0.8rem; color: var(--ink-soft);">0 bends. A completely straight line.</div>
+          </div>
+
+          <div style="background: var(--surface); border: 1.5px solid var(--line); border-radius: 8px; padding: 1rem;">
+            <div style="font-family: var(--display); font-weight: 800; font-size: 0.85rem; color: var(--teal-dark); text-transform: uppercase;">Degree 2 (Quadratic)</div>
+            <div style="font-family: 'IBM Plex Mono', monospace; font-size: 1rem; font-weight: 700; color: var(--ink); margin: 0.3rem 0;">Y = β₀ + β₁X + β₂X²</div>
+            <div style="font-size: 0.8rem; color: var(--ink-soft);">1 bend. A gentle parabolic curve.</div>
+          </div>
+
+          <div style="background: var(--surface); border: 1.5px solid var(--line); border-radius: 8px; padding: 1rem;">
+            <div style="font-family: var(--display); font-weight: 800; font-size: 0.85rem; color: var(--gold-dark); text-transform: uppercase;">Degree 3 (Cubic)</div>
+            <div style="font-family: 'IBM Plex Mono', monospace; font-size: 1rem; font-weight: 700; color: var(--ink); margin: 0.3rem 0;">Y = &hellip; + β₃X³</div>
+            <div style="font-size: 0.8rem; color: var(--ink-soft);">Up to 2 bends. Can make an S-shape.</div>
+          </div>
+
+          <div style="background: var(--surface); border: 1.5px solid var(--line); border-radius: 8px; padding: 1rem;">
+            <div style="font-family: var(--display); font-weight: 800; font-size: 0.85rem; color: var(--coral-dark); text-transform: uppercase;">Degree 8+ (High Power)</div>
+            <div style="font-family: 'IBM Plex Mono', monospace; font-size: 1rem; font-weight: 700; color: var(--ink); margin: 0.3rem 0;">Y = &hellip; + β₈X⁸</div>
+            <div style="font-size: 0.8rem; color: var(--ink-soft);">Many wild bends! Wiggles like a snake.</div>
+          </div>
+        </div>
+
+        <p class="fade-up animate-on-scroll">
+          You might think: <em>&ldquo;Why not always use Degree 10 or Degree 20 so our line can bend as much as it wants?&rdquo;</em>
+        </p>
+
+        <p class="fade-up animate-on-scroll">
+          Because of <strong>Overfitting</strong>! Overfitting happens when a model tries so hard to touch every single training dot that it memorizes random noise instead of learning the real underlying pattern.
+        </p>
+
+        <!-- =====================================================================
+             LIVE INTERACTIVE SIMULATOR: UNDERFITTING VS GOOD FIT VS OVERFITTING
+             ===================================================================== -->
+        <div class="poly-sim-box fade-up animate-on-scroll">
+          <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 1rem;">
+            <div>
+              <h3 style="font-size: 1.15rem; margin: 0; color: var(--ink);">Interactive Curve Simulator</h3>
+              <p style="font-size: 0.86rem; color: var(--ink-soft); margin: 0.2rem 0 0;">
+                Click each degree button to watch how the curve changes:
+              </p>
+            </div>
+            <div style="font-size: 0.8rem; font-family: 'IBM Plex Mono', monospace; color: var(--muted);">
+              8 training data points
+            </div>
+          </div>
+
+          <!-- Controls -->
+          <div class="poly-sim-controls">
+            <button class="poly-btn-degree" data-degree="1" id="btnDeg1">Degree 1 (Underfitting)</button>
+            <button class="poly-btn-degree is-active" data-degree="2" id="btnDeg2">Degree 2 (Good Fit &ndash; Recommended)</button>
+            <button class="poly-btn-degree" data-degree="3" id="btnDeg3">Degree 3 (Flexible Fit)</button>
+            <button class="poly-btn-degree poly-btn--warn" data-degree="8" id="btnDeg8">Degree 8 (Wild Overfitting!)</button>
+          </div>
+
+          <!-- SVG Chart Area -->
+          <div class="poly-chart-area">
+            <svg id="polySvg" viewBox="0 0 600 320" style="width: 100%; height: auto; display: block; overflow: visible;">
+              <defs>
+                <linearGradient id="curveGradGood" x1="0%" y1="0%" x2="100%" y2="0%">
+                  <stop offset="0%" stop-color="#0EA894"/>
+                  <stop offset="100%" stop-color="#0B7B6B"/>
+                </linearGradient>
+                <linearGradient id="curveGradBad" x1="0%" y1="0%" x2="100%" y2="0%">
+                  <stop offset="0%" stop-color="#FF5A3C"/>
+                  <stop offset="100%" stop-color="#D8431F"/>
+                </linearGradient>
+              </defs>
+
+              <!-- Grid lines -->
+              <g stroke="#EDE7DE" stroke-width="1" stroke-dasharray="3 3">
+                <line x1="60" y1="50" x2="560" y2="50"/>
+                <line x1="60" y1="110" x2="560" y2="110"/>
+                <line x1="60" y1="170" x2="560" y2="170"/>
+                <line x1="60" y1="230" x2="560" y2="230"/>
+              </g>
+
+              <!-- Axes -->
+              <line x1="60" y1="270" x2="570" y2="270" stroke="#8A8177" stroke-width="2"/>
+              <line x1="60" y1="270" x2="60" y2="30" stroke="#8A8177" stroke-width="2"/>
+
+              <text x="560" y="295" font-size="12" font-family="var(--display)" font-weight="700" fill="#8A8177" text-anchor="end">Input (X)</text>
+              <text x="50" y="25" font-size="12" font-family="var(--display)" font-weight="700" fill="#8A8177" text-anchor="start">Output (Y)</text>
+
+              <!-- Residual lines group -->
+              <g id="svgSimResiduals"></g>
+
+              <!-- Fitted curve path -->
+              <path id="svgSimPath" d="" fill="none" stroke="url(#curveGradGood)" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" style="transition: d 0.35s ease;"/>
+
+              <!-- Data Points group -->
+              <g id="svgSimPoints"></g>
+            </svg>
+          </div>
+
+          <!-- Dynamic Status Card -->
+          <div class="poly-status-card" id="polyStatusCard">
+            <div class="poly-status-badge" id="polyStatusBadge" style="background: var(--teal-tint); color: var(--teal-dark);">
+              Degree 2 &bull; Balanced Fit
+            </div>
+            <div style="font-family: 'IBM Plex Mono', monospace; font-size: 0.95rem; font-weight: 700; color: var(--ink); margin-bottom: 0.4rem;" id="polyFormulaReadout">
+              Formula: Y = 16.5 + 0.14X + 0.008X²
+            </div>
+            <p style="margin: 0; font-size: 0.9rem; color: var(--ink-soft); line-height: 1.55;" id="polyStatusText">
+              <strong>Just right!</strong> The smooth quadratic curve captures the general curved trend of the dots without overreacting to individual noisy points. It will make reliable predictions on new unseen data.
+            </p>
+          </div>
+        </div>
+
+        <!-- 3 Comparison Boxes for Intuition -->
+        <div class="reg-grid-3 fade-up animate-on-scroll">
+          <div class="reg-card" style="border-top: 4px solid var(--muted);">
+            <div class="reg-badge" style="background: rgba(138, 129, 119, 0.15); color: var(--muted); align-self: flex-start; margin-bottom: 0.5rem;">Degree 1</div>
+            <h3 style="font-family: var(--display); font-size: 1.05rem; margin: 0 0 0.4rem;">Underfitting (Too Simple)</h3>
+            <p style="font-size: 0.88rem; color: var(--ink-soft); margin: 0; line-height: 1.55;">
+              <strong>High Bias.</strong> The model is too stiff. It assumes the world is flat when it is actually round. Performs poorly on both training and test data.
+            </p>
+          </div>
+
+          <div class="reg-card" style="border-top: 4px solid var(--teal);">
+            <div class="reg-badge reg-badge--teal" style="align-self: flex-start; margin-bottom: 0.5rem;">Degree 2 &ndash; 3</div>
+            <h3 style="font-family: var(--display); font-size: 1.05rem; margin: 0 0 0.4rem;">Good Fit (Just Right)</h3>
+            <p style="font-size: 0.88rem; color: var(--ink-soft); margin: 0; line-height: 1.55;">
+              <strong>Balanced.</strong> Like Goldilocks: not too stiff, not too wiggly. Captures the true curvature while ignoring minor random noise.
+            </p>
+          </div>
+
+          <div class="reg-card" style="border-top: 4px solid var(--coral);">
+            <div class="reg-badge reg-badge--coral" style="align-self: flex-start; margin-bottom: 0.5rem;">Degree 8+</div>
+            <h3 style="font-family: var(--display); font-size: 1.05rem; margin: 0 0 0.4rem;">Overfitting (Too Complex)</h3>
+            <p style="font-size: 0.88rem; color: var(--ink-soft); margin: 0; line-height: 1.55;">
+              <strong>High Variance.</strong> The model acts like an overanxious student who memorized the practice questions word-for-word. Fails badly when given a brand new test!
+            </p>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- =========================================================================
+         QUICK CHECK INTERACTIVE QUIZ
+         ========================================================================= -->
+    <section class="block" id="quick-quiz">
+      <div class="block__body">
+        <h2 class="fade-up animate-on-scroll">
+          <span class="icon-badge icon-badge--teal">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg>
+          </span>
+          Quick Check: Test Your Understanding
+        </h2>
+
+        <p class="fade-up animate-on-scroll">
+          Tap an answer for each question below:
+        </p>
+
+        <!-- Quiz 1 -->
+        <div class="poly-quiz-card fade-up animate-on-scroll" id="quiz1">
+          <div class="poly-quiz-q">
+            <span>1.</span>
+            <span>When should you use Polynomial Regression instead of Simple Linear Regression?</span>
+          </div>
+          <div class="poly-quiz-options">
+            <button class="poly-quiz-opt" data-correct="false">A) When the data points form a perfect straight line</button>
+            <button class="poly-quiz-opt" data-correct="true">B) When the relationship between X and Y is curved</button>
+            <button class="poly-quiz-opt" data-correct="false">C) Only when you have categorical labels like "cat" and "dog"</button>
+          </div>
+          <div class="poly-quiz-feedback"></div>
+        </div>
+
+        <!-- Quiz 2 -->
+        <div class="poly-quiz-card fade-up animate-on-scroll" id="quiz2">
+          <div class="poly-quiz-q">
+            <span>2.</span>
+            <span>Why is Y = β₀ + β₁X + β₂X² still considered a <em>linear</em> model?</span>
+          </div>
+          <div class="poly-quiz-options">
+            <button class="poly-quiz-opt" data-correct="false">A) Because X² is a straight line</button>
+            <button class="poly-quiz-opt" data-correct="true">B) Because the equation is linear with respect to the coefficients (&beta;), not X</button>
+            <button class="poly-quiz-opt" data-correct="false">C) Because we round all curves into squares</button>
+          </div>
+          <div class="poly-quiz-feedback"></div>
+        </div>
+
+        <!-- Quiz 3 -->
+        <div class="poly-quiz-card fade-up animate-on-scroll" id="quiz3">
+          <div class="poly-quiz-q">
+            <span>3.</span>
+            <span>What happens if you increase the polynomial degree to an extremely high number (like Degree 15)?</span>
+          </div>
+          <div class="poly-quiz-options">
+            <button class="poly-quiz-opt" data-correct="true">A) It causes overfitting &mdash; the curve wiggles wildly to touch every dot and fails on new data</button>
+            <button class="poly-quiz-opt" data-correct="false">B) The model turns into a completely straight flat line</button>
+            <button class="poly-quiz-opt" data-correct="false">C) It always guarantees 100% accuracy on all future predictions</button>
+          </div>
+          <div class="poly-quiz-feedback"></div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- =========================================================================
+         SUMMARY CHECKLIST
+         ========================================================================= -->
+    <section class="block" id="summary">
+      <div class="block__body">
+        <h2 class="fade-up animate-on-scroll">
+          <span class="icon-badge icon-badge--gold">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+          </span>
+          Key Takeaways: That is Enough for Basic Understanding!
+        </h2>
+
+        <div class="reg-card fade-up animate-on-scroll" style="background: var(--surface-tint); border: 2px solid var(--line); padding: 1.8rem;">
+          <ul style="margin: 0; padding-left: 1.4rem; display: flex; flex-direction: column; gap: 0.8rem; font-size: 0.95rem; color: var(--ink);">
+            <li><strong>Curved Relationships:</strong> Real-world data curves. When a straight line fails, polynomial regression bends to fit.</li>
+            <li><strong>Feature Engineering:</strong> We create powers of our original feature (<span class="poly-code-inline">X²</span>, <span class="poly-code-inline">X³</span>).</li>
+            <li><strong>Standard Linear Math:</strong> We still train regular linear regression on those powered features!</li>
+            <li><strong>The Core Equation:</strong> <span class="poly-code-inline">Y = β₀ + β₁X + β₂X²</span> (where <span class="poly-code-inline">β₂</span> controls the curve).</li>
+            <li><strong>Overfitting Risk:</strong> Higher degree &rarr; more complex curve &rarr; risk of memorizing noise. Keep the degree as small as possible while fitting the true curve!</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ LESSON FOOTER ============ -->
+    <footer class="lesson__footer">
+      <a href="simple-linear-regression.html" class="lesson__footer-prev" id="prevLessonLink">
+        <span class="lesson__footer-prev-arrow">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5"/><path d="m12 19-7-7 7-7"/></svg>
+        </span>
+        <div class="lesson__footer-prev-text">
+          <span class="lesson__footer-prev-label">Previous part</span>
+          <span class="lesson__footer-prev-name">4.7 Simple Linear Regression</span>
+        </div>
+      </a>
+
+      <div class="lesson__footer-progress">Part 8 of 8 &bull; Supervised Learning</div>
+
+      <a href="unsupervised-learning.html" class="lesson__footer-next" id="nextLessonLink">
+        <div class="lesson__footer-next-text">
+          <span class="lesson__footer-next-label">Next module</span>
+          <span class="lesson__footer-next-name">5.1 Unsupervised Learning</span>
+        </div>
+        <span class="lesson__footer-arrow">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+        </span>
+      </a>
+    </footer>
+
+  </main>
+</div>
+
+<script src="main.js"></script>
+<script src="glossary.js"></script>
+
+<script>
+// =========================================================================
+// INTERACTIVE ENGINE: POLYNOMIAL REGRESSION
+// =========================================================================
+(function () {
+  "use strict";
+
+  // --- 1. Interactive Equation Anatomy Token Explorer ---
+  var termDetails = {
+    y: {
+      title: '<span style="color: var(--coral-dark);">Y</span> &mdash; Output Variable (Dependent)',
+      desc: 'The target value you want to predict (e.g. car braking distance, employee salary, or crop yield). Its final value depends on the input X.'
+    },
+    b0: {
+      title: '<span style="color: #6D28D9;">β₀</span> &mdash; Intercept (Starting Baseline)',
+      desc: 'The value of Y when X is 0. On a graph, it is where the curve crosses the vertical Y-axis.'
+    },
+    b1: {
+      title: '<span style="color: var(--teal-dark);">β₁X</span> &mdash; Linear Term (Baseline Slope)',
+      desc: 'The regular linear component. It sets the initial uphill or downhill tilt of the line near X = 0.'
+    },
+    b2: {
+      title: '<span style="color: #B45309;">β₂X²</span> &mdash; Quadratic Term (The Curve Maker!)',
+      desc: 'The magic feature that causes the curve! Because X is squared, as X grows, this term grows very quickly. If β₂ is positive, it bends the curve upwards (smiling ∪); if negative, it bends it downwards (hill ∩).'
+    }
+  };
+
+  var tokens = document.querySelectorAll(".poly-token");
+  var detailTitle = document.getElementById("polyDetailTitle");
+  var detailDesc = document.getElementById("polyDetailDesc");
+
+  tokens.forEach(function (tok) {
+    tok.addEventListener("click", function () {
+      tokens.forEach(function (t) { t.classList.remove("is-active"); });
+      tok.classList.add("is-active");
+      var term = tok.getAttribute("data-term");
+      if (termDetails[term] && detailTitle && detailDesc) {
+        detailTitle.innerHTML = termDetails[term].title;
+        detailDesc.innerHTML = termDetails[term].desc;
+      }
+    });
+  });
+
+  // --- 2. Interactive Curve & Overfitting Simulator ---
+  var simPoints = [
+    { x: 90,  y: 245 },
+    { x: 150, y: 220 },
+    { x: 210, y: 205 },
+    { x: 270, y: 175 },
+    { x: 340, y: 150 },
+    { x: 410, y: 110 },
+    { x: 480, y: 70  },
+    { x: 535, y: 38  }
+  ];
+
+  var pointsGroup = document.getElementById("svgSimPoints");
+  var residualsGroup = document.getElementById("svgSimResiduals");
+  var pathEl = document.getElementById("svgSimPath");
+
+  var btnDeg1 = document.getElementById("btnDeg1");
+  var btnDeg2 = document.getElementById("btnDeg2");
+  var btnDeg3 = document.getElementById("btnDeg3");
+  var btnDeg8 = document.getElementById("btnDeg8");
+
+  var statusBadge = document.getElementById("polyStatusBadge");
+  var formulaReadout = document.getElementById("polyFormulaReadout");
+  var statusText = document.getElementById("polyStatusText");
+
+  // Render scatter points once
+  if (pointsGroup) {
+    simPoints.forEach(function (pt) {
+      var circle = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+      circle.setAttribute("cx", pt.x);
+      circle.setAttribute("cy", pt.y);
+      circle.setAttribute("r", "6");
+      circle.setAttribute("fill", "#FF5A3C");
+      circle.setAttribute("stroke", "#FFFFFF");
+      circle.setAttribute("stroke-width", "2");
+      pointsGroup.appendChild(circle);
+    });
+  }
+
+  // Pre-calculated regression curves for each degree mode
+  var degreeConfigs = {
+    "1": {
+      name: "Degree 1 • Underfitting",
+      badgeClass: "background: rgba(138, 129, 119, 0.15); color: var(--muted);",
+      formula: "Formula: Y = 285 - 0.44X",
+      stroke: "url(#curveGradBad)",
+      // Straight line
+      path: "M 60 258 L 560 38",
+      desc: "<strong>Underfitting (Too simple):</strong> A straight line fails to capture the bend in the data. Residual errors are high, especially at the start and end.",
+      btnId: "btnDeg1",
+      calcY: function(x) { return 258 - 0.44 * (x - 60); }
+    },
+    "2": {
+      name: "Degree 2 • Balanced Fit (Recommended)",
+      badgeClass: "background: var(--teal-tint); color: var(--teal-dark);",
+      formula: "Formula: Y = 250 - 0.12X - 0.0005X²",
+      stroke: "url(#curveGradGood)",
+      // Quadratic smooth curve
+      path: "M 60 252 Q 310 220 560 30",
+      desc: "<strong>Just right!</strong> The smooth quadratic curve captures the general curved trend of the dots without overreacting to individual noisy points. It will make reliable predictions on new unseen data.",
+      btnId: "btnDeg2",
+      calcY: function(x) {
+        var t = (x - 60) / 500;
+        // Quadratic bezier approximation
+        return (1 - t) * (1 - t) * 252 + 2 * (1 - t) * t * 220 + t * t * 30;
+      }
+    },
+    "3": {
+      name: "Degree 3 • Flexible Fit",
+      badgeClass: "background: var(--gold-tint); color: var(--gold-dark);",
+      formula: "Formula: Y = 252 - 0.15X - 0.0003X² - 0.0000008X³",
+      stroke: "url(#curveGradGood)",
+      // Cubic curve
+      path: "M 60 250 C 180 230, 360 170, 560 28",
+      desc: "<strong>Flexible Fit:</strong> A cubic curve allows a subtle S-curve inflection. For this dataset, it provides a very close, smooth approximation to Degree 2.",
+      btnId: "btnDeg3",
+      calcY: function(x) {
+        var t = (x - 60) / 500;
+        // Cubic bezier calculation
+        return Math.pow(1 - t, 3) * 250 + 3 * Math.pow(1 - t, 2) * t * 230 + 3 * (1 - t) * Math.pow(t, 2) * 170 + Math.pow(t, 3) * 28;
+      }
+    },
+    "8": {
+      name: "Degree 8 • Extreme Overfitting!",
+      badgeClass: "background: var(--coral-tint); color: var(--coral-dark);",
+      formula: "Formula: Y = β₀ + β₁X + β₂X² + ... + β₈X⁸",
+      stroke: "url(#curveGradBad)",
+      // Wild oscillating polynomial that hits dots but goes crazy
+      path: "M 60 268 C 75 258, 85 245, 90 245 C 105 245, 130 190, 150 220 C 170 250, 195 200, 210 205 C 235 210, 255 160, 270 175 C 295 195, 320 135, 340 150 C 370 170, 395 90, 410 110 C 435 135, 465 50, 480 70 C 505 95, 520 20, 535 38 C 545 50, 555 12, 560 10",
+      desc: "<strong>Overfitting Alert!</strong> The model wiggles wildly to touch every single training point. Look at the bizarre peaks and valleys between the dots &mdash; this model will fail disastrously on new data!",
+      btnId: "btnDeg8",
+      calcY: null
+    }
+  };
+
+  function setDegree(degKey) {
+    var conf = degreeConfigs[degKey];
+    if (!conf) return;
+
+    // Toggle active button class
+    document.querySelectorAll(".poly-btn-degree").forEach(function (btn) {
+      btn.classList.remove("is-active");
+    });
+    var activeBtn = document.getElementById(conf.btnId);
+    if (activeBtn) activeBtn.classList.add("is-active");
+
+    // Update path
+    if (pathEl) {
+      pathEl.setAttribute("d", conf.path);
+      pathEl.setAttribute("stroke", conf.stroke);
+    }
+
+    // Update readouts
+    if (statusBadge) {
+      statusBadge.textContent = conf.name;
+      statusBadge.style.cssText = conf.badgeClass;
+    }
+    if (formulaReadout) formulaReadout.textContent = conf.formula;
+    if (statusText) statusText.innerHTML = conf.desc;
+
+    // Update residual lines
+    if (residualsGroup) {
+      residualsGroup.innerHTML = "";
+      if (conf.calcY) {
+        simPoints.forEach(function (pt) {
+          var predY = conf.calcY(pt.x);
+          var line = document.createElementNS("http://www.w3.org/2000/svg", "line");
+          line.setAttribute("x1", pt.x);
+          line.setAttribute("y1", pt.y);
+          line.setAttribute("x2", pt.x);
+          line.setAttribute("y2", predY);
+          line.setAttribute("stroke", "#8A8177");
+          line.setAttribute("stroke-width", "1.5");
+          line.setAttribute("stroke-dasharray", "2 2");
+          residualsGroup.appendChild(line);
+        });
+      }
+    }
+  }
+
+  if (btnDeg1) btnDeg1.addEventListener("click", function () { setDegree("1"); });
+  if (btnDeg2) btnDeg2.addEventListener("click", function () { setDegree("2"); });
+  if (btnDeg3) btnDeg3.addEventListener("click", function () { setDegree("3"); });
+  if (btnDeg8) btnDeg8.addEventListener("click", function () { setDegree("8"); });
+
+  // Initialize with Degree 2
+  setDegree("2");
+
+  // --- 3. Interactive Quiz Checker ---
+  var quizzes = [
+    {
+      id: "quiz1",
+      feedback: "Spot on! When the relationship between X and Y is curved, a straight line causes underfitting. Polynomial regression bends to match the true curve."
+    },
+    {
+      id: "quiz2",
+      feedback: "Great job! It is called 'linear' regression because it is linear in the unknown parameters &beta;. The powers (X², X³) are simply pre-computed feature values."
+    },
+    {
+      id: "quiz3",
+      feedback: "Exactly right! High-degree polynomials have too much flexibility. They weave through every bit of random noise in the training data (overfitting), making poor predictions on new data."
+    }
+  ];
+
+  quizzes.forEach(function (q) {
+    var card = document.getElementById(q.id);
+    if (!card) return;
+    var opts = card.querySelectorAll(".poly-quiz-opt");
+    var feedbackBox = card.querySelector(".poly-quiz-feedback");
+
+    opts.forEach(function (opt) {
+      opt.addEventListener("click", function () {
+        var isCorrect = opt.getAttribute("data-correct") === "true";
+        opts.forEach(function (o) {
+          o.classList.remove("is-correct", "is-wrong");
+          o.disabled = true;
+        });
+
+        if (isCorrect) {
+          opt.classList.add("is-correct");
+          feedbackBox.className = "poly-quiz-feedback is-visible is-correct";
+          feedbackBox.innerHTML = "<strong>Correct!</strong> " + q.feedback;
+        } else {
+          opt.classList.add("is-wrong");
+          feedbackBox.className = "poly-quiz-feedback is-visible is-wrong";
+          feedbackBox.innerHTML = "<strong>Not quite.</strong> Take another look at the section above and try again!";
+        }
+      });
+    });
+  });
+
+})();
+</script>
+
+</body>
+</html>

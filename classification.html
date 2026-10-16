@@ -1,0 +1,1116 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Classification &amp; Decision Trees &ndash; Learning Machines</title>
+<meta name="description" content="Supervised Learning Method 01: Classification methods, Decision Tree induction, and Hunt's recursive partitioning algorithm.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,600;12..96,700&family=Figtree:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="grain" aria-hidden="true"></div>
+
+<div class="progress-rail" aria-hidden="true"><div class="progress-fill" id="progressFill"></div></div>
+
+<header class="top-bar">
+  <div class="top-bar__brand">
+    <span class="course-nav__mark">LM</span>
+    <span class="top-bar__title">Learning Machines</span>
+  </div>
+  <div class="top-bar__controls">
+    <span class="top-bar__time" id="readTime">~8 min read</span>
+    <button class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="courseNav">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="4" x2="20" y1="6" y2="6"/><line x1="4" x2="20" y1="12" y2="12"/><line x1="4" x2="20" y1="18" y2="18"/></svg>
+      <span class="nav-toggle__label">Course map</span>
+    </button>
+  </div>
+</header>
+
+<div class="nav-overlay" id="navOverlay" aria-hidden="true"></div>
+<!-- ============ SLIDE-OVER SIDEBAR ============ -->
+<aside class="course-nav" id="courseNav">
+  <div class="course-nav__header">
+    <h2 class="course-nav__title-side">Course map</h2>
+    <button class="nav-close" id="navClose" aria-label="Close nav">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
+    </button>
+  </div>
+  <p class="course-nav__tagline">A slow, careful path through machine learning, start to finish.</p>
+
+  <ol class="course-nav__list">
+    <li class="course-nav__item is-completed">
+      <a href="index.html" class="course-nav__inner-link">
+        <span class="course-nav__num">1</span>
+        <div>
+          <span class="course-nav__name">Introduction</span>
+          <span class="course-nav__state">completed</span>
+        </div>
+      </a>
+    </li>
+    <li class="course-nav__item is-completed">
+      <a href="data-preprocessing.html" class="course-nav__inner-link">
+        <span class="course-nav__num">2</span>
+        <div>
+          <span class="course-nav__name">Data Preprocessing</span>
+          <span class="course-nav__state">completed</span>
+        </div>
+      </a>
+    </li>
+    <li class="course-nav__item is-completed">
+      <a href="eda.html" class="course-nav__inner-link">
+        <span class="course-nav__num">3</span>
+        <div>
+          <span class="course-nav__name">Exploratory Data Analysis</span>
+          <span class="course-nav__state">completed</span>
+        </div>
+      </a>
+    </li>
+    <li class="course-nav__item is-active-group">
+      <span class="course-nav__num">4</span>
+      <div>
+        <span class="course-nav__name">Supervised Learning</span>
+        <span class="course-nav__state">in progress</span>
+      </div>
+    </li>
+    <ol class="course-nav__sub-list">
+      <li class="course-nav__sub-item is-completed">
+        <a href="supervised-learning.html">
+          <span class="course-nav__sub-num">4.1</span>
+          <div>
+            <span class="course-nav__sub-name">Introduction</span>
+            <span class="course-nav__state">completed</span>
+          </div>
+        </a>
+      </li>
+      <li class="course-nav__sub-item is-active">
+        <a href="classification.html">
+          <span class="course-nav__sub-num">4.2</span>
+          <div>
+            <span class="course-nav__sub-name">Classification &amp; Decision Trees</span>
+            <span class="course-nav__state">reading now</span>
+          </div>
+        </a>
+      </li>
+      <li class="course-nav__sub-item ">
+        <a href="id3-algorithm.html">
+          <span class="course-nav__sub-num">4.3</span>
+          <div>
+            <span class="course-nav__sub-name">ID3 Algorithm</span>
+            <span class="course-nav__state">available now</span>
+          </div>
+        </a>
+      </li>
+      <li class="course-nav__sub-item ">
+        <a href="c45-algorithm.html">
+          <span class="course-nav__sub-num">4.4</span>
+          <div>
+            <span class="course-nav__sub-name">C4.5 Algorithm</span>
+            <span class="course-nav__state">available now</span>
+          </div>
+        </a>
+      </li>
+      <li class="course-nav__sub-item ">
+        <a href="cart-algorithm.html">
+          <span class="course-nav__sub-num">4.5</span>
+          <div>
+            <span class="course-nav__sub-name">CART Algorithm</span>
+            <span class="course-nav__state">available now</span>
+          </div>
+        </a>
+      </li>
+      <li class="course-nav__sub-item ">
+        <a href="regression-analysis.html">
+          <span class="course-nav__sub-num">4.6</span>
+          <div>
+            <span class="course-nav__sub-name">Introduction to Regression</span>
+            <span class="course-nav__state">available now</span>
+          </div>
+        </a>
+      </li>
+      <li class="course-nav__sub-item">
+        <a href="simple-linear-regression.html">
+          <span class="course-nav__sub-num">4.7</span>
+          <div>
+            <span class="course-nav__sub-name">Simple Linear Regression</span>
+            <span class="course-nav__state">available now</span>
+          </div>
+        </a>
+      </li>
+      <li class="course-nav__sub-item">
+        <a href="polynomial-regression.html">
+          <span class="course-nav__sub-num">4.8</span>
+          <div>
+            <span class="course-nav__sub-name">Polynomial Regression</span>
+            <span class="course-nav__state">available now</span>
+          </div>
+        </a>
+      </li>
+    </ol>
+    <li class="course-nav__item">
+      <a href="unsupervised-learning.html" class="course-nav__inner-link">
+        <span class="course-nav__num">5</span>
+        <div>
+          <span class="course-nav__name">Unsupervised Learning</span>
+          <span class="course-nav__state">available now</span>
+        </div>
+      </a>
+    </li>
+    <ol class="course-nav__sub-list">
+      <li class="course-nav__sub-item">
+        <a href="unsupervised-learning.html">
+          <span class="course-nav__sub-num">5.1</span>
+          <div>
+            <span class="course-nav__sub-name">Introduction</span>
+            <span class="course-nav__state">available now</span>
+          </div>
+        </a>
+      </li>
+      <li class="course-nav__sub-item">
+        <a href="hierarchical-clustering.html">
+          <span class="course-nav__sub-num">5.2</span>
+          <div>
+            <span class="course-nav__sub-name">Hierarchical Clustering</span>
+            <span class="course-nav__state">available now</span>
+          </div>
+        </a>
+      </li>
+    </ol>
+    <li class="course-nav__item is-locked">
+      <span class="course-nav__num">6</span>
+      <div>
+        <span class="course-nav__name">Reinforcement Learning</span>
+        <span class="course-nav__state">
+          <svg class="course-nav__lock" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          coming soon
+        </span>
+      </div>
+    </li>
+  </ol>
+</aside>
+<div class="shell">
+
+  <!-- ============ MAIN ARTICLE ============ -->
+  <main class="lesson">
+
+    <header class="lesson__header">
+      <span class="lesson__eyebrow-free-title">
+        <h1>Classification &amp; Decision Trees</h1>
+        <svg class="title-underline" viewBox="0 0 520 14" preserveAspectRatio="none" aria-hidden="true">
+          <path d="M4 9 C 120 2, 260 13, 400 6 C 440 4, 480 8, 516 5"/>
+        </svg>
+      </span>
+      <p class="lesson__dek">Supervised learning method 01: Discovering patterns to assign observations into distinct categories, and how decision trees recursively partition data from root to leaves.</p>
+    </header>
+
+    <!-- ---- Section 4: Supervised Learning Method 01: Classification ---- -->
+    <section class="block" id="method-classification">
+      <div class="block__body">
+        <h2 class="fade-up animate-on-scroll">
+          <span class="icon-badge icon-badge--coral">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M3 9h18"/><path d="M9 21V9"/></svg>
+          </span>
+          Supervised Learning Method 01: Classification
+        </h2>
+
+        <div class="definition fade-up animate-on-scroll">
+          <div class="definition__label">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+            Method Definition
+          </div>
+          <p>
+            <strong>Classification</strong> is used to <strong>predict categorical output</strong>.<br>
+            It basically <em>categorizes input data into groups</em> &mdash; normally <strong>two groups</strong> (Binary Classification).
+          </p>
+        </div>
+
+        <p class="fade-up animate-on-scroll">
+          In classification, the output is not a continuous measurement like distance or temperature. Instead, it is a discrete tag or group membership.
+        </p>
+
+        <h3 style="margin-top: 2rem;" class="fade-up animate-on-scroll">1. Binary Classification (Normally Two Groups)</h3>
+        <p class="fade-up animate-on-scroll">
+          The most widespread scenario in machine learning: dividing observations into one of two mutually exclusive categories.
+        </p>
+
+        <ul class="fade-up animate-on-scroll" style="line-height: 1.8; color: var(--ink-soft); margin-bottom: 1.8rem;">
+          <li><strong>Student Outcome:</strong> Pass vs. Fail (as in our Student example)</li>
+          <li><strong>Email Filtering:</strong> Spam vs. Not Spam (Ham)</li>
+          <li><strong>Financial Fraud:</strong> Legitimate vs. Fraudulent Transaction</li>
+          <li><strong>Medical Diagnosis:</strong> Positive (Disease present) vs. Negative (Healthy)</li>
+          <li><strong>Customer Retention:</strong> Churn (Cancels subscription) vs. Retained</li>
+        </ul>
+
+        <h3 class="fade-up animate-on-scroll">2. Multi-Class Classification (More than Two Groups)</h3>
+        <p class="fade-up animate-on-scroll">
+          When the classification problem expands beyond two choices, the model learns to assign inputs into one of three or more possible groups:
+        </p>
+
+        <ul class="fade-up animate-on-scroll" style="line-height: 1.8; color: var(--ink-soft); margin-bottom: 2rem;">
+          <li><strong>Academic Grades:</strong> Grade A, Grade B, Grade C, Grade D, or Grade F</li>
+          <li><strong>Handwritten Digit Recognition:</strong> Digits 0, 1, 2, 3, 4, 5, 6, 7, 8, or 9 (the classic MNIST problem)</li>
+          <li><strong>Sentiment Analysis:</strong> Positive, Neutral, or Negative</li>
+        </ul>
+
+      </div>
+    </section>
+
+    <!-- ---- Section 5: Decision Tree Algorithms (ID3, C4.5 & CART) ---- -->
+    <section class="block" id="decision-tree-algorithms">
+      <div class="block__body">
+        <h2 class="fade-up animate-on-scroll">
+          <span class="icon-badge icon-badge--teal">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="5" r="3"/><circle cx="6" cy="19" r="3"/><circle cx="18" cy="19" r="3"/><path d="M12 8v4"/><path d="m7.5 16.5 3-3.5"/><path d="m16.5 16.5-3-3.5"/></svg>
+          </span>
+          Decision Tree Algorithms
+        </h2>
+
+        <!-- Definition Card -->
+        <div class="definition fade-up animate-on-scroll">
+          <div class="definition__label">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+            What is a Decision Tree?
+          </div>
+          <p>
+            A <strong>decision tree</strong> is a <strong>flowchart-like structure</strong> that makes decision rules by asking a sequence of questions about the dataset.
+          </p>
+        </div>
+
+        <p class="fade-up animate-on-scroll">
+          Under <strong>Supervised Learning</strong>, decision trees are among the most intuitive and widely used algorithms. They mimic human reasoning: rather than evaluating complicated equations all at once, a decision tree breaks a problem down into a sequence of simple, interpretable questions about the features until reaching a confident prediction.
+        </p>
+
+        <p class="fade-up animate-on-scroll">
+          In practice, three landmark algorithms defined the development of decision trees &mdash; <strong>ID3</strong>, <strong>C4.5</strong>, and <strong>CART</strong>:
+        </p>
+
+        <!-- Algorithm Spotlight Grid: ID3, C4.5, CART -->
+        <div class="dt-algo-grid fade-up animate-on-scroll">
+          <!-- ID3 Card -->
+          <div class="dt-algo-card dt-algo-card--id3">
+            <div class="dt-algo-badge dt-algo-badge--coral">Ross Quinlan (1986)</div>
+            <h3 class="dt-algo-title">ID3 <span class="dt-algo-sub">Iterative Dichotomiser 3</span></h3>
+            <p class="dt-algo-summary">The pioneer algorithm that introduced decision tree induction to modern machine learning.</p>
+            <div class="dt-algo-spec">
+              <span class="dt-algo-spec-label">Splitting Metric</span>
+              <span class="dt-algo-spec-val">Entropy &amp; Information Gain</span>
+            </div>
+            <div class="dt-algo-spec">
+              <span class="dt-algo-spec-label">Split Type</span>
+              <span class="dt-algo-spec-val">Multi-way categorical splits</span>
+            </div>
+            <div class="dt-algo-spec">
+              <span class="dt-algo-spec-label">Target Task</span>
+              <span class="dt-algo-spec-val">Classification only</span>
+            </div>
+            <p class="dt-algo-notes">Selects the feature that yields the greatest Information Gain. Designed strictly for discrete/nominal features; cannot natively handle continuous numeric ranges or missing values.</p>
+            <div style="margin-top: 1rem;"><a href="id3-algorithm.html" style="display: inline-flex; align-items: center; gap: 0.35rem; font-size: 0.85rem; font-weight: 700; color: var(--coral-dark);">Explore ID3 Walkthrough &darr;</a></div>
+          </div>
+
+          <!-- C4.5 Card -->
+          <div class="dt-algo-card dt-algo-card--c45">
+            <div class="dt-algo-badge dt-algo-badge--gold">Ross Quinlan (1993)</div>
+            <h3 class="dt-algo-title">C4.5 <span class="dt-algo-sub">Successor to ID3</span></h3>
+            <p class="dt-algo-summary">A major breakthrough addressing ID3's limitations with continuous variables and feature bias.</p>
+            <div class="dt-algo-spec">
+              <span class="dt-algo-spec-label">Splitting Metric</span>
+              <span class="dt-algo-spec-val">Gain Ratio (Normalized Gain)</span>
+            </div>
+            <div class="dt-algo-spec">
+              <span class="dt-algo-spec-label">Split Type</span>
+              <span class="dt-algo-spec-val">Multi-way &amp; Continuous Thresholds</span>
+            </div>
+            <div class="dt-algo-spec">
+              <span class="dt-algo-spec-label">Target Task</span>
+              <span class="dt-algo-spec-val">Classification only</span>
+            </div>
+            <p class="dt-algo-notes">Uses Gain Ratio to eliminate ID3's bias toward attributes with many distinct values. Supports continuous features (e.g., Temperature &gt; 25&deg;C), handles missing data, and performs post-pruning.</p>
+            <div style="margin-top: 1rem;"><a href="c45-algorithm.html" style="display: inline-flex; align-items: center; gap: 0.35rem; font-size: 0.85rem; font-weight: 700; color: var(--gold-dark);">Explore C4.5 Walkthrough &darr;</a></div>
+          </div>
+
+          <!-- CART Card -->
+          <div class="dt-algo-card dt-algo-card--cart">
+            <div class="dt-algo-badge dt-algo-badge--teal">Breiman et al. (1984)</div>
+            <h3 class="dt-algo-title">CART <span class="dt-algo-sub">Classification &amp; Regression Trees</span></h3>
+            <p class="dt-algo-summary">The industry standard widely implemented in modern tools like Scikit-Learn.</p>
+            <div class="dt-algo-spec">
+              <span class="dt-algo-spec-label">Splitting Metric</span>
+              <span class="dt-algo-spec-val">Gini Impurity (or MSE / Variance)</span>
+            </div>
+            <div class="dt-algo-spec">
+              <span class="dt-algo-spec-label">Split Type</span>
+              <span class="dt-algo-spec-val">Strictly Binary (2 branches)</span>
+            </div>
+            <div class="dt-algo-spec">
+              <span class="dt-algo-spec-label">Target Task</span>
+              <span class="dt-algo-spec-val">Classification &amp; Regression</span>
+            </div>
+            <p class="dt-algo-notes">Constructs strictly binary trees (each split generates exactly two outcomes). Versatile enough to handle both discrete classes (via Gini Impurity) and continuous numerical targets (via MSE).</p>
+            <div style="margin-top: 1rem;"><a href="cart-algorithm.html" style="display: inline-flex; align-items: center; gap: 0.35rem; font-size: 0.85rem; font-weight: 700; color: var(--teal-dark);">Explore CART Walkthrough &darr;</a></div>
+          </div>
+        </div>
+
+        <!-- =========================================================================
+             FIGURE: Visual Decision Tree Example Flowchart
+             ========================================================================= -->
+        <figure class="dt-example-box fade-up animate-on-scroll" aria-label="Simple Decision Tree Example: Weather Decision">
+          <div class="dt-example-header">
+            <div class="dt-example-badge">
+              <span class="icon-badge icon-badge--teal" style="width:1.7rem;height:1.7rem;">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9Z"/></svg>
+              </span>
+              <span>Simple Real-World Example: &ldquo;Should I Play Outside?&rdquo;</span>
+            </div>
+            <h3 class="dt-example-title">Visualizing the Decision Flow</h3>
+            <p class="dt-example-desc">
+              Follow the flow from the top question down through the branches. Each node tests a condition to guide the observation to the final verdict.
+            </p>
+          </div>
+
+          <!-- SVG Flowchart Diagram -->
+          <div class="dt-diagram-wrapper">
+            <svg class="dt-diagram-svg" viewBox="0 0 760 380" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <defs>
+                <!-- Arrowhead markers -->
+                <marker id="dt-arrow-teal" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                  <path d="M 0 1.5 L 8 5 L 0 8.5 z" fill="#0EA894"/>
+                </marker>
+                <marker id="dt-arrow-coral" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                  <path d="M 0 1.5 L 8 5 L 0 8.5 z" fill="#FF5A3C"/>
+                </marker>
+                <marker id="dt-arrow-gold" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                  <path d="M 0 1.5 L 8 5 L 0 8.5 z" fill="#E9A825"/>
+                </marker>
+
+                <!-- Filter for subtle dropshadow -->
+                <filter id="dt-card-shadow" x="-8%" y="-8%" width="120%" height="120%" filterUnits="userSpaceOnUse">
+                  <feDropShadow dx="0" dy="4" stdDeviation="6" flood-color="#1B1712" flood-opacity="0.07"/>
+                </filter>
+              </defs>
+
+              <!-- ================= CONNECTOR BRANCH PATHS ================= -->
+              <!-- Branch 1: Root Node (380, 85) to Left Leaf "Play" (165, 175) -->
+              <path d="M 330 85 C 220 85, 165 125, 165 175" stroke="#0EA894" stroke-width="2.5" stroke-linecap="round" fill="none" marker-end="url(#dt-arrow-teal)"/>
+
+              <!-- Branch 2: Root Node (380, 85) to Internal Node (540, 175) -->
+              <path d="M 430 85 C 510 85, 540 120, 540 170" stroke="#E9A825" stroke-width="2.5" stroke-linecap="round" fill="none" marker-end="url(#dt-arrow-gold)"/>
+
+              <!-- Branch 3: Internal Node (540, 245) to Leaf "Don't Play" (420, 310) -->
+              <path d="M 490 245 C 440 255, 420 275, 420 305" stroke="#FF5A3C" stroke-width="2.5" stroke-linecap="round" fill="none" marker-end="url(#dt-arrow-coral)"/>
+
+              <!-- Branch 4: Internal Node (540, 245) to Leaf "Play" (650, 310) -->
+              <path d="M 590 245 C 630 255, 650 275, 650 305" stroke="#0EA894" stroke-width="2.5" stroke-linecap="round" fill="none" marker-end="url(#dt-arrow-teal)"/>
+
+              <!-- ================= BRANCH LABELS (PILLS) ================= -->
+              <!-- Branch 1 Label: "No" -->
+              <g transform="translate(205, 105)">
+                <rect x="0" y="0" width="62" height="26" rx="13" fill="#DFF7F3" stroke="#0EA894" stroke-width="1.5"/>
+                <text x="31" y="17" text-anchor="middle" font-family="'IBM Plex Mono', monospace" font-size="11" font-weight="700" fill="#0B7B6B">No</text>
+              </g>
+
+              <!-- Branch 2 Label: "Yes" -->
+              <g transform="translate(470, 105)">
+                <rect x="0" y="0" width="66" height="26" rx="13" fill="#FFF3D6" stroke="#E9A825" stroke-width="1.5"/>
+                <text x="33" y="17" text-anchor="middle" font-family="'IBM Plex Mono', monospace" font-size="11" font-weight="700" fill="#A9770B">Yes</text>
+              </g>
+
+              <!-- Branch 3 Label: "Yes" (Windy) -->
+              <g transform="translate(420, 260)">
+                <rect x="0" y="0" width="62" height="24" rx="12" fill="#FFE7DE" stroke="#FF5A3C" stroke-width="1.5"/>
+                <text x="31" y="16" text-anchor="middle" font-family="'IBM Plex Mono', monospace" font-size="10.5" font-weight="700" fill="#D8431F">Yes</text>
+              </g>
+
+              <!-- Branch 4 Label: "No" (Not Windy) -->
+              <g transform="translate(595, 260)">
+                <rect x="0" y="0" width="60" height="24" rx="12" fill="#DFF7F3" stroke="#0EA894" stroke-width="1.5"/>
+                <text x="30" y="16" text-anchor="middle" font-family="'IBM Plex Mono', monospace" font-size="10.5" font-weight="700" fill="#0B7B6B">No</text>
+              </g>
+
+              <!-- ================= NODES ================= -->
+
+              <!-- 1. ROOT NODE: "Is it raining?" -->
+              <g transform="translate(265, 20)" filter="url(#dt-card-shadow)">
+                <rect x="0" y="0" width="230" height="74" rx="14" fill="#FFFFFF" stroke="#0EA894" stroke-width="2"/>
+                <rect x="55" y="-11" width="120" height="22" rx="11" fill="#0EA894"/>
+                <text x="115" y="4" text-anchor="middle" font-family="'Figtree', sans-serif" font-size="9.5" font-weight="800" fill="#FFFFFF" letter-spacing="0.06em">ROOT NODE</text>
+                <text x="115" y="45" text-anchor="middle" font-family="'Bricolage Grotesque', sans-serif" font-size="16" font-weight="700" fill="#1B1712">Is it raining?</text>
+              </g>
+
+              <!-- 2. LEAF NODE (Left): "Play" -->
+              <g transform="translate(75, 175)" filter="url(#dt-card-shadow)">
+                <rect x="0" y="0" width="180" height="66" rx="12" fill="#DFF7F3" stroke="#0EA894" stroke-width="2"/>
+                <rect x="35" y="-10" width="110" height="20" rx="10" fill="#0EA894"/>
+                <text x="90" y="4" text-anchor="middle" font-family="'Figtree', sans-serif" font-size="9" font-weight="800" fill="#FFFFFF" letter-spacing="0.05em">LEAF NODE</text>
+                <text x="90" y="40" text-anchor="middle" font-family="'Bricolage Grotesque', sans-serif" font-size="17" font-weight="800" fill="#0B7B6B">&#10003; Play</text>
+              </g>
+
+              <!-- 3. INTERNAL NODE: "Is it windy?" -->
+              <g transform="translate(430, 170)" filter="url(#dt-card-shadow)">
+                <rect x="0" y="0" width="220" height="72" rx="14" fill="#FFFFFF" stroke="#E9A825" stroke-width="2"/>
+                <rect x="45" y="-11" width="130" height="22" rx="11" fill="#E9A825"/>
+                <text x="110" y="4" text-anchor="middle" font-family="'Figtree', sans-serif" font-size="9.5" font-weight="800" fill="#FFFFFF" letter-spacing="0.06em">INTERNAL NODE</text>
+                <text x="110" y="44" text-anchor="middle" font-family="'Bricolage Grotesque', sans-serif" font-size="16" font-weight="700" fill="#1B1712">Is it windy?</text>
+              </g>
+
+              <!-- 4. LEAF NODE (Bottom Left): "Don't Play" -->
+              <g transform="translate(330, 305)" filter="url(#dt-card-shadow)">
+                <rect x="0" y="0" width="175" height="62" rx="12" fill="#FFE7DE" stroke="#FF5A3C" stroke-width="2"/>
+                <rect x="35" y="-10" width="105" height="20" rx="10" fill="#FF5A3C"/>
+                <text x="87" y="4" text-anchor="middle" font-family="'Figtree', sans-serif" font-size="9" font-weight="800" fill="#FFFFFF" letter-spacing="0.05em">LEAF NODE</text>
+                <text x="87" y="38" text-anchor="middle" font-family="'Bricolage Grotesque', sans-serif" font-size="16" font-weight="800" fill="#D8431F">&#10007; Don't Play</text>
+              </g>
+
+              <!-- 5. LEAF NODE (Bottom Right): "Play" -->
+              <g transform="translate(560, 305)" filter="url(#dt-card-shadow)">
+                <rect x="0" y="0" width="175" height="62" rx="12" fill="#DFF7F3" stroke="#0EA894" stroke-width="2"/>
+                <rect x="35" y="-10" width="105" height="20" rx="10" fill="#0EA894"/>
+                <text x="87" y="4" text-anchor="middle" font-family="'Figtree', sans-serif" font-size="9" font-weight="800" fill="#FFFFFF" letter-spacing="0.05em">LEAF NODE</text>
+                <text x="87" y="38" text-anchor="middle" font-family="'Bricolage Grotesque', sans-serif" font-size="16" font-weight="800" fill="#0B7B6B">&#10003; Play</text>
+              </g>
+            </svg>
+          </div>
+        </figure>
+
+        <!-- =========================================================================
+             SECTION: Very Simply Explaining the 4 Tree Components
+             ========================================================================= -->
+        <h3 class="fade-up animate-on-scroll" style="margin-top: 2.8rem;">
+          The 4 Key Components Explained Simply
+        </h3>
+        <p class="fade-up animate-on-scroll">
+          Every decision tree &mdash; from this simple weather example to deep models with hundreds of branches &mdash; is assembled from four fundamental parts:
+        </p>
+
+        <div class="dt-anatomy-grid fade-up animate-on-scroll">
+          
+          <!-- Component 1: Root Node -->
+          <div class="dt-component-card dt-component-card--root">
+            <div class="dt-comp-head">
+              <span class="icon-badge icon-badge--teal" style="width:2rem;height:2rem;">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="3"/></svg>
+              </span>
+              <div>
+                <span class="dt-comp-label">Starting Point</span>
+                <h4 class="dt-comp-title">1. Root Node</h4>
+              </div>
+            </div>
+            <p class="dt-comp-def">
+              <strong>What it is:</strong> The first node of the tree. Uses the best attribute to separate data into sets. Acquired by splitting metrics like Gini Impurity, Gain Ratio, or Entropy.
+            </p>
+            <div class="dt-comp-example">
+              <span class="dt-comp-ex-badge">In our example:</span>
+              <p class="dt-comp-ex-text"><strong>&ldquo;Is it raining?&rdquo;</strong> is the root node. Everything starts here: before checking any other factor, we first examine whether rain is falling.</p>
+            </div>
+          </div>
+
+          <!-- Component 2: Branches -->
+          <div class="dt-component-card dt-component-card--branch">
+            <div class="dt-comp-head">
+              <span class="icon-badge icon-badge--gold" style="width:2rem;height:2rem;">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 3v12"/><circle cx="18" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M18 9a9 9 0 0 1-9 9"/></svg>
+              </span>
+              <div>
+                <span class="dt-comp-label">Decision Pathways</span>
+                <h4 class="dt-comp-title">2. Branches</h4>
+              </div>
+            </div>
+            <p class="dt-comp-def">
+              <strong>What they are:</strong> Connects nodes together. Represents the outcome or decision resulting from the test performed on an attribute.
+            </p>
+            <div class="dt-comp-example">
+              <span class="dt-comp-ex-badge">In our example:</span>
+              <p class="dt-comp-ex-text">The lines labeled <strong>&ldquo;Yes&rdquo;</strong> and <strong>&ldquo;No&rdquo;</strong>. Answering &ldquo;No&rdquo; to rain directs you immediately to Play, while answering &ldquo;Yes&rdquo; routes you to the next question.</p>
+            </div>
+          </div>
+
+          <!-- Component 3: Internal Nodes -->
+          <div class="dt-component-card dt-component-card--internal">
+            <div class="dt-comp-head">
+              <span class="icon-badge icon-badge--purple" style="width:2rem;height:2rem;">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+              </span>
+              <div>
+                <span class="dt-comp-label">Intermediate Tests</span>
+                <h4 class="dt-comp-title">3. Internal Nodes (Decision Nodes)</h4>
+              </div>
+            </div>
+            <p class="dt-comp-def">
+              <strong>What they are:</strong> The nodes that come after the root node. Represents the test performed on the selected attribute.
+            </p>
+            <div class="dt-comp-example">
+              <span class="dt-comp-ex-badge">In our example:</span>
+              <p class="dt-comp-ex-text"><strong>&ldquo;Is it windy?&rdquo;</strong> is an internal node. It is evaluated conditionally only if the answer to the root node was &ldquo;Yes&rdquo; (it is raining).</p>
+            </div>
+          </div>
+
+          <!-- Component 4: Leaf Nodes -->
+          <div class="dt-component-card dt-component-card--leaf">
+            <div class="dt-comp-head">
+              <span class="icon-badge icon-badge--coral" style="width:2rem;height:2rem;">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+              </span>
+              <div>
+                <span class="dt-comp-label">Final Predictions</span>
+                <h4 class="dt-comp-title">4. Leaf Nodes (Terminal Nodes)</h4>
+              </div>
+            </div>
+            <p class="dt-comp-def">
+              <strong>What they are:</strong> The endpoints of the tree with <strong>no outgoing branches</strong>. They hold the model's final prediction, decision, or class label.
+            </p>
+            <div class="dt-comp-example">
+              <span class="dt-comp-ex-badge">In our example:</span>
+              <p class="dt-comp-ex-text"><strong>&ldquo;Play&rdquo;</strong> and <strong>&ldquo;Don't Play&rdquo;</strong> are the leaf nodes. Once an observation lands on a leaf node, all questioning stops and the final decision is rendered.</p>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- =========================================================================
+             SUMMARY COMPARISON TABLE: ID3 vs C4.5 vs CART
+             ========================================================================= -->
+        <div class="dt-compare-wrap fade-up animate-on-scroll">
+          <h4 style="font-family: var(--display); font-size: 1.15rem; margin-bottom: 0.4rem;">
+            Comparative Summary: ID3 vs. C4.5 vs. CART
+          </h4>
+          <p style="font-size: 0.9rem; color: var(--muted); margin-bottom: 1.2rem;">
+            A side-by-side synthesis of how the three landmark decision tree algorithms contrast in splitting criteria, structure, and capabilities.
+          </p>
+
+          <div style="overflow-x: auto;">
+            <table class="sl-compare-table">
+              <thead>
+                <tr>
+                  <th>Property</th>
+                  <th>ID3 (1986)</th>
+                  <th>C4.5 (1993)</th>
+                  <th>CART (1984)</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>Originator</strong></td>
+                  <td>Ross Quinlan</td>
+                  <td>Ross Quinlan</td>
+                  <td>Breiman, Friedman, Olshen &amp; Stone</td>
+                </tr>
+                <tr>
+                  <td><strong>Splitting Criterion</strong></td>
+                  <td>Entropy &amp; Information Gain</td>
+                  <td>Gain Ratio (Normalized Information Gain)</td>
+                  <td>Gini Impurity (Classification) / MSE (Regression)</td>
+                </tr>
+                <tr>
+                  <td><strong>Tree Splitting Style</strong></td>
+                  <td>Multi-way split per category</td>
+                  <td>Multi-way &amp; Binary Thresholds</td>
+                  <td>Strictly Binary splits (always 2 branches)</td>
+                </tr>
+                <tr>
+                  <td><strong>Supported Data Types</strong></td>
+                  <td>Categorical only</td>
+                  <td>Categorical &amp; Continuous</td>
+                  <td>Categorical &amp; Continuous</td>
+                </tr>
+                <tr>
+                  <td><strong>Supported Tasks</strong></td>
+                  <td>Classification only</td>
+                  <td>Classification only</td>
+                  <td>Both Classification &amp; Regression</td>
+                </tr>
+                <tr>
+                  <td><strong>Missing Value Handling</strong></td>
+                  <td>No (Cannot handle missing values)</td>
+                  <td>Yes (Weights probability across branches)</td>
+                  <td>Yes (Uses surrogate split features)</td>
+                </tr>
+                <tr>
+                  <td><strong>Pruning Strategy</strong></td>
+                  <td>None (Prone to overfitting)</td>
+                  <td>Post-pruning (Rule error-based)</td>
+                  <td>Cost-Complexity Pruning</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ---- Section 6: Hunt's Algorithm ---- -->
+    <section class="block" id="hunts-algorithm">
+      <div class="block__body">
+        <h2 class="fade-up animate-on-scroll">
+          <span class="icon-badge icon-badge--coral">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="18" cy="18" r="3"/><circle cx="6" cy="6" r="3"/><path d="M6 9v12"/><path d="M18 9a9 9 0 0 0-9 9"/></svg>
+          </span>
+          Hunt's Algorithm
+        </h2>
+
+        <!-- Definition Card -->
+        <div class="definition fade-up animate-on-scroll">
+          <div class="definition__label">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+            The Base of ID3, C4.5, and CART
+          </div>
+          <p>
+            <strong>Hunt's Algorithm</strong> is a <strong>basic, recursive method</strong> for building a decision tree.<br>
+            It is the foundational core behind modern decision tree algorithms (such as <strong>ID3</strong>, <strong>C4.5</strong>, and <strong>CART</strong>), defining the fundamental recursive splitting loop that grows a tree from top to bottom.
+          </p>
+        </div>
+
+        <p class="fade-up animate-on-scroll">
+          Hunt's algorithm builds a decision tree by dividing a dataset using a <strong>5-step recursive cycle</strong>. Below is a simple 4-student reference dataset, followed by a step-by-step roadmap showing how Hunt's algorithm evaluates features, partitions the data, and seals every branch into pure leaf nodes.
+        </p>
+
+        <!-- =========================================================================
+             HUNT'S ALGORITHM: CONTINUOUS ROADMAP & DATASET WALKTHROUGH
+             ========================================================================= -->
+        <div class="hunt-continuous-section fade-up animate-on-scroll">
+
+          <!-- 1. Reference Dataset Showcase Card at the Top -->
+          <div class="hunt-dataset-card">
+            <div class="hunt-dataset-header">
+              <div>
+                <span class="hunt-dataset-badge">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M3 9h18"/><path d="M9 21V9"/></svg>
+                  Reference Mock Dataset
+                </span>
+                <h3 class="hunt-dataset-title">Student Exam Performance Dataset</h3>
+                <p class="hunt-dataset-desc">
+                  We use this clean 4-student reference dataset across all 5 steps below to trace exactly how Hunt's algorithm works. Our target is to predict whether a student will <strong>Pass</strong> or <strong>Fail</strong> based on their <strong>Attendance</strong> and <strong>Study Hours</strong>.
+                </p>
+              </div>
+            </div>
+
+            <!-- Dataset Table -->
+            <div class="hunt-table-container">
+              <table class="hunt-ref-table">
+                <thead>
+                  <tr>
+                    <th>Record</th>
+                    <th>Attendance (Feature 1)</th>
+                    <th>Study Hours (Feature 2)</th>
+                    <th>Exam Result (Target Class)</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><strong>Student 1</strong></td>
+                    <td>High</td>
+                    <td>High</td>
+                    <td><span class="hunt-pill-pass">&#10003; Pass</span></td>
+                  </tr>
+                  <tr>
+                    <td><strong>Student 2</strong></td>
+                    <td>High</td>
+                    <td>Low</td>
+                    <td><span class="hunt-pill-pass">&#10003; Pass</span></td>
+                  </tr>
+                  <tr>
+                    <td><strong>Student 3</strong></td>
+                    <td>Low</td>
+                    <td>High</td>
+                    <td><span class="hunt-pill-pass">&#10003; Pass</span></td>
+                  </tr>
+                  <tr>
+                    <td><strong>Student 4</strong></td>
+                    <td>Low</td>
+                    <td>Low</td>
+                    <td><span class="hunt-pill-fail">&#10007; Fail</span></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div class="hunt-table-footer-callout">
+              <div>
+                <strong>Dataset Summary:</strong> 4 students total &bull; <strong>3 Pass</strong> (Students 1, 2, 3) &bull; <strong>1 Fail</strong> (Student 4)
+              </div>
+              <div style="font-size:0.8rem; color:var(--muted);">
+                Target: <code>Result</code> | Features: <code>Attendance</code>, <code>Study Hours</code>
+              </div>
+            </div>
+          </div>
+
+          <!-- 2. Continuous 5-Step Vertical Roadmap Flow -->
+          <div class="hunt-roadmap-flow">
+
+            <!-- STEP 01 -->
+            <div class="hunt-flow-step">
+              <div class="hunt-flow-spine">
+                <div class="hunt-flow-beacon hunt-flow-beacon--teal">01</div>
+                <div class="hunt-flow-line"></div>
+              </div>
+              <div class="hunt-flow-card">
+                <div class="hunt-flow-grid">
+                  <div class="hunt-flow-info">
+                    <div class="hunt-flow-meta">
+                      <span class="hunt-flow-step-tag">Step 01 of 05</span>
+                      <span class="hunt-flow-status-pill hunt-flow-status-pill--teal">Attribute Selection</span>
+                    </div>
+                    <h3 class="hunt-flow-title">Selecting the Best Attribute</h3>
+                    <p class="hunt-flow-text">
+                      The algorithm begins at the top by selecting the single best attribute to split the dataset. In advanced decision tree algorithms (ID3, C4.5, CART), this choice is mathematically scored using metrics like <em>Information Gain</em> or <em>Gini Impurity</em>.
+                    </p>
+
+                    <div class="hunt-dataset-ref-box hunt-dataset-ref-box--teal">
+                      <span class="hunt-dataset-ref-label">Referring to our Dataset:</span>
+                      <p class="hunt-dataset-ref-content">
+                        We evaluate our two candidate features against the 4 students:
+                        <br>&bull; <strong>Attendance:</strong> High Attendance isolates <strong>Student 1 &amp; Student 2</strong>, both of whom passed (<strong>100% pure Pass</strong>!). Low Attendance leaves Student 3 (Pass) and Student 4 (Fail).
+                        <br>&bull; <strong>Study Hours:</strong> High Study Hours isolates Student 1 &amp; Student 3 (Pass), while Low Study Hours leaves Student 2 (Pass) and Student 4 (Fail).
+                        <br>Because splitting on <strong>Attendance</strong> immediately yields a perfectly pure branch of 2 passing students, <code>Attendance</code> is selected as the <strong>Root Node</strong> attribute!
+                      </p>
+                    </div>
+                  </div>
+
+                  <!-- Right Visual Card -->
+                  <div class="hunt-visual-card">
+                    <div class="hunt-visual-head">
+                      <h4 class="hunt-visual-heading">Candidate Attribute Evaluation</h4>
+                      <span class="hunt-visual-tag">ROOT SELECTION</span>
+                    </div>
+
+                    <div class="hunt-candidate-list">
+                      <div class="hunt-candidate-card hunt-candidate-card--chosen">
+                        <div class="hunt-candidate-info">
+                          <span class="hunt-candidate-name">&#10003; Attendance</span>
+                          <span class="hunt-candidate-sub">High: Students 1, 2 (Pass) | Low: Students 3, 4</span>
+                        </div>
+                        <span class="hunt-candidate-badge hunt-candidate-badge--chosen">Selected Root</span>
+                      </div>
+                      <div class="hunt-candidate-card">
+                        <div class="hunt-candidate-info">
+                          <span class="hunt-candidate-name">Study Hours</span>
+                          <span class="hunt-candidate-sub">High: Students 1, 3 | Low: Students 2, 4</span>
+                        </div>
+                        <span class="hunt-candidate-badge hunt-candidate-badge--alt">Evaluated</span>
+                      </div>
+                    </div>
+
+                    <div class="hunt-visual-callout hunt-visual-callout--teal">
+                      &#10003; <strong>Selected:</strong> <code>Attendance</code> creates the cleanest separation on our 4-student dataset.
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- STEP 02 -->
+            <div class="hunt-flow-step">
+              <div class="hunt-flow-spine">
+                <div class="hunt-flow-beacon hunt-flow-beacon--gold">02</div>
+                <div class="hunt-flow-line"></div>
+              </div>
+              <div class="hunt-flow-card">
+                <div class="hunt-flow-grid">
+                  <div class="hunt-flow-info">
+                    <div class="hunt-flow-meta">
+                      <span class="hunt-flow-step-tag">Step 02 of 05</span>
+                      <span class="hunt-flow-status-pill hunt-flow-status-pill--gold">Data Partitioning</span>
+                    </div>
+                    <h3 class="hunt-flow-title">Splitting the Data Using the Root Node</h3>
+                    <p class="hunt-flow-text">
+                      Once the root attribute is chosen, the algorithm creates outgoing branches for each attribute value and channels the dataset records into their corresponding child branches.
+                    </p>
+
+                    <div class="hunt-dataset-ref-box hunt-dataset-ref-box--gold">
+                      <span class="hunt-dataset-ref-label">Referring to our Dataset:</span>
+                      <p class="hunt-dataset-ref-content">
+                        The 4 students are routed along the branches of the <code>Attendance</code> root node:
+                        <br>&bull; <strong>Left Branch (Attendance = High):</strong> Receives <strong>Student 1</strong> (Pass) and <strong>Student 2</strong> (Pass).
+                        <br>&bull; <strong>Right Branch (Attendance = Low):</strong> Receives <strong>Student 3</strong> (Pass) and <strong>Student 4</strong> (Fail).
+                        <br>The original dataset of 4 students is now partitioned into two smaller subsets of 2 students each.
+                      </p>
+                    </div>
+                  </div>
+
+                  <!-- Right Visual Card -->
+                  <div class="hunt-visual-card">
+                    <div class="hunt-visual-head">
+                      <h4 class="hunt-visual-heading">Root Split &amp; Subsets</h4>
+                      <span class="hunt-visual-tag">2 BRANCHES</span>
+                    </div>
+
+                    <div class="hunt-tree-diagram">
+                      <div class="hunt-node-pill hunt-node-pill--root">
+                        Root: Attendance?
+                      </div>
+                      <div class="hunt-tree-branches">
+                        <!-- Left Branch Column -->
+                        <div class="hunt-tree-branch-col">
+                          <span class="hunt-branch-tag">High</span>
+                          <div class="hunt-subset-box hunt-subset-box--teal">
+                            <span class="hunt-subset-title">Left Subset (2 records)</span>
+                            <ul class="hunt-student-mini-list">
+                              <li class="hunt-student-mini-item">
+                                <span>Student 1</span>
+                                <span class="hunt-pill-pass" style="font-size:0.7rem; padding:0.1rem 0.4rem;">Pass</span>
+                              </li>
+                              <li class="hunt-student-mini-item">
+                                <span>Student 2</span>
+                                <span class="hunt-pill-pass" style="font-size:0.7rem; padding:0.1rem 0.4rem;">Pass</span>
+                              </li>
+                            </ul>
+                          </div>
+                        </div>
+
+                        <!-- Right Branch Column -->
+                        <div class="hunt-tree-branch-col">
+                          <span class="hunt-branch-tag">Low</span>
+                          <div class="hunt-subset-box hunt-subset-box--gold">
+                            <span class="hunt-subset-title">Right Subset (2 records)</span>
+                            <ul class="hunt-student-mini-list">
+                              <li class="hunt-student-mini-item">
+                                <span>Student 3</span>
+                                <span class="hunt-pill-pass" style="font-size:0.7rem; padding:0.1rem 0.4rem;">Pass</span>
+                              </li>
+                              <li class="hunt-student-mini-item">
+                                <span>Student 4</span>
+                                <span class="hunt-pill-fail" style="font-size:0.7rem; padding:0.1rem 0.4rem;">Fail</span>
+                              </li>
+                            </ul>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="hunt-visual-callout" style="margin-top:0.9rem;">
+                      &rarr; <strong>Status:</strong> The full dataset is split into focused left and right groups. Next, Hunt's algorithm evaluates each child.
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- STEP 03 -->
+            <div class="hunt-flow-step">
+              <div class="hunt-flow-spine">
+                <div class="hunt-flow-beacon hunt-flow-beacon--teal">03</div>
+                <div class="hunt-flow-line"></div>
+              </div>
+              <div class="hunt-flow-card">
+                <div class="hunt-flow-grid">
+                  <div class="hunt-flow-info">
+                    <div class="hunt-flow-meta">
+                      <span class="hunt-flow-step-tag">Step 03 of 05</span>
+                      <span class="hunt-flow-status-pill hunt-flow-status-pill--teal">Purity Verification</span>
+                    </div>
+                    <h3 class="hunt-flow-title">Examine the Left Child</h3>
+                    <p class="hunt-flow-text">
+                      The algorithm inspects the records in the left branch. If all records belong to the exact same class (pure), further questioning is unnecessary &mdash; the node is immediately converted into a permanent <strong>Leaf Node</strong>. If classes are mixed, it must be split again.
+                    </p>
+
+                    <div class="hunt-dataset-ref-box hunt-dataset-ref-box--teal">
+                      <span class="hunt-dataset-ref-label">Referring to our Dataset:</span>
+                      <p class="hunt-dataset-ref-content">
+                        Examining the left branch:
+                        <br>&bull; Contains <strong>Student 1</strong> (<code>Pass</code>) and <strong>Student 2</strong> (<code>Pass</code>).
+                        <br>&bull; Every single record in this branch shares the identical outcome: <strong>Pass</strong>.
+                        <br>&bull; Because this subset is <strong>100% pure</strong> (no Fail records exist here), Hunt's algorithm converts this node directly into a <strong>Leaf Node labeled "Pass"</strong>.
+                        <br>Splitting is finished along this branch!
+                      </p>
+                    </div>
+                  </div>
+
+                  <!-- Right Visual Card -->
+                  <div class="hunt-visual-card">
+                    <div class="hunt-visual-head">
+                      <h4 class="hunt-visual-heading">Left Child Evaluation</h4>
+                      <span class="hunt-visual-tag">100% PURE</span>
+                    </div>
+
+                    <div class="hunt-verdict-card hunt-verdict-card--leaf">
+                      <span class="hunt-verdict-tag hunt-verdict-tag--leaf">&#10003; Sealed as Leaf Node</span>
+                      <h4 class="hunt-verdict-title hunt-verdict-title--leaf">Leaf Node: Pass</h4>
+                      <p class="hunt-verdict-sub">
+                        Contains: <strong>Student 1</strong> (Pass) &bull; <strong>Student 2</strong> (Pass)
+                      </p>
+                    </div>
+
+                    <div class="hunt-visual-callout hunt-visual-callout--teal">
+                      &#10003; <strong>Stopping Condition Met:</strong> Subset is completely pure. No additional questions needed for High Attendance students!
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- STEP 04 -->
+            <div class="hunt-flow-step">
+              <div class="hunt-flow-spine">
+                <div class="hunt-flow-beacon hunt-flow-beacon--gold">04</div>
+                <div class="hunt-flow-line"></div>
+              </div>
+              <div class="hunt-flow-card">
+                <div class="hunt-flow-grid">
+                  <div class="hunt-flow-info">
+                    <div class="hunt-flow-meta">
+                      <span class="hunt-flow-step-tag">Step 04 of 05</span>
+                      <span class="hunt-flow-status-pill hunt-flow-status-pill--gold">Impurity Detection</span>
+                    </div>
+                    <h3 class="hunt-flow-title">Examine the Right Child</h3>
+                    <p class="hunt-flow-text">
+                      The algorithm applies the exact same purity check to the right child subset. If pure, it becomes a leaf node. If records are mixed across multiple classes, it cannot become a leaf node yet and must be marked for another split.
+                    </p>
+
+                    <div class="hunt-dataset-ref-box hunt-dataset-ref-box--gold">
+                      <span class="hunt-dataset-ref-label">Referring to our Dataset:</span>
+                      <p class="hunt-dataset-ref-content">
+                        Examining the right branch:
+                        <br>&bull; Contains <strong>Student 3</strong> (<code>Pass</code>) and <strong>Student 4</strong> (<code>Fail</code>).
+                        <br>&bull; The outcomes are mixed: 1 Pass vs. 1 Fail.
+                        <br>&bull; Because this subset is <strong>impure</strong>, we cannot assign a single final leaf label yet.
+                        <br>Hunt's algorithm flags this node as an <strong>Internal Node</strong> that must undergo another split using our remaining feature (<code>Study Hours</code>).
+                      </p>
+                    </div>
+                  </div>
+
+                  <!-- Right Visual Card -->
+                  <div class="hunt-visual-card">
+                    <div class="hunt-visual-head">
+                      <h4 class="hunt-visual-heading">Right Child Evaluation</h4>
+                      <span class="hunt-visual-tag">IMPURE (MIXED)</span>
+                    </div>
+
+                    <div class="hunt-verdict-card hunt-verdict-card--impure">
+                      <span class="hunt-verdict-tag hunt-verdict-tag--impure">&#9888; Cannot Convert to Leaf</span>
+                      <h4 class="hunt-verdict-title hunt-verdict-title--impure">Mixed: 1 Pass, 1 Fail</h4>
+                      <p class="hunt-verdict-sub">
+                        Contains: <strong>Student 3</strong> (Pass) &bull; <strong>Student 4</strong> (Fail)
+                      </p>
+                    </div>
+
+                    <div class="hunt-visual-callout" style="border-color:rgba(233,168,37,0.4); background:rgba(233,168,37,0.06); color:var(--gold-dark);">
+                      &#9888; <strong>Action Needed:</strong> One question was not enough. This branch must split again using the next attribute!
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- STEP 05 -->
+            <div class="hunt-flow-step">
+              <div class="hunt-flow-spine">
+                <div class="hunt-flow-beacon hunt-flow-beacon--teal">05</div>
+              </div>
+              <div class="hunt-flow-card">
+                <div class="hunt-flow-grid">
+                  <div class="hunt-flow-info">
+                    <div class="hunt-flow-meta">
+                      <span class="hunt-flow-step-tag">Step 05 of 05</span>
+                      <span class="hunt-flow-status-pill hunt-flow-status-pill--coral">Recursive Completion</span>
+                    </div>
+                    <h3 class="hunt-flow-title">Continue Recursively Until All Branches End in Leaf Nodes</h3>
+                    <p class="hunt-flow-text">
+                      Hunt's algorithm recursively repeats Steps 1 to 4 on any remaining mixed child nodes. It selects the next best attribute to split each impure branch until every path in the tree reaches a pure leaf node.
+                    </p>
+
+                    <div class="hunt-dataset-ref-box hunt-dataset-ref-box--teal">
+                      <span class="hunt-dataset-ref-label">Referring to our Dataset:</span>
+                      <p class="hunt-dataset-ref-content">
+                        For the impure right branch (Students 3 &amp; 4), the algorithm splits on our remaining attribute: <strong>Study Hours</strong>:
+                        <br>&bull; <strong>Study Hours = High:</strong> Isolates <strong>Student 3</strong> (Pass) &rarr; Sealed as <strong>Leaf Node: Pass</strong>.
+                        <br>&bull; <strong>Study Hours = Low:</strong> Isolates <strong>Student 4</strong> (Fail) &rarr; Sealed as <strong>Leaf Node: Fail</strong>.
+                        <br>All 4 students have now reached a pure leaf node with 100% confidence. The recursive cycle terminates &mdash; our decision tree is <strong>complete</strong>!
+                      </p>
+                    </div>
+                  </div>
+
+                  <!-- Right Visual Card -->
+                  <div class="hunt-visual-card">
+                    <div class="hunt-visual-head">
+                      <h4 class="hunt-visual-heading">Final Completed Decision Tree</h4>
+                      <span class="hunt-visual-tag">ALL LEAVES SEALED</span>
+                    </div>
+
+                    <div class="hunt-final-tree-wrap">
+                      <!-- Root -->
+                      <div class="hunt-node-pill hunt-node-pill--root">
+                        Root: Attendance?
+                      </div>
+
+                      <div class="hunt-tree-branches" style="width:100%;">
+                        <!-- Left Branch: Pure Leaf -->
+                        <div class="hunt-tree-branch-col">
+                          <span class="hunt-branch-tag">High</span>
+                          <span class="hunt-leaf-node-badge hunt-leaf-node-badge--pass">
+                            &#10003; Pass (Students 1, 2)
+                          </span>
+                        </div>
+
+                        <!-- Right Branch: Internal Node -> Children -->
+                        <div class="hunt-tree-branch-col">
+                          <span class="hunt-branch-tag">Low</span>
+                          <div class="hunt-node-pill hunt-node-pill--internal" style="font-size:0.78rem; padding:0.35rem 0.75rem; margin-bottom:0.6rem;">
+                            Study Hours?
+                          </div>
+                          <!-- Sub-branches -->
+                          <div style="display:flex; gap:0.5rem; justify-content:center;">
+                            <div style="display:flex; flex-direction:column; align-items:center;">
+                              <span style="font-size:0.68rem; color:var(--muted); font-family:monospace; margin-bottom:0.2rem;">High</span>
+                              <span class="hunt-leaf-node-badge hunt-leaf-node-badge--pass" style="font-size:0.72rem; padding:0.25rem 0.5rem;">
+                                Pass (Student 3)
+                              </span>
+                            </div>
+                            <div style="display:flex; flex-direction:column; align-items:center;">
+                              <span style="font-size:0.68rem; color:var(--muted); font-family:monospace; margin-bottom:0.2rem;">Low</span>
+                              <span class="hunt-leaf-node-badge hunt-leaf-node-badge--fail" style="font-size:0.72rem; padding:0.25rem 0.5rem;">
+                                Fail (Student 4)
+                              </span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="hunt-visual-callout hunt-visual-callout--teal" style="margin-top:0.9rem;">
+                      &#10003; <strong>Complete:</strong> Every path ends in a leaf node. All 4 students are classified without ambiguity!
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ============ LESSON FOOTER ============ -->
+    <footer class="lesson__footer">
+      <a href="supervised-learning.html" class="lesson__footer-prev" id="prevLessonLink">
+        <span class="lesson__footer-prev-arrow">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5"/><path d="m12 19-7-7 7-7"/></svg>
+        </span>
+        <div class="lesson__footer-prev-text">
+          <span class="lesson__footer-prev-label">Previous part</span>
+          <span class="lesson__footer-prev-name">4.1 Introduction</span>
+        </div>
+      </a>
+
+      <div class="lesson__footer-progress">Part 2 of 6 &bull; Supervised Learning</div>
+
+      <a href="id3-algorithm.html" class="lesson__footer-next" id="nextLessonLink">
+        <div class="lesson__footer-next-text">
+          <span class="lesson__footer-next-label">Next part</span>
+          <span class="lesson__footer-next-name">4.3 ID3 Algorithm</span>
+        </div>
+        <span class="lesson__footer-arrow">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+        </span>
+      </a>
+    </footer>
+
+  </main>
+</div>
+
+<script src="main.js"></script>
+</body>
+</html>

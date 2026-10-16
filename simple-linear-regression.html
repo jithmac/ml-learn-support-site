@@ -1,0 +1,2819 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Simple Linear Regression &ndash; Learning Machines</title>
+<meta name="description" content="A simple and easy-to-understand guide to Simple Linear Regression. Learn about two continuous variables, the equation y = β₀ ± β₁x ± ε₁, slope (β₁), intercept (β₀), and error (ε₁).">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,600;12..96,700;12..96,800&family=Figtree:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600;700&display=swap" rel="stylesheet">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="stylesheet" href="style.css">
+<style>
+/* Custom styles for Simple Linear Regression lesson */
+.slr-hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: var(--coral-tint);
+  border: 1px solid rgba(255, 90, 60, 0.25);
+  color: var(--coral-dark);
+  font-family: var(--display);
+  font-size: 0.78rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 0.35rem 0.85rem;
+  border-radius: 999px;
+  margin-bottom: 1rem;
+}
+
+.slr-anatomy-bar {
+  background: var(--surface);
+  border: 2px solid var(--line);
+  border-radius: var(--radius);
+  padding: 1.8rem 1.4rem;
+  margin: 1.8rem 0;
+  text-align: center;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+}
+
+.slr-equation-interactive {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.5rem 0.75rem;
+  font-family: "IBM Plex Mono", monospace;
+  font-size: clamp(1.4rem, 4vw, 2.3rem);
+  font-weight: 700;
+  margin: 1.2rem 0;
+}
+
+.slr-token {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  cursor: pointer;
+  padding: 0.35rem 0.65rem;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+  position: relative;
+  user-select: none;
+}
+
+.slr-token:hover,
+.slr-token.is-active {
+  transform: translateY(-3px) scale(1.04);
+  box-shadow: 0 6px 16px rgba(0,0,0,0.08);
+}
+
+.slr-token-y {
+  color: var(--coral);
+  background: var(--coral-tint);
+  border: 1.5px solid rgba(255, 90, 60, 0.35);
+}
+
+.slr-token-b0 {
+  color: #8B5CF6;
+  background: rgba(139, 92, 246, 0.08);
+  border: 1.5px solid rgba(139, 92, 246, 0.35);
+}
+
+.slr-token-b1 {
+  color: var(--teal);
+  background: var(--teal-tint);
+  border: 1.5px solid rgba(14, 168, 148, 0.35);
+}
+
+.slr-token-x {
+  color: var(--gold-dark);
+  background: var(--gold-tint);
+  border: 1.5px solid rgba(233, 168, 37, 0.4);
+}
+
+.slr-token-err {
+  color: #EC4899;
+  background: rgba(236, 72, 153, 0.08);
+  border: 1.5px solid rgba(236, 72, 153, 0.35);
+}
+
+.slr-token__subtext {
+  font-size: 0.68rem;
+  font-family: var(--display);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  margin-top: 0.25rem;
+}
+
+.slr-token-detail {
+  background: var(--bg);
+  border: 1.5px solid var(--line);
+  border-radius: var(--radius-sm);
+  padding: 1.2rem 1.4rem;
+  text-align: left;
+  margin-top: 1.2rem;
+  min-height: 85px;
+  transition: all 0.25s ease;
+}
+
+.slr-token-detail__title {
+  font-family: var(--display);
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--ink);
+  margin-bottom: 0.3rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.slr-token-detail__desc {
+  font-size: 0.92rem;
+  color: var(--ink-soft);
+  margin: 0;
+  line-height: 1.55;
+}
+
+/* Coordinate Diagram & Live Playground */
+.slr-viz-container {
+  background: var(--surface);
+  border: 1.5px solid var(--line);
+  border-radius: var(--radius);
+  padding: 1.6rem;
+  margin: 1.8rem 0;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+}
+
+.slr-viz-layout {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.6rem;
+}
+
+@media (min-width: 860px) {
+  .slr-viz-layout {
+    grid-template-columns: 1.2fr 1fr;
+    align-items: center;
+  }
+}
+
+.slr-svg-wrap {
+  background: #FCFBF9;
+  border: 1.5px solid var(--line);
+  border-radius: var(--radius-sm);
+  padding: 1rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.slr-svg-wrap svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.slr-control-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 1.1rem;
+}
+
+.slr-slider-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.slr-slider-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: var(--ink);
+}
+
+.slr-slider-header span.val {
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 0.95rem;
+  color: var(--teal-dark);
+}
+
+.slr-slider-input {
+  width: 100%;
+  accent-color: var(--teal);
+  cursor: pointer;
+  height: 6px;
+}
+
+.slr-presets {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.slr-preset-btn {
+  background: var(--bg);
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  padding: 0.35rem 0.65rem;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--ink-soft);
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.slr-preset-btn:hover {
+  background: var(--surface);
+  border-color: var(--teal);
+  color: var(--teal-dark);
+  transform: translateY(-1px);
+}
+
+.slr-metrics-strip {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.8rem;
+  background: var(--bg);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  padding: 0.85rem 1rem;
+}
+
+.slr-metric-box {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.slr-metric-label {
+  font-size: 0.72rem;
+  font-family: var(--display);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--muted);
+}
+
+.slr-metric-value {
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--ink);
+}
+
+/* Side-by-side Variable Cards */
+.slr-var-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.2rem;
+  margin: 1.6rem 0;
+}
+
+@media (min-width: 680px) {
+  .slr-var-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.slr-var-card {
+  background: var(--surface);
+  border: 1.5px solid var(--line);
+  border-radius: var(--radius);
+  padding: 1.4rem;
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.2s ease;
+}
+
+.slr-var-card:hover {
+  transform: translateY(-2px);
+}
+
+.slr-var-card--x {
+  border-top: 4px solid var(--gold);
+}
+
+.slr-var-card--y {
+  border-top: 4px solid var(--coral);
+}
+
+.slr-scenario-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+  margin: 1rem 0;
+}
+
+.slr-scenario-pill {
+  font-size: 0.82rem;
+  padding: 0.35rem 0.75rem;
+  border-radius: 999px;
+  background: var(--bg);
+  border: 1px solid var(--line);
+  color: var(--ink-soft);
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.slr-scenario-pill:hover,
+.slr-scenario-pill.is-selected {
+  background: var(--teal-tint);
+  border-color: rgba(14, 168, 148, 0.4);
+  color: var(--teal-dark);
+  font-weight: 600;
+}
+
+/* Quiz Styles */
+.slr-quiz-card {
+  background: var(--surface);
+  border: 1.5px solid var(--line);
+  border-radius: var(--radius);
+  padding: 1.5rem;
+  margin: 1.4rem 0;
+}
+
+.slr-quiz-q {
+  font-family: var(--display);
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--ink);
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: flex-start;
+  gap: 0.6rem;
+}
+
+.slr-quiz-num {
+  width: 1.8rem;
+  height: 1.8rem;
+  background: var(--coral-tint);
+  color: var(--coral-dark);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.82rem;
+  font-weight: 800;
+  flex-shrink: 0;
+}
+
+.slr-quiz-options {
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+}
+
+.slr-quiz-opt {
+  display: block;
+  text-align: left;
+  background: var(--bg);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  padding: 0.75rem 1rem;
+  font-size: 0.9rem;
+  color: var(--ink);
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.slr-quiz-opt:hover {
+  border-color: var(--coral);
+  background: var(--surface);
+}
+
+.slr-quiz-opt.is-correct {
+  background: var(--teal-tint);
+  border-color: var(--teal);
+  color: var(--teal-dark);
+  font-weight: 600;
+}
+
+.slr-quiz-opt.is-wrong {
+  background: var(--coral-tint);
+  border-color: var(--coral);
+  color: var(--coral-dark);
+}
+
+.slr-quiz-feedback {
+  margin-top: 0.8rem;
+  padding: 0.75rem 1rem;
+  border-radius: 6px;
+  font-size: 0.86rem;
+  line-height: 1.5;
+  display: none;
+}
+
+.slr-quiz-feedback.is-visible {
+  display: block;
+}
+
+.slr-quiz-feedback.is-correct {
+  background: var(--teal-tint);
+  border-left: 3px solid var(--teal);
+  color: var(--teal-dark);
+}
+
+.slr-quiz-feedback.is-wrong {
+  background: var(--coral-tint);
+  border-left: 3px solid var(--coral);
+  color: var(--coral-dark);
+}
+
+/* Enhanced Math & Formula Showcase Styles */
+.slr-math-showcase {
+  background: var(--surface);
+  border: 2px solid var(--line);
+  border-radius: var(--radius);
+  padding: 2.4rem 2.2rem;
+  margin: 2.4rem 0;
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.03);
+}
+
+@media (min-width: 860px) {
+  .slr-math-showcase {
+    margin-left: -3rem;
+    margin-right: -3rem;
+    padding: 2.6rem 3rem;
+  }
+}
+
+@media (min-width: 1100px) {
+  .slr-math-showcase {
+    margin-left: -5.5rem;
+    margin-right: -5.5rem;
+    padding: 2.8rem 3.5rem;
+  }
+}
+
+.slr-math-showcase__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-bottom: 1.2rem;
+  padding-bottom: 1.1rem;
+  border-bottom: 1.5px solid var(--line);
+}
+
+.slr-math-card {
+  background: var(--bg);
+  border: 1.5px solid var(--line);
+  border-radius: var(--radius-sm);
+  padding: 2rem 2.4rem;
+  margin: 1.8rem 0;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.02);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.slr-math-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.05);
+}
+
+.slr-math-card--slope {
+  border-top: 5px solid var(--teal);
+}
+
+.slr-math-card--intercept {
+  border-top: 5px solid #8B5CF6;
+}
+
+.slr-math-card--ols {
+  border-top: 5px solid #EC4899;
+}
+
+.slr-math-card--fstat {
+  border-top: 5px solid var(--teal);
+}
+
+.slr-math-hero-box {
+  background: var(--surface);
+  border: 1.5px solid var(--line);
+  border-radius: 12px;
+  padding: 1.5rem 1.8rem;
+  margin: 1.4rem 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: nowrap; /* Keep all equation parts on ONE line */
+  white-space: nowrap;
+  gap: 0.8rem 1.2rem;
+  font-family: "IBM Plex Mono", monospace;
+  font-size: clamp(0.96rem, 1.8vw, 1.28rem);
+  font-weight: 700;
+  color: var(--ink);
+  box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.02);
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.slr-math-hero-box::-webkit-scrollbar {
+  height: 6px;
+}
+.slr-math-hero-box::-webkit-scrollbar-thumb {
+  background: var(--line);
+  border-radius: 4px;
+}
+
+.slr-fraction {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  vertical-align: middle;
+  padding: 0 0.5rem;
+  line-height: 1.25;
+}
+
+.slr-numerator {
+  border-bottom: 2.5px solid currentColor;
+  padding-bottom: 0.35rem;
+  margin-bottom: 0.35rem;
+  text-align: center;
+  width: 100%;
+  font-weight: 700;
+}
+
+.slr-denominator {
+  padding-top: 0.15rem;
+  text-align: center;
+  width: 100%;
+  font-weight: 700;
+}
+
+.slr-math-breakdown {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 1rem 1.6rem;
+  margin-top: 1.4rem;
+  padding: 1.2rem 1.5rem;
+  background: var(--surface);
+  border: 1px dashed var(--line);
+  border-radius: 8px;
+  font-size: 0.88rem;
+  color: var(--ink-soft);
+  line-height: 1.55;
+}
+
+.slr-math-breakdown-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.65rem;
+}
+
+.slr-math-symbol {
+  font-family: "IBM Plex Mono", monospace;
+  font-weight: 800;
+  color: var(--ink);
+  white-space: nowrap;
+  background: var(--bg);
+  border: 1px solid var(--line);
+  padding: 0.15rem 0.45rem;
+  border-radius: 4px;
+}
+
+.slr-math-pill {
+  display: inline-block;
+  padding: 0.25rem 0.6rem;
+  border-radius: 4px;
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 0.82rem;
+  font-weight: 700;
+}
+
+/* ANOVA Table & Hypothesis Section Styles */
+.slr-anova-wrap {
+  background: var(--surface);
+  border: 1.5px solid var(--line);
+  border-radius: var(--radius);
+  margin: 2.2rem 0;
+  overflow: hidden;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+}
+
+@media (min-width: 768px) {
+  .slr-anova-wrap {
+    margin-left: -3.5rem;
+    margin-right: -3.5rem;
+  }
+}
+
+@media (min-width: 920px) {
+  .slr-anova-wrap {
+    margin-left: -6.5rem;
+    margin-right: -6.5rem;
+  }
+}
+
+@media (min-width: 1100px) {
+  .slr-anova-wrap {
+    margin-left: -9.5rem;
+    margin-right: -9.5rem;
+  }
+}
+
+@media (min-width: 1240px) {
+  .slr-anova-wrap {
+    margin-left: -12rem;
+    margin-right: -12rem;
+  }
+}
+
+.slr-anova-head {
+  padding: 1.2rem 1.8rem;
+  background: var(--bg);
+  border-bottom: 1.5px solid var(--line);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+}
+
+.slr-anova-table-scroll {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.slr-anova-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+  font-size: 0.9rem;
+}
+
+.slr-anova-table th {
+  background: var(--surface-tint);
+  color: var(--ink);
+  font-family: var(--display);
+  font-weight: 700;
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  padding: 1.1rem 1.3rem;
+  border-bottom: 2px solid var(--line);
+  line-height: 1.4;
+  white-space: nowrap;
+}
+
+.slr-anova-table td {
+  padding: 1.15rem 1.3rem;
+  border-bottom: 1px solid var(--line);
+  vertical-align: middle;
+  color: var(--ink-soft);
+  line-height: 1.55;
+  white-space: nowrap;
+}
+
+.slr-anova-table tr:hover td {
+  background: rgba(0, 0, 0, 0.015);
+}
+
+.slr-anova-table tr.total-row td {
+  font-weight: 700;
+  background: rgba(0, 0, 0, 0.02);
+  border-bottom: none;
+  color: var(--ink);
+}
+
+.slr-anova-code {
+  font-family: "IBM Plex Mono", monospace;
+  font-weight: 700;
+  color: var(--ink);
+}
+
+.slr-hypothesis-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.2rem;
+  margin: 1.4rem 0;
+}
+
+@media (min-width: 680px) {
+  .slr-hypothesis-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.slr-hypothesis-card {
+  background: var(--surface);
+  border: 1.5px solid var(--line);
+  border-radius: var(--radius-sm);
+  padding: 1.4rem 1.6rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
+  transition: transform 0.2s ease;
+}
+
+.slr-hypothesis-card:hover {
+  transform: translateY(-2px);
+}
+
+.slr-decision-box {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.2rem;
+  margin: 1.4rem 0;
+}
+
+@media (min-width: 680px) {
+  .slr-decision-box {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.slr-decision-card {
+  background: var(--surface);
+  border: 1.5px solid var(--line);
+  border-radius: var(--radius-sm);
+  padding: 1.4rem 1.6rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.slr-decision-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.05);
+}
+
+.slr-decision-card--reject {
+  border-top: 4px solid var(--teal);
+}
+
+.slr-decision-card--fail {
+  border-top: 4px solid var(--coral);
+}
+
+.slr-ss-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.2rem;
+  margin: 1.6rem 0;
+}
+
+@media (min-width: 768px) {
+  .slr-ss-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.slr-ss-card {
+  background: var(--surface);
+  border: 1.5px solid var(--line);
+  border-radius: var(--radius-sm);
+  padding: 1.4rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.slr-ss-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.05);
+}
+
+.slr-ss-card--sst { border-top: 4px solid #6366F1; }
+.slr-ss-card--ssr { border-top: 4px solid var(--teal); }
+.slr-ss-card--sse { border-top: 4px solid var(--coral); }
+
+/* Simple vs Multiple Regression Comparison */
+.slr-compare-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.4rem;
+  margin: 1.6rem 0;
+}
+
+@media (min-width: 768px) {
+  .slr-compare-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.slr-compare-card {
+  background: var(--surface);
+  border: 1.5px solid var(--line);
+  border-radius: var(--radius-sm);
+  padding: 1.6rem;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.02);
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.slr-compare-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.05);
+}
+
+.slr-compare-card--simple {
+  border-top: 4px solid var(--coral);
+}
+
+.slr-compare-card--multiple {
+  border-top: 4px solid #6366F1;
+}
+
+.slr-compare-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+  font-size: 0.9rem;
+}
+
+.slr-compare-table th {
+  background: var(--surface-tint);
+  color: var(--ink);
+  font-family: var(--display);
+  font-weight: 700;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  padding: 1.1rem 1.3rem;
+  border-bottom: 2px solid var(--line);
+  line-height: 1.4;
+}
+
+.slr-compare-table td {
+  padding: 1.15rem 1.3rem;
+  border-bottom: 1px solid var(--line);
+  vertical-align: middle;
+  color: var(--ink-soft);
+  line-height: 1.55;
+}
+
+.slr-compare-table tr:hover td {
+  background: rgba(0, 0, 0, 0.015);
+}
+
+.slr-mixing-card {
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.05) 0%, rgba(14, 168, 148, 0.05) 100%);
+  border: 1.5px solid rgba(99, 102, 241, 0.3);
+  border-radius: var(--radius-sm);
+  padding: 1.6rem 1.8rem;
+  margin-top: 1.8rem;
+}
+</style>
+</head>
+<body>
+
+<div class="grain" aria-hidden="true"></div>
+
+<div class="progress-rail" aria-hidden="true"><div class="progress-fill" id="progressFill"></div></div>
+
+<header class="top-bar">
+  <div class="top-bar__brand">
+    <span class="course-nav__mark">LM</span>
+    <span class="top-bar__title">Learning Machines</span>
+  </div>
+  <div class="top-bar__controls">
+    <span class="top-bar__time" id="readTime">~6 min read</span>
+    <button class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="courseNav">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="4" x2="20" y1="6" y2="6"/><line x1="4" x2="20" y1="12" y2="12"/><line x1="4" x2="20" y1="18" y2="18"/></svg>
+      <span class="nav-toggle__label">Course map</span>
+    </button>
+  </div>
+</header>
+
+<div class="nav-overlay" id="navOverlay" aria-hidden="true"></div>
+
+<!-- ============ SLIDE-OVER SIDEBAR ============ -->
+<aside class="course-nav" id="courseNav">
+  <div class="course-nav__header">
+    <h2 class="course-nav__title-side">Course map</h2>
+    <button class="nav-close" id="navClose" aria-label="Close nav">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
+    </button>
+  </div>
+  <p class="course-nav__tagline">A slow, careful path through machine learning, start to finish.</p>
+
+  <ol class="course-nav__list">
+    <li class="course-nav__item is-completed">
+      <a href="index.html" class="course-nav__inner-link">
+        <span class="course-nav__num">1</span>
+        <div>
+          <span class="course-nav__name">Introduction</span>
+          <span class="course-nav__state">completed</span>
+        </div>
+      </a>
+    </li>
+    <li class="course-nav__item is-completed">
+      <a href="data-preprocessing.html" class="course-nav__inner-link">
+        <span class="course-nav__num">2</span>
+        <div>
+          <span class="course-nav__name">Data Preprocessing</span>
+          <span class="course-nav__state">completed</span>
+        </div>
+      </a>
+    </li>
+    <li class="course-nav__item is-completed">
+      <a href="eda.html" class="course-nav__inner-link">
+        <span class="course-nav__num">3</span>
+        <div>
+          <span class="course-nav__name">Exploratory Data Analysis</span>
+          <span class="course-nav__state">completed</span>
+        </div>
+      </a>
+    </li>
+    <li class="course-nav__item is-active-group">
+      <span class="course-nav__num">4</span>
+      <div>
+        <span class="course-nav__name">Supervised Learning</span>
+        <span class="course-nav__state">in progress</span>
+      </div>
+    </li>
+    <ol class="course-nav__sub-list">
+      <li class="course-nav__sub-item is-completed">
+        <a href="supervised-learning.html">
+          <span class="course-nav__sub-num">4.1</span>
+          <div>
+            <span class="course-nav__sub-name">Introduction</span>
+            <span class="course-nav__state">completed</span>
+          </div>
+        </a>
+      </li>
+      <li class="course-nav__sub-item is-completed">
+        <a href="classification.html">
+          <span class="course-nav__sub-num">4.2</span>
+          <div>
+            <span class="course-nav__sub-name">Classification &amp; Decision Trees</span>
+            <span class="course-nav__state">completed</span>
+          </div>
+        </a>
+      </li>
+      <li class="course-nav__sub-item is-completed">
+        <a href="id3-algorithm.html">
+          <span class="course-nav__sub-num">4.3</span>
+          <div>
+            <span class="course-nav__sub-name">ID3 Algorithm</span>
+            <span class="course-nav__state">completed</span>
+          </div>
+        </a>
+      </li>
+      <li class="course-nav__sub-item is-completed">
+        <a href="c45-algorithm.html">
+          <span class="course-nav__sub-num">4.4</span>
+          <div>
+            <span class="course-nav__sub-name">C4.5 Algorithm</span>
+            <span class="course-nav__state">completed</span>
+          </div>
+        </a>
+      </li>
+      <li class="course-nav__sub-item is-completed">
+        <a href="cart-algorithm.html">
+          <span class="course-nav__sub-num">4.5</span>
+          <div>
+            <span class="course-nav__sub-name">CART Algorithm</span>
+            <span class="course-nav__state">completed</span>
+          </div>
+        </a>
+      </li>
+      <li class="course-nav__sub-item is-completed">
+        <a href="regression-analysis.html">
+          <span class="course-nav__sub-num">4.6</span>
+          <div>
+            <span class="course-nav__sub-name">Introduction to Regression</span>
+            <span class="course-nav__state">completed</span>
+          </div>
+        </a>
+      </li>
+      <li class="course-nav__sub-item is-active">
+        <a href="simple-linear-regression.html">
+          <span class="course-nav__sub-num">4.7</span>
+          <div>
+            <span class="course-nav__sub-name">Simple Linear Regression</span>
+            <span class="course-nav__state">reading now</span>
+          </div>
+        </a>
+      </li>
+      <li class="course-nav__sub-item">
+        <a href="polynomial-regression.html">
+          <span class="course-nav__sub-num">4.8</span>
+          <div>
+            <span class="course-nav__sub-name">Polynomial Regression</span>
+            <span class="course-nav__state">available now</span>
+          </div>
+        </a>
+      </li>
+    </ol>
+    <li class="course-nav__item">
+      <a href="unsupervised-learning.html" class="course-nav__inner-link">
+        <span class="course-nav__num">5</span>
+        <div>
+          <span class="course-nav__name">Unsupervised Learning</span>
+          <span class="course-nav__state">available now</span>
+        </div>
+      </a>
+    </li>
+    <ol class="course-nav__sub-list">
+      <li class="course-nav__sub-item">
+        <a href="unsupervised-learning.html">
+          <span class="course-nav__sub-num">5.1</span>
+          <div>
+            <span class="course-nav__sub-name">Introduction</span>
+            <span class="course-nav__state">available now</span>
+          </div>
+        </a>
+      </li>
+      <li class="course-nav__sub-item">
+        <a href="hierarchical-clustering.html">
+          <span class="course-nav__sub-num">5.2</span>
+          <div>
+            <span class="course-nav__sub-name">Hierarchical Clustering</span>
+            <span class="course-nav__state">available now</span>
+          </div>
+        </a>
+      </li>
+    </ol>
+    <li class="course-nav__item is-locked">
+      <span class="course-nav__num">6</span>
+      <div>
+        <span class="course-nav__name">Reinforcement Learning</span>
+        <span class="course-nav__state">
+          <svg class="course-nav__lock" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          coming soon
+        </span>
+      </div>
+    </li>
+  </ol>
+</aside>
+
+<div class="shell">
+
+  <!-- ============ MAIN ARTICLE ============ -->
+  <main class="lesson">
+
+    <header class="lesson__header">
+      <div class="slr-hero-badge">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+        Part 4.7 &bull; Supervised Learning
+      </div>
+      <span class="lesson__eyebrow-free-title">
+        <h1>Simple Linear Regression</h1>
+        <svg class="title-underline" viewBox="0 0 520 14" preserveAspectRatio="none" aria-hidden="true">
+          <path d="M4 9 C 120 2, 260 13, 400 6 C 440 4, 480 8, 516 5"/>
+        </svg>
+      </span>
+      <p class="lesson__dek">The easiest and most common way to start learning regression. Learn how a single straight line connects two continuous variables &mdash; what the slope, intercept, and error mean, and why finding the line is so important.</p>
+    </header>
+
+    <!-- =========================================================================
+         SECTION 1: WHAT IS SIMPLE LINEAR REGRESSION?
+         ========================================================================= -->
+    <section class="block" id="what-is-slr">
+      <div class="block__body">
+        <h2 class="fade-up animate-on-scroll">
+          <span class="icon-badge icon-badge--coral">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          </span>
+          The Most Simple Method of Regression
+        </h2>
+
+        <p class="fade-up animate-on-scroll">
+          In the previous chapter (<a href="regression-analysis.html">4.6 Introduction to Regression</a>), we saw an overview of regression models. Now we start with the simplest one of all: <strong>Simple Linear Regression</strong>.
+        </p>
+
+        <!-- 3 Pillars Definition Cards -->
+        <div class="reg-grid-3 fade-up animate-on-scroll">
+          
+          <div class="reg-card" style="border-top: 4px solid var(--coral);">
+            <div class="reg-badge reg-badge--coral" style="align-self: flex-start; margin-bottom: 0.5rem;">Why "Simple"?</div>
+            <h3 style="font-family: var(--display); font-size: 1.05rem; margin: 0 0 0.4rem;">Only 1 Input &amp; 1 Output</h3>
+            <p style="font-size: 0.88rem; color: var(--ink-soft); margin: 0; line-height: 1.55;">
+              It is called "simple" because we use only <strong>one input variable (x)</strong> to predict <strong>one output variable (y)</strong>. No complicated formulas with many features!
+            </p>
+          </div>
+
+          <div class="reg-card" style="border-top: 4px solid var(--teal);">
+            <div class="reg-badge reg-badge--teal" style="align-self: flex-start; margin-bottom: 0.5rem;">Why "Linear"?</div>
+            <h3 style="font-family: var(--display); font-size: 1.05rem; margin: 0 0 0.4rem;">A Straight Line</h3>
+            <p style="font-size: 0.88rem; color: var(--ink-soft); margin: 0; line-height: 1.55;">
+              "Linear" means a straight line. We assume the relationship between our two variables can be drawn as a <strong>straight line</strong> on a graph.
+            </p>
+          </div>
+
+          <div class="reg-card" style="border-top: 4px solid var(--gold);">
+            <div class="reg-badge reg-badge--gold" style="align-self: flex-start; margin-bottom: 0.5rem;">Why "Regression"?</div>
+            <h3 style="font-family: var(--display); font-size: 1.05rem; margin: 0 0 0.4rem;">Continuous Numbers</h3>
+            <p style="font-size: 0.88rem; color: var(--ink-soft); margin: 0; line-height: 1.55;">
+              Regression means we are predicting a <strong>continuous number</strong> (like price, score, or temperature), not categories like "yes" or "no".
+            </p>
+          </div>
+
+        </div>
+
+        <!-- Callout Banner -->
+        <div class="reg-callout reg-callout--teal fade-up animate-on-scroll">
+          <div style="font-family: var(--display); font-weight: 700; font-size: 1.05rem; color: var(--teal-dark); margin-bottom: 0.35rem;">
+            📌 What is a "Continuous Variable"?
+          </div>
+          <p style="margin: 0; font-size: 0.92rem; color: var(--ink-soft); line-height: 1.6;">
+            A <strong>continuous variable</strong> is any number that can have decimals or fractions. For example: study time (like <code>2.5 hours</code>), height (like <code>1.75 meters</code>), or price (like <code>$120.50</code>). Simple Linear Regression is a statistical method for studying the relationship between <strong>two continuous variables</strong>.
+          </p>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- =========================================================================
+         SECTION 2: THE TWO VARIABLES (X and Y)
+         ========================================================================= -->
+    <section class="block" id="the-variables">
+      <div class="block__body">
+        <h2 class="fade-up animate-on-scroll">
+          <span class="icon-badge icon-badge--teal">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/><path d="M9 21V9"/></svg>
+          </span>
+          The Two Variables: x (Input) and y (Output)
+        </h2>
+
+        <p class="fade-up animate-on-scroll">
+          Simple linear regression connects two variables: <strong>one independent variable (x)</strong> and <strong>one dependent variable (y)</strong>. Here is what they mean in simple words:
+        </p>
+
+        <!-- Variable Cards Grid -->
+        <div class="slr-var-grid fade-up animate-on-scroll">
+          
+          <!-- X Variable Card -->
+          <div class="slr-var-card slr-var-card--x">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;">
+              <span class="reg-badge reg-badge--gold">Horizontal Axis</span>
+              <span style="font-family: 'IBM Plex Mono', monospace; font-size: 1.4rem; font-weight: 800; color: var(--gold-dark);">x</span>
+            </div>
+            <h3 style="font-family: var(--display); font-size: 1.15rem; margin: 0 0 0.5rem; color: var(--ink);">
+              x = Independent Variable
+            </h3>
+            <p style="font-size: 0.88rem; color: var(--ink-soft); line-height: 1.55; margin: 0 0 0.8rem;">
+              This is the <strong>input</strong>. It stands on its own. You already know or control this number (for example, how many hours you study).
+            </p>
+            <div style="background: var(--bg); border: 1px solid var(--line); border-radius: 6px; padding: 0.6rem 0.8rem; font-size: 0.8rem; color: var(--ink);">
+              <strong>Simple rule:</strong> Think of <strong>x</strong> as the <em>cause</em> or the <em>question</em>.
+            </div>
+          </div>
+
+          <!-- Y Variable Card -->
+          <div class="slr-var-card slr-var-card--y">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;">
+              <span class="reg-badge reg-badge--coral">Vertical Axis</span>
+              <span style="font-family: 'IBM Plex Mono', monospace; font-size: 1.4rem; font-weight: 800; color: var(--coral-dark);">y</span>
+            </div>
+            <h3 style="font-family: var(--display); font-size: 1.15rem; margin: 0 0 0.5rem; color: var(--ink);">
+              y = Dependent Variable
+            </h3>
+            <p style="font-size: 0.88rem; color: var(--ink-soft); line-height: 1.55; margin: 0 0 0.8rem;">
+              This is the <strong>output</strong>. It is called "dependent" because its value <strong>depends on x</strong> (for example, your exam score depends on how much you study).
+            </p>
+            <div style="background: var(--bg); border: 1px solid var(--line); border-radius: 6px; padding: 0.6rem 0.8rem; font-size: 0.8rem; color: var(--ink);">
+              <strong>Simple rule:</strong> Think of <strong>y</strong> as the <em>effect</em> or the <em>answer</em> you want to predict.
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Real World Intuitive Pair Selector -->
+        <div class="reg-card fade-up animate-on-scroll" style="margin-top: 1.4rem;">
+          <div style="font-family: var(--display); font-weight: 700; font-size: 0.95rem; color: var(--ink); margin-bottom: 0.4rem;">
+            💡 Click each example to see the relationship:
+          </div>
+          <div class="slr-scenario-pills" id="scenarioPills">
+            <button class="slr-scenario-pill is-selected" data-x="Hours of Study (hours)" data-y="Exam Score (points)" data-desc="The more hours you study (x), the higher your exam score (y) will be.">📚 Study Hours &rarr; Exam Score</button>
+            <button class="slr-scenario-pill" data-x="House Size (square feet)" data-y="House Price ($)" data-desc="A bigger house (x) will cost more money (y).">🏡 House Size &rarr; House Price</button>
+            <button class="slr-scenario-pill" data-x="Years of Experience" data-y="Salary ($)" data-desc="More years on the job (x) usually means a higher salary (y).">💼 Experience &rarr; Salary</button>
+            <button class="slr-scenario-pill" data-x="Outdoor Temperature (°C)" data-y="Ice Cream Sales ($)" data-desc="Hotter days (x) make people buy more ice cream (y).">🍦 Temperature &rarr; Ice Cream Sales</button>
+          </div>
+          <div id="scenarioDisplay" style="background: var(--bg); border: 1px dashed var(--line); border-radius: var(--radius-sm); padding: 0.9rem 1.2rem; font-size: 0.88rem; color: var(--ink-soft);">
+            <strong style="color: var(--gold-dark);">Input (x):</strong> <span id="scenX">Hours of Study (hours)</span> &nbsp;&bull;&nbsp;
+            <strong style="color: var(--coral-dark);">Output to predict (y):</strong> <span id="scenY">Exam Score (points)</span>
+            <div id="scenDesc" style="margin-top: 0.35rem; color: var(--ink); font-style: italic;">The more hours you study (x), the higher your exam score (y) will be.</div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- =========================================================================
+         SECTION: SIMPLE VS. MULTIPLE LINEAR REGRESSION
+         ========================================================================= -->
+    <section class="block" id="simple-vs-multiple">
+      <div class="block__body">
+        <h2 class="fade-up animate-on-scroll">
+          <span class="icon-badge icon-badge--gold">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+          </span>
+          The Main Difference: Simple vs. Multiple Linear Regression
+        </h2>
+        <div class="fade-up animate-on-scroll" style="font-size: 0.95rem; color: var(--ink-soft); margin-top: -0.4rem; margin-bottom: 1.2rem;">
+          The primary distinction between the two models is <strong>how many independent (X) variables are used to predict one dependent (Y) variable</strong>.
+        </div>
+
+        <!-- 2 Comparison Cards Grid -->
+        <div class="slr-compare-grid fade-up animate-on-scroll">
+          
+          <!-- Card 1: Simple Linear Regression -->
+          <div class="slr-compare-card slr-compare-card--simple">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;">
+              <span class="reg-badge reg-badge--coral">1 Input (X)</span>
+              <span style="font-family: 'IBM Plex Mono', monospace; font-size: 0.82rem; font-weight: 700; color: var(--coral-dark);">1 X &rarr; 1 Y</span>
+            </div>
+            <h3 style="font-family: var(--display); font-size: 1.18rem; margin: 0 0 0.5rem; color: var(--ink);">
+              1. Simple Linear Regression
+            </h3>
+            <p style="font-size: 0.88rem; color: var(--ink-soft); line-height: 1.55; margin: 0 0 0.8rem;">
+              Uses <strong>ONE independent variable (X)</strong> to predict <strong>ONE dependent variable (Y)</strong>.
+            </p>
+
+            <!-- Equation Pill Box -->
+            <div style="background: var(--bg); border: 1px solid var(--line); border-radius: 6px; padding: 0.75rem 1rem; margin-bottom: 0.9rem; text-align: center;">
+              <div style="font-size: 0.7rem; font-family: var(--display); font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.25rem;">General Equation</div>
+              <div style="font-family: 'IBM Plex Mono', monospace; font-size: 1.15rem; font-weight: 700; color: var(--ink);">
+                Y = β₀ + β₁X + ε
+              </div>
+            </div>
+
+            <div style="font-size: 0.84rem; color: var(--ink); line-height: 1.5; margin-bottom: 0.4rem;">
+              <strong>Example:</strong> Predict a student's exam score based on study hours:
+            </div>
+            <div style="font-family: 'IBM Plex Mono', monospace; font-size: 0.86rem; background: var(--surface-tint); padding: 0.6rem 0.8rem; border-radius: 6px; color: var(--ink); border: 1px solid var(--line); margin-bottom: 0.8rem;">
+              Score = β₀ + β₁(StudyHours)
+            </div>
+
+            <div style="margin-top: auto; padding: 0.65rem 0.85rem; background: var(--coral-tint); border-left: 3px solid var(--coral); border-radius: 4px; font-size: 0.82rem; color: var(--coral-dark); font-weight: 600;">
+              💡 Core Rule: Exactly <strong>1 X &rarr; 1 Y</strong> (Forms a straight line in 2D space)
+            </div>
+          </div>
+
+          <!-- Card 2: Multiple Linear Regression -->
+          <div class="slr-compare-card slr-compare-card--multiple">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;">
+              <span class="reg-badge" style="background: rgba(99, 102, 241, 0.12); color: #4F46E5;">2 or More Inputs (X's)</span>
+              <span style="font-family: 'IBM Plex Mono', monospace; font-size: 0.82rem; font-weight: 700; color: #4F46E5;">Multiple X's &rarr; 1 Y</span>
+            </div>
+            <h3 style="font-family: var(--display); font-size: 1.18rem; margin: 0 0 0.5rem; color: var(--ink);">
+              2. Multiple Linear Regression
+            </h3>
+            <p style="font-size: 0.88rem; color: var(--ink-soft); line-height: 1.55; margin: 0 0 0.8rem;">
+              Uses <strong>TWO or MORE independent variables (X's)</strong> to predict <strong>ONE dependent variable (Y)</strong>.
+            </p>
+
+            <!-- Equation Pill Box -->
+            <div style="background: var(--bg); border: 1px solid var(--line); border-radius: 6px; padding: 0.75rem 1rem; margin-bottom: 0.9rem; text-align: center;">
+              <div style="font-size: 0.7rem; font-family: var(--display); font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.25rem;">General Equation</div>
+              <div style="font-family: 'IBM Plex Mono', monospace; font-size: 1.05rem; font-weight: 700; color: var(--ink);">
+                Y = β₀ + β₁X₁ + β₂X₂ + β₃X₃ + &hellip; + ε
+              </div>
+            </div>
+
+            <div style="font-size: 0.84rem; color: var(--ink); line-height: 1.5; margin-bottom: 0.4rem;">
+              <strong>Example:</strong> Predict exam score using study hours (X₁), attendance (X₂), and assignment marks (X₃):
+            </div>
+            <div style="font-family: 'IBM Plex Mono', monospace; font-size: 0.8rem; background: var(--surface-tint); padding: 0.6rem 0.8rem; border-radius: 6px; color: var(--ink); border: 1px solid var(--line); margin-bottom: 0.8rem; overflow-x: auto;">
+              Score = β₀ + β₁StudyHours + β₂Attendance + β₃AssignmentMarks
+            </div>
+
+            <div style="margin-top: auto; padding: 0.65rem 0.85rem; background: rgba(99, 102, 241, 0.08); border-left: 3px solid #6366F1; border-radius: 4px; font-size: 0.82rem; color: #4338CA; font-weight: 600;">
+              💡 Core Rule: <strong>Multiple X's &rarr; 1 Y</strong> (Forms a 3D plane or multidimensional hyperplane)
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Comparison Summary Table Card -->
+        <div class="reg-card fade-up animate-on-scroll" style="margin-top: 1.6rem; padding: 1.6rem;">
+          <div style="font-family: var(--display); font-weight: 700; font-size: 1.05rem; color: var(--ink); margin-bottom: 0.8rem;">
+            📊 Side-by-Side Comparison: The Key Difference
+          </div>
+          
+          <div class="slr-anova-table-scroll">
+            <table class="slr-compare-table">
+              <thead>
+                <tr>
+                  <th style="width: 25%;">Feature</th>
+                  <th style="width: 37%;">Simple Linear Regression</th>
+                  <th style="width: 38%;">Multiple Linear Regression</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>Number of X variables</strong></td>
+                  <td><strong style="color: var(--coral-dark);">1</strong></td>
+                  <td><strong style="color: #4F46E5;">2 or more</strong></td>
+                </tr>
+                <tr>
+                  <td><strong>Number of Y variables</strong></td>
+                  <td>1</td>
+                  <td>1</td>
+                </tr>
+                <tr>
+                  <td><strong>Equation</strong></td>
+                  <td><code style="font-family: 'IBM Plex Mono', monospace;">Y = β₀ + β₁X</code></td>
+                  <td><code style="font-family: 'IBM Plex Mono', monospace;">Y = β₀ + β₁X₁ + β₂X₂ + &hellip;</code></td>
+                </tr>
+                <tr>
+                  <td><strong>Example</strong></td>
+                  <td>Score &larr; Study hours</td>
+                  <td>Score &larr; Study hours + Attendance + Assignments</td>
+                </tr>
+                <tr>
+                  <td><strong>Geometric Shape</strong></td>
+                  <td>A <strong>straight line</strong> (2D)</td>
+                  <td>A <strong>plane</strong> (3D) or <strong>hyperplane</strong> (&gt;3D)</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- One Important Thing: The Sound Mixing Board Analogy -->
+        <div class="slr-mixing-card fade-up animate-on-scroll">
+          <div style="display: flex; align-items: center; gap: 0.6rem; margin-bottom: 0.6rem;">
+            <span style="font-size: 1.4rem;">🎛️</span>
+            <h3 style="font-family: var(--display); font-size: 1.15rem; font-weight: 800; color: var(--ink); margin: 0;">
+              One Important Thing: The Sound Mixing Board Analogy
+            </h3>
+          </div>
+
+          <p style="font-size: 0.92rem; color: var(--ink-soft); line-height: 1.6; margin: 0 0 0.8rem;">
+            In multiple regression, each coefficient tells you the effect of that variable <strong>while keeping the other X variables constant</strong> (statisticians call this principle <em>&ldquo;ceteris paribus&rdquo;</em>).
+          </p>
+
+          <div style="background: var(--surface); border: 1.5px solid rgba(99, 102, 241, 0.3); border-radius: 8px; padding: 1rem 1.4rem; margin-bottom: 1rem;">
+            <div style="font-size: 0.75rem; font-family: var(--display); font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--muted); margin-bottom: 0.3rem;">
+              Example Multiple Regression Model:
+            </div>
+            <div style="font-family: 'IBM Plex Mono', monospace; font-size: 1.15rem; font-weight: 700; color: var(--ink); margin-bottom: 0.4rem;">
+              Score = 20 + <span style="color: var(--teal-dark);">5(StudyHours)</span> + <span style="color: #6366F1;">0.3(Attendance)</span>
+            </div>
+            <p style="font-size: 0.9rem; color: var(--ink); line-height: 1.55; margin: 0;">
+              The coefficient <strong style="color: var(--teal-dark);">5</strong> means:
+              <br>
+              <em style="color: var(--teal-dark); font-weight: 600;">&ldquo;For each additional study hour, predicted score increases by 5 points, <strong>assuming attendance stays the same</strong>.&rdquo;</em>
+            </p>
+          </div>
+
+          <div class="reg-grid-3" style="grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1rem; margin-top: 1rem;">
+            
+            <!-- Dial 1 -->
+            <div style="background: var(--surface); border: 1px solid var(--line); border-left: 4px solid var(--coral); border-radius: 6px; padding: 0.9rem 1.1rem;">
+              <div style="font-family: var(--display); font-weight: 700; font-size: 0.92rem; color: var(--coral-dark); margin-bottom: 0.3rem;">
+                📻 Simple Regression = Single Volume Knob
+              </div>
+              <p style="font-size: 0.85rem; color: var(--ink-soft); line-height: 1.5; margin: 0;">
+                There is only <strong>one dial</strong> on the device. When you turn study hours up, the score rises directly. You don't have to freeze or balance anything else because <em>no other dials exist!</em>
+              </p>
+            </div>
+
+            <!-- Dial 2 -->
+            <div style="background: var(--surface); border: 1px solid var(--line); border-left: 4px solid #6366F1; border-radius: 6px; padding: 0.9rem 1.1rem;">
+              <div style="font-family: var(--display); font-weight: 700; font-size: 0.92rem; color: #4338CA; margin-bottom: 0.3rem;">
+                🎚️ Multiple Regression = Audio Mixing Board
+              </div>
+              <p style="font-size: 0.85rem; color: var(--ink-soft); line-height: 1.5; margin: 0;">
+                You have a whole row of sliders (Study Hours, Attendance, Assignments). To measure the true power of Study Hours, you push that single slider up <strong>while your other fingers hold Attendance and Assignments completely still</strong>.
+              </p>
+            </div>
+
+          </div>
+
+          <div style="margin-top: 1rem; font-size: 0.88rem; color: var(--ink); font-style: italic;">
+            📌 That <strong>&ldquo;keeping other variables constant&rdquo;</strong> idea is one of the most important concepts to understand when moving from Simple to Multiple regression!
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- =========================================================================
+         SECTION 3: THE MAIN EQUATION
+         ========================================================================= -->
+    <section class="block" id="the-equation">
+      <div class="block__body">
+        <h2 class="fade-up animate-on-scroll">
+          <span class="icon-badge icon-badge--gold">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+          </span>
+          The Main Equation: y = β₀ &plusmn; β₁x &plusmn; ε₁
+        </h2>
+        <div class="fade-up animate-on-scroll" style="font-size: 0.95rem; color: var(--ink-soft); margin-top: -0.4rem; margin-bottom: 1.2rem;">
+          This equation connects the input variable (<strong>x</strong>) to the output variable (<strong>y</strong>) using standard Greek symbols: <strong>β₀</strong> (intercept), <strong>β₁</strong> (slope), and <strong>ε₁</strong> (error).
+        </div>
+
+        <p class="fade-up animate-on-scroll">
+          <strong>This equation creates a relationship between the two variables.</strong> It connects the input <strong>x</strong> to the output <strong>y</strong>:
+        </p>
+
+        <!-- Interactive Equation Anatomy Card -->
+        <div class="slr-anatomy-bar fade-up animate-on-scroll">
+          <span style="font-family: var(--display); font-size: 0.82rem; font-weight: 800; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em;">
+            Click on any part of the equation to see what it means:
+          </span>
+
+          <div class="slr-equation-interactive">
+            <div class="slr-token slr-token-y is-active" data-term="y">
+              <span>y</span>
+              <span class="slr-token__subtext">Output</span>
+            </div>
+            <span style="color: var(--muted); font-size: 1.6rem;">=</span>
+            <div class="slr-token slr-token-b0" data-term="b0">
+              <span>β₀</span>
+              <span class="slr-token__subtext">Intercept</span>
+            </div>
+            <span style="color: var(--muted); font-size: 1.6rem;">&plusmn;</span>
+            <div class="slr-token slr-token-b1" data-term="b1">
+              <span>β₁</span>
+              <span class="slr-token__subtext">Slope</span>
+            </div>
+            <div class="slr-token slr-token-x" data-term="x">
+              <span>x</span>
+              <span class="slr-token__subtext">Input</span>
+            </div>
+            <span style="color: var(--muted); font-size: 1.6rem;">&plusmn;</span>
+            <div class="slr-token slr-token-err" data-term="err">
+              <span>ε₁</span>
+              <span class="slr-token__subtext">Error</span>
+            </div>
+          </div>
+
+          <!-- Dynamic Detail Box -->
+          <div class="slr-token-detail" id="tokenDetailBox">
+            <div class="slr-token-detail__title" id="tokenDetailTitle">
+              <span style="color: var(--coral);">y</span> &mdash; Dependent Variable
+            </div>
+            <p class="slr-token-detail__desc" id="tokenDetailDesc">
+              The real-world value we want to understand or predict (like exam score or house price). Its value depends on x.
+            </p>
+          </div>
+        </div>
+
+        <!-- Deep Dive List on the 5 Components -->
+        <div class="reg-steps-grid fade-up animate-on-scroll" style="margin-top: 2rem;">
+          
+          <!-- Term 1: y -->
+          <div class="reg-step-box" style="border-top: 3px solid var(--coral);">
+            <div class="reg-step-badge" style="background: var(--coral);">y</div>
+            <div class="reg-step-content">
+              <div class="reg-step-title" style="color: var(--coral-dark);">y = Dependent Variable</div>
+              <p class="reg-step-desc">
+                The actual value we measure in real life. It is the final result we want our model to predict.
+              </p>
+            </div>
+          </div>
+
+          <!-- Term 2: x -->
+          <div class="reg-step-box" style="border-top: 3px solid var(--gold);">
+            <div class="reg-step-badge" style="background: var(--gold-dark);">x</div>
+            <div class="reg-step-content">
+              <div class="reg-step-title" style="color: var(--gold-dark);">x = Independent Variable</div>
+              <p class="reg-step-desc">
+                The input value. This is the information you give to the model to help it make a guess.
+              </p>
+            </div>
+          </div>
+
+          <!-- Term 3: β₀ -->
+          <div class="reg-step-box" style="border-top: 3px solid #8B5CF6;">
+            <div class="reg-step-badge" style="background: #8B5CF6;">β₀</div>
+            <div class="reg-step-content">
+              <div class="reg-step-title" style="color: #6D28D9;">β₀ = The Intercept Point of the Regression Line and the y Axis</div>
+              <p class="reg-step-desc">
+                The point where the line crosses the vertical y-axis. In simple words: <strong>what is y when x is 0?</strong> (For example: what score do you get if you study 0 hours?)
+              </p>
+            </div>
+          </div>
+
+          <!-- Term 4: β₁ -->
+          <div class="reg-step-box" style="border-top: 3px solid var(--teal);">
+            <div class="reg-step-badge" style="background: var(--teal);">β₁</div>
+            <div class="reg-step-content">
+              <div class="reg-step-title" style="color: var(--teal-dark);">β₁ = The Slope of the Regression Line</div>
+              <p class="reg-step-desc">
+                How steep the line is. It tells you <strong>how much y changes when x increases by 1</strong>. If the line slopes up, y increases. If it slopes down, y decreases.
+              </p>
+            </div>
+          </div>
+
+          <!-- Term 5: ε₁ -->
+          <div class="reg-step-box" style="border-top: 3px solid #EC4899; grid-column: 1 / -1;">
+            <div class="reg-step-badge" style="background: #EC4899;">ε₁</div>
+            <div class="reg-step-content">
+              <div class="reg-step-title" style="color: #BE185D;">ε₁ = Error</div>
+              <p class="reg-step-desc">
+                Real life is not perfect! Real data points almost never sit exactly on a straight line.
+                <br>
+                <code>Error (ε₁) = Actual real-life value &minus; Line's guess</code>
+                <br>
+                If a point is above the line, the error is positive (<code>+ε₁</code>). If a point is below the line, the error is negative (<code>&minus;ε₁</code>). That is why the equation has <code>&plusmn; ε₁</code>!
+              </p>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Creative Deep-Dive: How to Read the Slope Coefficient in Simple Regression -->
+        <div class="reg-card fade-up animate-on-scroll" style="margin-top: 1.8rem; border-left: 4px solid var(--teal); background: rgba(14, 168, 148, 0.03);">
+          <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 0.5rem;">
+            <h3 style="font-family: var(--display); font-size: 1.08rem; font-weight: 700; color: var(--ink); margin: 0;">
+              💡 How to Read the Slope Coefficient (β₁): The &ldquo;Single Knob&rdquo; Rule
+            </h3>
+            <span class="reg-badge reg-badge--teal">Slope Interpretation</span>
+          </div>
+
+          <p style="font-size: 0.9rem; color: var(--ink-soft); line-height: 1.6; margin: 0 0 0.8rem;">
+            Suppose our simple linear regression model predicts a student's exam score based on study hours:
+          </p>
+
+          <div class="slr-math-hero-box" style="margin: 0.6rem 0; padding: 1rem 1.4rem; background: var(--surface); border: 1.5px solid rgba(14, 168, 148, 0.35);">
+            <span style="color: var(--coral-dark);">Score</span>
+            <span style="color: var(--muted); font-size: 1.2rem;">=</span>
+            <span style="color: #6D28D9;">30</span>
+            <span style="color: var(--muted); font-size: 1.2rem;">+</span>
+            <span style="color: var(--teal-dark); font-weight: 800;">5</span><span style="color: var(--gold-dark);">(StudyHours)</span>
+          </div>
+
+          <p style="font-size: 0.9rem; color: var(--ink); line-height: 1.6; margin: 0.8rem 0 0.6rem;">
+            The slope coefficient <strong style="color: var(--teal-dark); font-size: 1rem;">5</strong> simply means:
+          </p>
+
+          <blockquote style="margin: 0 0 1rem; padding: 0.85rem 1.2rem; background: var(--surface); border-left: 3px solid var(--teal); border-radius: 4px; font-size: 0.94rem; color: var(--ink); line-height: 1.55;">
+            <strong>&ldquo;For every 1 extra hour you study, your predicted exam score jumps by 5 points.&rdquo;</strong>
+          </blockquote>
+
+          <div style="background: var(--bg); border: 1px dashed var(--line); border-radius: var(--radius-sm); padding: 0.95rem 1.2rem; font-size: 0.88rem; color: var(--ink-soft); line-height: 1.6;">
+            🎛️ <strong style="color: var(--ink);">The &ldquo;Single Knob&rdquo; Concept:</strong> Think of Simple Linear Regression like an old radio with <strong>only one volume knob</strong>. You never have to worry about <em>&ldquo;holding other variables constant&rdquo;</em> because <strong>no other dials exist!</strong> It gives you a pure, direct 1-on-1 spotlight connecting <span style="color: var(--gold-dark); font-weight: 700;">x</span> directly to <span style="color: var(--coral-dark); font-weight: 700;">y</span>.
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- =========================================================================
+         SECTION 4: THE CORE PROCESS - FINDING β₀ AND β₁
+         ========================================================================= -->
+    <section class="block" id="finding-betas">
+      <div class="block__body">
+        <h2 class="fade-up animate-on-scroll">
+          <span class="icon-badge icon-badge--coral">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          </span>
+          Finding the Values of β₀ and β₁ is the Main Process
+        </h2>
+        <div class="fade-up animate-on-scroll" style="font-size: 0.95rem; color: var(--ink-soft); margin-top: -0.4rem; margin-bottom: 1.2rem;">
+          Finding the exact values for the slope (<strong>β₁</strong>) and intercept (<strong>β₀</strong>) is the whole goal of simple linear regression.
+        </div>
+
+        <p class="fade-up animate-on-scroll">
+          <strong>Finding the values of β₀ and β₁ is the main process of simple linear regression.</strong>
+        </p>
+
+        <p class="fade-up animate-on-scroll">
+          Why? Think about a graph with data dots scattered on it. You could draw hundreds of different straight lines through those dots. Some lines would be too high, some too low, and some completely in the wrong direction.
+        </p>
+
+        <!-- 2 Simple Cards: Many lines vs Best line -->
+        <div class="reg-grid-2 fade-up animate-on-scroll">
+          
+          <div class="reg-card" style="border: 2px dashed var(--line); background: var(--surface);">
+            <div class="reg-badge" style="margin-bottom: 0.6rem; align-self: flex-start;">The Problem</div>
+            <h3 style="font-family: var(--display); font-size: 1.05rem; margin: 0 0 0.4rem; color: var(--ink);">
+              Too Many Possible Lines
+            </h3>
+            <p style="font-size: 0.88rem; color: var(--ink-soft); line-height: 1.55; margin: 0 0 0.8rem;">
+              If you pick random numbers for β₀ and β₁, your line will miss most of the dots and make terrible predictions.
+            </p>
+            <div style="font-family: 'IBM Plex Mono', monospace; font-size: 0.82rem; background: var(--bg); padding: 0.5rem 0.8rem; border-radius: 6px; color: var(--muted);">
+              Line 1: Too steep (bad guesses)<br>
+              Line 2: Goes the wrong way!
+            </div>
+          </div>
+
+          <div class="reg-card" style="border: 2px solid var(--teal); background: rgba(14, 168, 148, 0.02);">
+            <div class="reg-badge reg-badge--teal" style="margin-bottom: 0.6rem; align-self: flex-start;">The Goal</div>
+            <h3 style="font-family: var(--display); font-size: 1.05rem; margin: 0 0 0.4rem; color: var(--teal-dark);">
+              Find the One "Best-Fit" Line
+            </h3>
+            <p style="font-size: 0.88rem; color: var(--ink-soft); line-height: 1.55; margin: 0 0 0.8rem;">
+              We want to find the one line that stays as close to all the dots as possible. This means making the total error as small as possible!
+            </p>
+            <div style="font-family: 'IBM Plex Mono', monospace; font-size: 0.82rem; background: var(--teal-tint); padding: 0.5rem 0.8rem; border-radius: 6px; color: var(--teal-dark); font-weight: 700;">
+              Best Line: Has the smallest total error!
+            </div>
+          </div>
+
+        </div>
+
+        <!-- How we find them box -->
+        <div class="slr-math-showcase fade-up animate-on-scroll">
+          
+          <div class="slr-math-showcase__header">
+            <div>
+              <span class="reg-badge reg-badge--teal" style="margin-bottom: 0.4rem;">The Mathematics of Ordinary Least Squares</span>
+              <h3 style="font-family: var(--display); font-weight: 800; font-size: 1.35rem; color: var(--ink); margin: 0;">
+                How We Calculate β₁ (Slope) and β₀ (Intercept)
+              </h3>
+            </div>
+            <span style="font-family: 'IBM Plex Mono', monospace; font-size: 0.82rem; background: var(--teal-tint); color: var(--teal-dark); padding: 0.35rem 0.75rem; border-radius: 6px; font-weight: 700;">
+              OLS Closed-Form Formulas
+            </span>
+          </div>
+
+          <p style="font-size: 0.94rem; color: var(--ink-soft); line-height: 1.6; margin-bottom: 1.6rem;">
+            To find the single best-fitting straight line among infinite possibilities, statistics uses a method called <strong>Ordinary Least Squares (OLS)</strong>. Rather than trial-and-error, OLS provides exact mathematical equations to compute the slope (<strong>β₁</strong>) and intercept (<strong>β₀</strong>) directly from your dataset.
+          </p>
+
+          <!-- 1. Slope Card (Spacious, prominent) -->
+          <div class="slr-math-card slr-math-card--slope">
+            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 0.6rem;">
+              <span style="font-size: 0.82rem; font-weight: 800; color: var(--teal-dark); text-transform: uppercase; letter-spacing: 0.06em;">
+                Step 1: Calculate the Slope of the Line (β₁)
+              </span>
+              <span class="slr-math-pill" style="background: var(--teal-tint); color: var(--teal-dark);">Covariance / Variance</span>
+            </div>
+
+            <p style="font-size: 0.9rem; color: var(--ink-soft); margin: 0 0 1rem; line-height: 1.55;">
+              The slope tells us how much <strong>y</strong> changes for every 1-unit increase in <strong>x</strong>. It compares how <strong>x and y move together</strong> (covariance) to the <strong>total spread of x</strong> (variance):
+            </p>
+
+            <!-- Prominent Equation Box: All parts on ONE line -->
+            <div class="slr-math-hero-box">
+              <span style="color: var(--teal-dark);">β₁</span>
+              <span style="color: var(--muted);">=</span>
+              <!-- Direct Summation Formula (Requested) -->
+              <div class="slr-fraction" style="color: var(--teal-dark);">
+                <div class="slr-numerator">
+                  n&sum;xy &minus; (&sum;x)(&sum;y)
+                </div>
+                <div class="slr-denominator">
+                  n&sum;x&sup2; &minus; (&sum;x)&sup2;
+                </div>
+              </div>
+              <span style="color: var(--muted);">=</span>
+              <!-- Mean-Deviation Formula -->
+              <div class="slr-fraction" style="color: var(--ink);">
+                <div class="slr-numerator">
+                  &sum;(x<sub>i</sub> &minus; x̄)(y<sub>i</sub> &minus; ȳ)
+                </div>
+                <div class="slr-denominator">
+                  &sum;(x<sub>i</sub> &minus; x̄)&sup2;
+                </div>
+              </div>
+              <span style="color: var(--muted);">=</span>
+              <!-- Covariance / Variance Concept Formula -->
+              <div class="slr-fraction" style="color: var(--ink-soft); font-size: 0.92em;">
+                <div class="slr-numerator">
+                  Cov(x, y)
+                </div>
+                <div class="slr-denominator">
+                  Var(x)
+                </div>
+              </div>
+            </div>
+
+            <!-- Mathematical Breakdown of Terms -->
+            <div class="slr-math-breakdown">
+              <div class="slr-math-breakdown-item">
+                <span class="slr-math-symbol">n</span>
+                <div><strong>Sample Size:</strong> The total number of observation pairs (rows) in your dataset.</div>
+              </div>
+              <div class="slr-math-breakdown-item">
+                <span class="slr-math-symbol">&sum; xy</span>
+                <div><strong>Sum of Products:</strong> Multiply each <code>x</code> by its paired <code>y</code>, then sum them all up: <code>(x₁y₁ + x₂y₂ + ... + xₙyₙ)</code>.</div>
+              </div>
+              <div class="slr-math-breakdown-item">
+                <span class="slr-math-symbol">(&sum;x)(&sum;y)</span>
+                <div><strong>Product of Sums:</strong> The total sum of all <code>x</code> values multiplied by the total sum of all <code>y</code> values.</div>
+              </div>
+              <div class="slr-math-breakdown-item">
+                <span class="slr-math-symbol">&sum; x&sup2; vs (&sum;x)&sup2;</span>
+                <div><strong>Sum of Squares vs Square of Sum:</strong> <code>&sum; x&sup2;</code> squares each x first, while <code>(&sum; x)&sup2;</code> sums all x first and then squares that total.</div>
+              </div>
+              <div class="slr-math-breakdown-item">
+                <span class="slr-math-symbol">(x<sub>i</sub> &minus; x̄)(y<sub>i</sub> &minus; ȳ)</span>
+                <div><strong>Mean-Deviation Form:</strong> The product of deviations from the averages <code>x̄</code> and <code>ȳ</code>, showing covariance directly.</div>
+              </div>
+              <div class="slr-math-breakdown-item">
+                <span class="slr-math-symbol">Cov(x, y) / Var(x)</span>
+                <div><strong>Statistical Concept:</strong> Slope is fundamentally how much <code>x</code> and <code>y</code> vary together divided by the variance of <code>x</code>.</div>
+              </div>
+            </div>
+
+            <div style="margin-top: 1rem; padding: 0.75rem 1rem; background: rgba(14, 168, 148, 0.06); border-left: 3px solid var(--teal); border-radius: 4px; font-size: 0.85rem; color: var(--ink); line-height: 1.5;">
+              💡 <strong>Why are both equations identical?</strong> The direct formula <code>[n&sum;xy &minus; (&sum;x)(&sum;y)] / [n&sum;x&sup2; &minus; (&sum;x)&sup2;]</code> is algebraically identical to the mean-deviation formula <code>&sum;(x &minus; x̄)(y &minus; ȳ) / &sum;(x &minus; x̄)&sup2;</code>. The direct formula is widely used by computers and calculators because you can compute all the sums in a single pass over your data without calculating the averages first!
+            </div>
+          </div>
+
+          <!-- 2. Intercept Card (Spacious, prominent) -->
+          <div class="slr-math-card slr-math-card--intercept">
+            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 0.6rem;">
+              <span style="font-size: 0.82rem; font-weight: 800; color: #6D28D9; text-transform: uppercase; letter-spacing: 0.06em;">
+                Step 2: Calculate the Intercept (β₀)
+              </span>
+              <span class="slr-math-pill" style="background: rgba(139, 92, 246, 0.1); color: #6D28D9;">Passes Through (x̄, ȳ)</span>
+            </div>
+
+            <p style="font-size: 0.9rem; color: var(--ink-soft); margin: 0 0 1rem; line-height: 1.55;">
+              A mathematical rule of linear regression is that the best-fit line must pass directly through the central average point of your data, known as the centroid: <strong>(x̄, ȳ)</strong>. Once you have the slope (<strong>β₁</strong>), calculating <strong>β₀</strong> is direct:
+            </p>
+
+            <!-- Prominent Equation Box: All parts on ONE line -->
+            <div class="slr-math-hero-box">
+              <span style="color: #6D28D9;">β₀</span>
+              <span style="color: var(--muted);">=</span>
+              <span style="color: #6D28D9;">ȳ &minus; β₁x̄</span>
+              <span style="color: var(--muted);">=</span>
+              <div class="slr-fraction" style="color: var(--coral-dark); font-size: 0.92em;">
+                <div class="slr-numerator">&sum; y<sub>i</sub></div>
+                <div class="slr-denominator">n</div>
+              </div>
+              <span style="color: var(--muted);">&minus;</span>
+              <span style="color: var(--teal-dark); font-size: 0.95em;">β₁</span>
+              <span style="color: var(--muted); font-size: 0.9rem;">&times;</span>
+              <div class="slr-fraction" style="color: var(--gold-dark); font-size: 0.92em;">
+                <div class="slr-numerator">&sum; x<sub>i</sub></div>
+                <div class="slr-denominator">n</div>
+              </div>
+            </div>
+
+            <!-- Mathematical Breakdown of Terms -->
+            <div class="slr-math-breakdown">
+              <div class="slr-math-breakdown-item">
+                <span class="slr-math-symbol">ȳ ("y-bar")</span>
+                <div><strong>Mean of y:</strong> The arithmetic average of all output values: <code>ȳ = (&sum; y<sub>i</sub>) &divide; n</code>.</div>
+              </div>
+              <div class="slr-math-breakdown-item">
+                <span class="slr-math-symbol">x̄ ("x-bar")</span>
+                <div><strong>Mean of x:</strong> The arithmetic average of all input values: <code>x̄ = (&sum; x<sub>i</sub>) &divide; n</code>.</div>
+              </div>
+              <div class="slr-math-breakdown-item">
+                <span class="slr-math-symbol">n</span>
+                <div><strong>Sample Size:</strong> The total number of data points (rows) in the sample.</div>
+              </div>
+              <div class="slr-math-breakdown-item">
+                <span class="slr-math-symbol">β₁ &times; x̄</span>
+                <div><strong>Baseline Correction:</strong> Shifts the line so that when <code>x = 0</code>, the line crosses the y-axis at the exact proper height.</div>
+              </div>
+            </div>
+
+            <div style="margin-top: 1rem; padding: 0.75rem 1rem; background: rgba(139, 92, 246, 0.06); border-left: 3px solid #8B5CF6; border-radius: 4px; font-size: 0.85rem; color: var(--ink); line-height: 1.5;">
+              💡 <strong>Intuitive meaning:</strong> The intercept <strong>β₀</strong> is the expected starting value of <strong>y</strong> when <strong>x = 0</strong> (for example, the baseline exam score an average student gets with zero hours of study).
+            </div>
+          </div>
+
+          <!-- 3. The OLS Minimization Criterion (Why These Formulas Work) -->
+          <div class="slr-math-card slr-math-card--ols">
+            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 0.6rem;">
+              <span style="font-size: 0.82rem; font-weight: 800; color: #BE185D; text-transform: uppercase; letter-spacing: 0.06em;">
+                The Underlying Criterion: Minimizing the Sum of Squared Errors (SSE)
+              </span>
+              <span class="slr-math-pill" style="background: rgba(236, 72, 153, 0.1); color: #BE185D;">Objective Function</span>
+            </div>
+
+            <p style="font-size: 0.9rem; color: var(--ink-soft); margin: 0 0 1rem; line-height: 1.55;">
+              Why do the formulas in Step 1 and Step 2 look the way they do? They are the mathematical result of minimizing the <strong>Sum of Squared Errors (SSE)</strong> &mdash; the total squared vertical distance from each real dot to the line:
+            </p>
+
+            <!-- Prominent Equation Box -->
+            <div class="slr-math-hero-box" style="font-size: clamp(1.05rem, 2.5vw, 1.45rem);">
+              <span style="font-size: 0.86rem; font-weight: 800; color: #BE185D; text-transform: uppercase; letter-spacing: 0.05em;">Minimize SSE</span>
+              <span style="color: var(--muted); font-size: 1.2rem;">=</span>
+              <span style="color: #BE185D;">&sum; ε<sub>i</sub>&sup2;</span>
+              <span style="color: var(--muted); font-size: 1.2rem;">=</span>
+              <span>&sum; (y<sub>i</sub> &minus; ŷ<sub>i</sub>)&sup2;</span>
+              <span style="color: var(--muted); font-size: 1.2rem;">=</span>
+              <span>&sum; [y<sub>i</sub> &minus; (β₀ + β₁x<sub>i</sub>)]&sup2;</span>
+            </div>
+
+            <p style="font-size: 0.88rem; color: var(--ink-soft); margin: 0; line-height: 1.55;">
+              Using calculus (setting the partial derivatives &part;SSE/&part;β₀ = 0 and &part;SSE/&part;β₁ = 0), we find the single minimum point. This guarantees that no other straight line in the universe has a smaller sum of squared errors for this data!
+            </p>
+          </div>
+
+          <!-- 4. The Final Prediction Model (Fitted Line) -->
+          <div style="background: linear-gradient(135deg, rgba(233, 168, 37, 0.08) 0%, rgba(14, 168, 148, 0.08) 100%); border: 1.5px solid rgba(233, 168, 37, 0.4); border-radius: var(--radius-sm); padding: 1.6rem 2rem; margin-top: 1.6rem;">
+            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 0.4rem;">
+              <span style="font-family: var(--display); font-weight: 800; font-size: 1.05rem; color: var(--ink);">
+                🎯 The Final Prediction Equation (The Fitted Line)
+              </span>
+              <span class="reg-badge reg-badge--gold">Fitted Regression Model</span>
+            </div>
+            
+            <p style="font-size: 0.88rem; color: var(--ink-soft); margin: 0 0 0.8rem; line-height: 1.55;">
+              Once the computer calculates the numerical values for <strong>β₀</strong> and <strong>β₁</strong>, your machine learning model is ready to predict. For any new input value <strong>x</strong>, plug it in to calculate <strong>ŷ</strong> (pronounced <em>"y-hat"</em>):
+            </p>
+
+            <div class="slr-math-hero-box" style="margin: 0.8rem 0; padding: 1.2rem 1.6rem; background: var(--surface); border: 2px solid rgba(233, 168, 37, 0.45);">
+              <span style="color: var(--coral-dark);">ŷ</span>
+              <span style="color: var(--muted); font-size: 1.2rem;">=</span>
+              <span style="color: #6D28D9;">β₀</span>
+              <span style="color: var(--muted); font-size: 1.2rem;">+</span>
+              <span style="color: var(--teal-dark);">β₁</span><span style="color: var(--gold-dark);">x</span>
+            </div>
+
+            <div style="font-size: 0.82rem; color: var(--muted); font-style: italic; margin-top: 0.5rem; line-height: 1.5;">
+              📌 <strong>Notice:</strong> The error term (<code>&plusmn; ε₁</code>) is absent here. That is because <strong>ŷ</strong> is our clean, predicted average on the line. The error only exists when comparing real-world observations (<code>y</code>) against the line's prediction (<code>ŷ</code>).
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+    <!-- =========================================================================
+         SECTION 5: ANOVA TABLE & STATISTICAL SIGNIFICANCE
+         ========================================================================= -->
+    <section class="block" id="anova-table">
+      <div class="block__body">
+        <h2 class="fade-up animate-on-scroll">
+          <span class="icon-badge icon-badge--teal">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/><path d="M3 15h18"/><path d="M9 3v18"/></svg>
+          </span>
+          The ANOVA Table: Is the Model Statistically Significant?
+        </h2>
+
+        <p class="fade-up animate-on-scroll">
+          Once we find <strong>β₀</strong> and <strong>β₁</strong> and draw our regression line, we must answer a very important question:
+          <em>Is this relationship real, or did it happen just by lucky chance?</em>
+        </p>
+
+        <!-- Concept Callout: What is Statistically Significant -->
+        <div class="reg-card fade-up animate-on-scroll" style="border-left: 4px solid var(--teal); background: var(--surface); margin: 1.5rem 0;">
+          <div style="display: flex; align-items: center; gap: 0.5rem; font-family: var(--display); font-weight: 700; color: var(--teal-dark); font-size: 1.05rem; margin-bottom: 0.5rem;">
+            <span>💡</span> What Does &ldquo;Statistically Significant&rdquo; Mean?
+          </div>
+          <p style="font-size: 0.92rem; color: var(--ink-soft); line-height: 1.6; margin: 0;">
+            It means: based on our observed data, we have <strong>enough statistical evidence to prove that a real linear relationship exists</strong> between the variables. We can trust that <strong>x</strong> genuinely helps predict <strong>y</strong>, and the pattern is not just random coincidence in our sample points.
+          </p>
+        </div>
+
+        <!-- Hypotheses Grid -->
+        <div class="fade-up animate-on-scroll" style="margin-top: 2rem;">
+          <h3 style="font-family: var(--display); font-size: 1.15rem; font-weight: 700; margin-bottom: 0.5rem;">
+            Step 1: Set Up the Hypotheses
+          </h3>
+          <p style="font-size: 0.9rem; color: var(--ink-soft); line-height: 1.55; margin-bottom: 1rem;">
+            Before checking the numbers, we set up two competing statements:
+          </p>
+
+          <div class="slr-hypothesis-grid">
+            <!-- Null Hypothesis H0 -->
+            <div class="slr-hypothesis-card" style="border-top: 4px solid var(--coral);">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.6rem;">
+                <span style="font-family: var(--display); font-weight: 800; font-size: 1.05rem; color: var(--coral-dark);">Null Hypothesis (H₀)</span>
+                <span class="slr-math-pill" style="background: var(--coral-tint); color: var(--coral-dark);">H₀ : β₁ = 0</span>
+              </div>
+              <p style="font-size: 0.88rem; color: var(--ink-soft); line-height: 1.55; margin: 0;">
+                <strong>No significant relationship.</strong> The slope is zero (a flat line). Changing <em>x</em> tells us nothing about <em>y</em>. Any slope seen in our sample dots is just random luck.
+              </p>
+            </div>
+
+            <!-- Alternative Hypothesis H1 -->
+            <div class="slr-hypothesis-card" style="border-top: 4px solid var(--teal);">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.6rem;">
+                <span style="font-family: var(--display); font-weight: 800; font-size: 1.05rem; color: var(--teal-dark);">Alternative Hypothesis (H₁)</span>
+                <span class="slr-math-pill" style="background: var(--teal-tint); color: var(--teal-dark);">H₁ : β₁ &ne; 0</span>
+              </div>
+              <p style="font-size: 0.88rem; color: var(--ink-soft); line-height: 1.55; margin: 0;">
+                <strong>A real relationship exists!</strong> The slope is not zero. As <em>x</em> changes, <em>y</em> really changes with it. The regression line has true predictive value.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Sum of Squares Equations (SST, SSR, SSE) -->
+        <div class="fade-up animate-on-scroll" style="margin-top: 2.2rem;">
+          <h3 style="font-family: var(--display); font-size: 1.15rem; font-weight: 700; margin-bottom: 0.5rem;">
+            Step 2: Split the Variation &mdash; SSR, SSE, and SST
+          </h3>
+          <p style="font-size: 0.9rem; color: var(--ink-soft); line-height: 1.55;">
+            <strong>ANOVA</strong> stands for <em>Analysis of Variance</em>. It tests significance by splitting the total variation in our data into two parts: variation <strong>explained</strong> by the line, and <strong>unexplained</strong> error.
+          </p>
+
+          <!-- Golden Rule Box -->
+          <div style="background: var(--surface); border: 2px solid var(--line); border-radius: 12px; padding: 1.3rem 1.6rem; margin: 1.4rem 0; text-align: center; box-shadow: 0 3px 12px rgba(0,0,0,0.02);">
+            <div style="font-size: 0.76rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); margin-bottom: 0.35rem;">The Golden Rule of Variation</div>
+            <div style="font-family: 'IBM Plex Mono', monospace; font-size: clamp(1.2rem, 2.6vw, 1.7rem); font-weight: 700; color: var(--ink); margin: 0.3rem 0;">
+              <span style="color: #6366F1;">SST</span>
+              <span style="color: var(--muted); margin: 0 0.35rem;">=</span>
+              <span style="color: var(--teal-dark);">SSR</span>
+              <span style="color: var(--muted); margin: 0 0.35rem;">+</span>
+              <span style="color: var(--coral-dark);">SSE</span>
+            </div>
+            <div style="font-size: 0.86rem; color: var(--ink-soft); margin-top: 0.35rem;">
+              <strong>Total Variation</strong> = <strong>Variation Explained by the Line</strong> + <strong>Unexplained Error (Noise)</strong>
+            </div>
+          </div>
+
+          <!-- 3 Cards for SST, SSR, SSE -->
+          <div class="slr-ss-grid">
+            
+            <!-- SST -->
+            <div class="slr-ss-card slr-ss-card--sst">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.6rem;">
+                <span style="font-family: var(--display); font-weight: 800; color: #6366F1; font-size: 0.95rem;">SST</span>
+                <span class="slr-math-pill" style="background: rgba(99, 102, 241, 0.1); color: #6366F1; font-size: 0.72rem;">Total Variation</span>
+              </div>
+              <div style="font-family: 'IBM Plex Mono', monospace; font-size: 1.05rem; font-weight: 700; background: var(--bg); border: 1px solid var(--line); border-radius: 6px; padding: 0.6rem 0.8rem; text-align: center; margin: 0.5rem 0 0.8rem; color: #6366F1;">
+                SST = &sum;(yᵢ &minus; ȳ)²
+              </div>
+              <p style="font-size: 0.84rem; color: var(--ink-soft); line-height: 1.5; margin: 0;">
+                <strong>Total Sum of Squares:</strong> Measures the total spread of all real data points (<code>yᵢ</code>) around the overall average (<code>ȳ</code>).
+              </p>
+            </div>
+
+            <!-- SSR -->
+            <div class="slr-ss-card slr-ss-card--ssr">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.6rem;">
+                <span style="font-family: var(--display); font-weight: 800; color: var(--teal-dark); font-size: 0.95rem;">SSR</span>
+                <span class="slr-math-pill" style="background: var(--teal-tint); color: var(--teal-dark); font-size: 0.72rem;">Explained by Line</span>
+              </div>
+              <div style="font-family: 'IBM Plex Mono', monospace; font-size: 1.05rem; font-weight: 700; background: var(--bg); border: 1px solid var(--line); border-radius: 6px; padding: 0.6rem 0.8rem; text-align: center; margin: 0.5rem 0 0.8rem; color: var(--teal-dark);">
+                SSR = &sum;(ŷᵢ &minus; ȳ)²
+              </div>
+              <p style="font-size: 0.84rem; color: var(--ink-soft); line-height: 1.5; margin: 0;">
+                <strong>Regression Sum of Squares:</strong> Measures how much variation our fitted line (<code>ŷᵢ</code>) successfully explains compared to the simple average (<code>ȳ</code>).
+              </p>
+            </div>
+
+            <!-- SSE -->
+            <div class="slr-ss-card slr-ss-card--sse">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.6rem;">
+                <span style="font-family: var(--display); font-weight: 800; color: var(--coral-dark); font-size: 0.95rem;">SSE</span>
+                <span class="slr-math-pill" style="background: var(--coral-tint); color: var(--coral-dark); font-size: 0.72rem;">Unexplained Error</span>
+              </div>
+              <div style="font-family: 'IBM Plex Mono', monospace; font-size: 1.05rem; font-weight: 700; background: var(--bg); border: 1px solid var(--line); border-radius: 6px; padding: 0.6rem 0.8rem; text-align: center; margin: 0.5rem 0 0.8rem; color: var(--coral-dark);">
+                SSE = &sum;(yᵢ &minus; ŷᵢ)²
+              </div>
+              <p style="font-size: 0.84rem; color: var(--ink-soft); line-height: 1.5; margin: 0;">
+                <strong>Error Sum of Squares:</strong> Measures the leftover noise &mdash; the distance between real points (<code>yᵢ</code>) and what the line predicted (<code>ŷᵢ</code>).
+              </p>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- The ANOVA Table Display -->
+        <div class="fade-up animate-on-scroll" style="margin-top: 2.2rem;">
+          <h3 style="font-family: var(--display); font-size: 1.15rem; font-weight: 700; margin-bottom: 0.5rem;">
+            Step 3: The ANOVA Table
+          </h3>
+          <p style="font-size: 0.9rem; color: var(--ink-soft); line-height: 1.55; margin-bottom: 1rem;">
+            We arrange these sums into the standard ANOVA table to calculate the <strong>F-value</strong>:
+          </p>
+
+          <div class="slr-anova-wrap">
+            <div class="slr-anova-head">
+              <div>
+                <strong style="font-family: var(--display); font-size: 0.96rem; color: var(--ink);">ANOVA Table (Simple Linear Regression)</strong>
+                <div style="font-size: 0.8rem; color: var(--muted); margin-top: 0.15rem;">where <em>n</em> = total number of observed data points</div>
+              </div>
+              <span class="slr-math-pill" style="background: var(--surface-tint); color: var(--ink); cursor: help;" title="Degrees of freedom = how many values can vary independently before the remaining values become determined.">df = Degrees of Freedom</span>
+            </div>
+
+            <div class="slr-anova-table-scroll">
+              <table class="slr-anova-table">
+                <thead>
+                  <tr>
+                    <th>Source of Variation</th>
+                    <th>Degrees of Freedom <span style="font-size: 0.72rem; color: var(--muted); font-weight: 600; text-transform: none; display: block; margin-top: 0.2rem;">(df)</span></th>
+                    <th>Sum of Squares <span style="font-size: 0.72rem; color: var(--muted); font-weight: 600; text-transform: none; display: block; margin-top: 0.2rem;">(SS)</span></th>
+                    <th>Mean Square <span style="font-size: 0.72rem; color: var(--muted); font-weight: 600; text-transform: none; display: block; margin-top: 0.2rem;">(MS = SS / df)</span></th>
+                    <th>F-Value</th>
+                    <th>p-Value</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>
+                      <strong style="color: var(--teal-dark);">Regression</strong><br>
+                      <span style="font-size: 0.78rem; color: var(--muted);">Explained by the line</span>
+                    </td>
+                    <td>
+                      <span class="slr-anova-code">1</span><br>
+                      <span style="font-size: 0.75rem; color: var(--muted);">(1 input variable x)</span>
+                    </td>
+                    <td><span class="slr-anova-code" style="color: var(--teal-dark);">SSR</span></td>
+                    <td>
+                      <span class="slr-anova-code">MSR = SSR / 1 = SSR</span>
+                    </td>
+                    <td rowspan="2" style="background: rgba(13, 148, 136, 0.04); vertical-align: middle;">
+                      <a href="#f-statistic-formula" style="text-decoration: none;" title="Formula: F = MSR / MSE (Click to view full formula and breakdown below)">
+                        <div class="slr-anova-code" style="color: var(--teal-dark); font-size: 1.05rem; padding: 0.35rem 0.6rem; background: var(--teal-tint); border-radius: 6px; border: 1.5px solid rgba(13, 148, 136, 0.3); display: inline-block; cursor: pointer;">
+                          F = MSR / MSE
+                        </div>
+                      </a>
+                    </td>
+                    <td rowspan="2" style="vertical-align: middle;">
+                      <span style="font-size: 0.86rem; color: var(--ink);">From F-Table</span><br>
+                      <span style="font-size: 0.76rem; color: var(--muted);">(using df₁ = 1, df₂ = n &minus; 2)</span>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <strong style="color: var(--coral-dark);">Error (Residual)</strong><br>
+                      <span style="font-size: 0.78rem; color: var(--muted);">Unexplained noise</span>
+                    </td>
+                    <td>
+                      <span class="slr-anova-code">n &minus; 2</span><br>
+                      <span style="font-size: 0.75rem; color: var(--muted);">(n points &minus; 2 estimated betas)</span>
+                    </td>
+                    <td><span class="slr-anova-code" style="color: var(--coral-dark);">SSE</span></td>
+                    <td>
+                      <span class="slr-anova-code">MSE = SSE / (n &minus; 2)</span>
+                    </td>
+                  </tr>
+                  <tr class="total-row">
+                    <td>
+                      <strong>Total</strong><br>
+                      <span style="font-size: 0.78rem; color: var(--muted);">All variation combined</span>
+                    </td>
+                    <td><span class="slr-anova-code">n &minus; 1</span></td>
+                    <td><span class="slr-anova-code" style="color: #6366F1;">SST = SSR + SSE</span></td>
+                    <td><span style="color: var(--muted);">&mdash;</span></td>
+                    <td><span style="color: var(--muted);">&mdash;</span></td>
+                    <td><span style="color: var(--muted);">&mdash;</span></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <!-- Degrees of Freedom Explanation Callout -->
+            <div style="padding: 1.25rem 1.8rem; background: var(--bg); border-top: 1.5px solid var(--line); font-size: 0.88rem; color: var(--ink-soft); line-height: 1.6;">
+              <div style="display: flex; align-items: center; gap: 0.5rem; font-family: var(--display); font-weight: 700; font-size: 0.98rem; color: var(--ink); margin-bottom: 0.4rem;">
+                <span style="font-size: 1.15rem;">💡</span>
+                <span>What are &ldquo;Degrees of Freedom&rdquo; (df)?</span>
+              </div>
+              <p style="margin: 0; font-size: 0.92rem; color: var(--ink); line-height: 1.55;">
+                <strong style="color: var(--teal-dark);">Degrees of freedom</strong> = how many values can vary independently before the remaining values become determined.
+              </p>
+              <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 0.75rem 1.2rem; margin-top: 0.8rem; padding-top: 0.8rem; border-top: 1px dashed var(--line); font-size: 0.84rem; color: var(--muted); line-height: 1.55;">
+                <div>
+                  • <strong style="color: var(--teal-dark);">Regression (df = 1):</strong> We have exactly <strong>1</strong> independent predictor variable (<em>x</em>) free to vary.
+                </div>
+                <div>
+                  • <strong style="color: var(--coral-dark);">Error (df = n &minus; 2):</strong> Out of <em>n</em> data points, <strong>2</strong> values become determined by calculating the intercept (<strong>β₀</strong>) and slope (<strong>β₁</strong>). The remaining <strong>(n &minus; 2)</strong> values are free to vary independently.
+                </div>
+                <div>
+                  • <strong style="color: #6366F1;">Total (df = n &minus; 1):</strong> <strong>1</strong> value becomes determined by fixing the overall mean (ȳ). The remaining <strong>(n &minus; 1)</strong> values can vary freely.
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Formula of the F-Statistic (Requested) -->
+          <div class="slr-math-card slr-math-card--fstat fade-up animate-on-scroll" id="f-statistic-formula" style="border-top: 5px solid var(--teal); margin-top: 1.8rem;">
+            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 0.6rem;">
+              <span style="font-size: 0.82rem; font-weight: 800; color: var(--teal-dark); text-transform: uppercase; letter-spacing: 0.06em;">
+                Formula of the F-Statistic (F-Ratio)
+              </span>
+              <span class="slr-math-pill" style="background: var(--teal-tint); color: var(--teal-dark);">Signal / Noise &bull; MSR / MSE</span>
+            </div>
+
+            <p style="font-size: 0.9rem; color: var(--ink-soft); margin: 0 0 1rem; line-height: 1.55;">
+              The <strong>F-statistic</strong> (also called the <em>F-ratio</em>) is calculated directly from the ANOVA table to test whether the regression model as a whole explains a statistically significant amount of variation. It compares the variance explained by the line (<code>MSR</code>) against the unexplained residual error (<code>MSE</code>):
+            </p>
+
+            <!-- Prominent Equation Box: All parts on ONE line -->
+            <div class="slr-math-hero-box">
+              <span style="color: var(--teal-dark); font-size: 1.1em;">F</span>
+              <span style="color: var(--muted);">=</span>
+              <!-- Mean Square ratio -->
+              <div class="slr-fraction" style="color: var(--teal-dark);">
+                <div class="slr-numerator">MSR</div>
+                <div class="slr-denominator">MSE</div>
+              </div>
+              <span style="color: var(--muted);">=</span>
+              <!-- SS / df expanded ratio -->
+              <div class="slr-fraction" style="color: var(--ink);">
+                <div class="slr-numerator">SSR / 1</div>
+                <div class="slr-denominator">SSE / (n &minus; 2)</div>
+              </div>
+              <span style="color: var(--muted);">=</span>
+              <!-- Simplified algebraic ratio -->
+              <div class="slr-fraction" style="color: var(--ink);">
+                <div class="slr-numerator">SSR &times; (n &minus; 2)</div>
+                <div class="slr-denominator">SSE</div>
+              </div>
+              <span style="color: var(--muted);">=</span>
+              <!-- In terms of R-squared -->
+              <div class="slr-fraction" style="color: #6366F1;">
+                <div class="slr-numerator">R&sup2; &times; (n &minus; 2)</div>
+                <div class="slr-denominator">1 &minus; R&sup2;</div>
+              </div>
+            </div>
+
+            <!-- Mathematical Breakdown of Terms -->
+            <div class="slr-math-breakdown">
+              <div class="slr-math-breakdown-item">
+                <span class="slr-math-symbol">MSR</span>
+                <div><strong>Mean Square Regression:</strong> <code>SSR / 1</code> &mdash; The variance explained by the regression line (the model's &ldquo;signal&rdquo;).</div>
+              </div>
+              <div class="slr-math-breakdown-item">
+                <span class="slr-math-symbol">MSE</span>
+                <div><strong>Mean Square Error:</strong> <code>SSE / (n &minus; 2)</code> &mdash; The unexplained residual variance around the line (the &ldquo;noise&rdquo;, <em>s<sub>e</sub>&sup2;</em>).</div>
+              </div>
+              <div class="slr-math-breakdown-item">
+                <span class="slr-math-symbol">SSR / SSE</span>
+                <div><strong>Signal-to-Noise Ratio:</strong> Measures how many times stronger the explained variation is compared to random scatter.</div>
+              </div>
+              <div class="slr-math-breakdown-item">
+                <span class="slr-math-symbol">df₁ = 1, df₂ = n &minus; 2</span>
+                <div><strong>Degrees of Freedom:</strong> <code>df₁ = 1</code> (1 input variable <em>x</em>), <code>df₂ = n &minus; 2</code> (sample size minus 2 estimated parameters &beta;₀ and &beta;₁).</div>
+              </div>
+              <div class="slr-math-breakdown-item">
+                <span class="slr-math-symbol">R&sup2; Formulation</span>
+                <div><strong>Goodness-of-Fit Link:</strong> Expresses <em>F</em> in terms of <em>R&sup2;</em>: <code>F = [R&sup2;(n &minus; 2)] / (1 &minus; R&sup2;)</code>, showing higher <em>R&sup2;</em> yields a higher F-statistic.</div>
+              </div>
+              <div class="slr-math-breakdown-item">
+                <span class="slr-math-symbol">F &gt; 1 vs F &approx; 1</span>
+                <div><strong>Statistical Benchmark:</strong> If H₀ is true (no relationship), <em>F &approx; 1</em>. A large <em>F</em> yields <strong>p &lt; 0.05</strong>, rejecting H₀ and confirming significance.</div>
+              </div>
+            </div>
+
+            <div style="margin-top: 1rem; padding: 0.75rem 1rem; background: rgba(14, 168, 148, 0.06); border-left: 3px solid var(--teal); border-radius: 4px; font-size: 0.85rem; color: var(--ink); line-height: 1.5;">
+              💡 <strong>Intuitive meaning:</strong> Think of the F-statistic as a <strong>Signal-to-Noise Ratio</strong>. The numerator (<code>MSR</code>) is the signal captured by your line; the denominator (<code>MSE</code>) is background noise. When the signal is much stronger than the noise (large F), we reject H₀ and conclude that <em>x</em> truly helps predict <em>y</em>!
+            </div>
+          </div>
+        </div>
+
+        <!-- Decision Rule (F-value & p-value) -->
+        <div class="fade-up animate-on-scroll" style="margin-top: 2.2rem;">
+          <h3 style="font-family: var(--display); font-size: 1.15rem; font-weight: 700; margin-bottom: 0.5rem;">
+            Step 4: Making the Decision with the F-Value and p-Value
+          </h3>
+          <p style="font-size: 0.9rem; color: var(--ink-soft); line-height: 1.55;">
+            The <strong>F-value</strong> compares the signal (variation explained by the line, <code>MSR</code>) to the noise (random error, <code>MSE</code>).
+            Using the calculated F-value and the degrees of freedom (<code>1</code> and <code>n &minus; 2</code>), we look up the <strong>p-value</strong> from an F-distribution table (or statistical software).
+            Then we compare <strong>p</strong> with our significance threshold (usually <strong>0.05</strong>):
+          </p>
+
+          <div class="slr-decision-box">
+            <!-- Reject H0 -->
+            <div class="slr-decision-card slr-decision-card--reject">
+              <div style="display: flex; align-items: center; gap: 0.45rem; font-family: var(--display); font-weight: 800; font-size: 1.05rem; color: var(--teal-dark); margin-bottom: 0.5rem;">
+                <span style="font-size: 1.2rem;">✅</span> If p &lt; 0.05 &mdash; Reject the NULL Hypothesis
+              </div>
+              <p style="font-size: 0.88rem; color: var(--ink-soft); line-height: 1.55; margin: 0 0 0.6rem;">
+                Because <em>p</em> is smaller than 0.05, we <strong>reject H₀</strong>.
+              </p>
+              <div style="background: var(--teal-tint); border-left: 3px solid var(--teal); padding: 0.65rem 0.85rem; border-radius: 4px; font-size: 0.86rem; color: var(--teal-dark); line-height: 1.5;">
+                <strong>What it means:</strong> The slope is NOT zero (<strong>β₁ &ne; 0</strong>). There <strong>is</strong> a statistically significant linear relationship between the variables!
+              </div>
+            </div>
+
+            <!-- Fail to Reject H0 -->
+            <div class="slr-decision-card slr-decision-card--fail">
+              <div style="display: flex; align-items: center; gap: 0.45rem; font-family: var(--display); font-weight: 800; font-size: 1.05rem; color: var(--coral-dark); margin-bottom: 0.5rem;">
+                <span style="font-size: 1.2rem;">❌</span> If p &ge; 0.05 &mdash; Fail to Reject H₀
+              </div>
+              <p style="font-size: 0.88rem; color: var(--ink-soft); line-height: 1.55; margin: 0 0 0.6rem;">
+                Because <em>p</em> is 0.05 or greater, we <strong>fail to reject H₀</strong>.
+              </p>
+              <div style="background: var(--coral-tint); border-left: 3px solid var(--coral); padding: 0.65rem 0.85rem; border-radius: 4px; font-size: 0.86rem; color: var(--coral-dark); line-height: 1.5;">
+                <strong>What it means:</strong> There is <strong>not enough evidence</strong> to prove a linear relationship exists. Any slope could simply be random noise.
+              </div>
+            </div>
+          </div>
+
+          <!-- Concrete Mini Example -->
+          <div style="background: var(--surface); border: 1.5px solid var(--line); border-radius: var(--radius-sm); padding: 1.2rem 1.4rem; margin-top: 1.4rem;">
+            <div style="font-family: var(--display); font-weight: 700; font-size: 0.92rem; color: var(--ink); margin-bottom: 0.4rem;">
+              🎯 Quick Example: Study Hours vs. Exam Score
+            </div>
+            <p style="font-size: 0.86rem; color: var(--ink-soft); line-height: 1.55; margin: 0;">
+              Suppose we measure <strong>n = 22</strong> students and calculate <code>SSR = 480</code> and <code>SSE = 120</code> (so <code>SST = 600</code>):<br>
+              &bull; <code>MSR = 480 / 1 = 480</code><br>
+              &bull; <code>MSE = 120 / (22 &minus; 2) = 120 / 20 = 6.0</code><br>
+              &bull; <code>F = MSR / MSE = 480 / 6.0 = 80.0</code><br>
+              Using the F-table with df₁ = 1 and df₂ = 20, an F of 80.0 gives <strong>p &lt; 0.0001</strong>.<br>
+              Since <strong>p &lt; 0.05</strong>, we <strong>reject the NULL hypothesis</strong> &mdash; proving there is a statistically significant linear relationship between study hours and exam score!
+            </p>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+    <!-- =========================================================================
+         SECTION 6: INTERACTIVE VISUALIZER & LIVE EXPLORER
+         ========================================================================= -->
+    <section class="block" id="interactive-explorer">
+      <div class="block__body">
+        <h2 class="fade-up animate-on-scroll">
+          <span class="icon-badge icon-badge--teal">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="4" y1="21" x2="4" y2="14"/><line x1="4" y1="10" x2="4" y2="3"/><line x1="12" y1="21" x2="12" y2="12"/><line x1="12" y1="8" x2="12" y2="3"/><line x1="20" y1="21" x2="20" y2="16"/><line x1="20" y1="12" x2="20" y2="3"/><line x1="1" y1="14" x2="7" y2="14"/><line x1="9" y1="8" x2="15" y2="8"/><line x1="17" y1="16" x2="23" y2="16"/></svg>
+          </span>
+          Try It Yourself: Interactive Graph
+        </h2>
+
+        <p class="fade-up animate-on-scroll">
+          Move the sliders below to see how changing the <strong>intercept (β₀)</strong> and <strong>slope (β₁)</strong> moves the line and changes the error (ε₁):
+        </p>
+
+        <!-- Visualizer Container -->
+        <div class="slr-viz-container fade-up animate-on-scroll">
+          <div class="slr-viz-layout">
+            
+            <!-- Left: Interactive SVG Graph -->
+            <div class="slr-svg-wrap">
+              <svg id="slrSvgGraph" viewBox="0 0 420 320" width="100%" height="auto">
+                <defs>
+                  <!-- Arrow marker -->
+                  <marker id="arrow" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                    <path d="M 0 0 L 10 5 L 0 10 z" fill="#8A8177"/>
+                  </marker>
+                </defs>
+
+                <!-- Grid lines -->
+                <line x1="50" y1="40" x2="390" y2="40" stroke="#E7E2DA" stroke-width="1" stroke-dasharray="3,3"/>
+                <line x1="50" y1="100" x2="390" y2="100" stroke="#E7E2DA" stroke-width="1" stroke-dasharray="3,3"/>
+                <line x1="50" y1="160" x2="390" y2="160" stroke="#E7E2DA" stroke-width="1" stroke-dasharray="3,3"/>
+                <line x1="50" y1="220" x2="390" y2="220" stroke="#E7E2DA" stroke-width="1" stroke-dasharray="3,3"/>
+
+                <line x1="135" y1="20" x2="135" y2="260" stroke="#E7E2DA" stroke-width="1" stroke-dasharray="3,3"/>
+                <line x1="220" y1="20" x2="220" y2="260" stroke="#E7E2DA" stroke-width="1" stroke-dasharray="3,3"/>
+                <line x1="305" y1="20" x2="305" y2="260" stroke="#E7E2DA" stroke-width="1" stroke-dasharray="3,3"/>
+
+                <!-- Axes -->
+                <line x1="50" y1="260" x2="400" y2="260" stroke="#1C1917" stroke-width="2" marker-end="url(#arrow)"/>
+                <line x1="50" y1="260" x2="50" y2="15" stroke="#1C1917" stroke-width="2" marker-end="url(#arrow)"/>
+
+                <!-- Axis Labels -->
+                <text x="395" y="280" font-family="'IBM Plex Mono', monospace" font-size="11" font-weight="700" fill="#B0780A" text-anchor="end">Input (x)</text>
+                <text x="40" y="20" font-family="'IBM Plex Mono', monospace" font-size="11" font-weight="700" fill="#FF5A3C" text-anchor="end" transform="rotate(-90 40 20)">Output (y)</text>
+                <text x="45" y="278" font-family="'IBM Plex Mono', monospace" font-size="10" fill="#8A8177">0</text>
+
+                <!-- Residual Error Lines (Dynamic) -->
+                <g id="svgResidualsGroup"></g>
+
+                <!-- Regression Line (Dynamic) -->
+                <line id="svgRegressionLine" x1="50" y1="210" x2="380" y2="70" stroke="#0EA894" stroke-width="3.5" stroke-linecap="round"/>
+
+                <!-- Data Points (Fixed Scatter Data) -->
+                <g id="svgPointsGroup"></g>
+
+                <!-- Intercept Beta0 Marker (Dynamic) -->
+                <circle id="svgInterceptPoint" cx="50" cy="210" r="5.5" fill="#8B5CF6" stroke="#FFFFFF" stroke-width="2"/>
+                <text id="svgInterceptLabel" x="58" y="206" font-family="'IBM Plex Mono', monospace" font-size="10" font-weight="700" fill="#6D28D9">β₀ (Intercept)</text>
+
+                <!-- Slope Triangle (Dynamic) -->
+                <g id="svgSlopeTriangle"></g>
+              </svg>
+
+              <div style="display: flex; justify-content: space-around; font-size: 0.76rem; color: var(--ink-soft); margin-top: 0.5rem; flex-wrap: wrap; gap: 0.4rem;">
+                <span style="display: flex; align-items: center; gap: 0.35rem;">
+                  <span style="width: 9px; height: 9px; border-radius: 50%; background: #FF5A3C; display: inline-block;"></span> Real Data Dots
+                </span>
+                <span style="display: flex; align-items: center; gap: 0.35rem;">
+                  <span style="width: 14px; height: 3px; background: #0EA894; display: inline-block;"></span> Regression Line
+                </span>
+                <span style="display: flex; align-items: center; gap: 0.35rem;">
+                  <span style="width: 12px; height: 0; border-top: 1.5px dashed #EC4899; display: inline-block;"></span> Error Lines (Difference)
+                </span>
+              </div>
+            </div>
+
+            <!-- Right: Interactive Sliders & Presets -->
+            <div class="slr-control-panel">
+              
+              <!-- Current Equation Display -->
+              <div style="background: var(--bg); border: 1.5px solid var(--line); border-radius: var(--radius-sm); padding: 0.9rem 1.1rem; text-align: center;">
+                <div style="font-size: 0.72rem; font-family: var(--display); font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--muted); margin-bottom: 0.3rem;">
+                  Current Line Equation (ŷ = β₀ + β₁x)
+                </div>
+                <div style="font-family: 'IBM Plex Mono', monospace; font-size: 1.3rem; font-weight: 800; color: var(--ink);">
+                  ŷ = <span id="eqB0" style="color: #6D28D9;">20.0</span> + <span id="eqB1" style="color: var(--teal-dark);">1.20</span>x
+                </div>
+              </div>
+
+              <!-- Intercept Slider (β₀) -->
+              <div class="slr-slider-group">
+                <div class="slr-slider-header">
+                  <span>Intercept (β₀) &mdash; Starting point:</span>
+                  <span class="val" id="valB0">20.0</span>
+                </div>
+                <input type="range" class="slr-slider-input" id="sliderB0" min="0" max="60" step="1" value="20">
+                <div style="display: flex; justify-content: space-between; font-size: 0.72rem; color: var(--muted);">
+                  <span>0 (Starts at bottom)</span>
+                  <span>Moves line up/down</span>
+                  <span>60 (Starts high)</span>
+                </div>
+              </div>
+
+              <!-- Slope Slider (β₁) -->
+              <div class="slr-slider-group">
+                <div class="slr-slider-header">
+                  <span>Slope (β₁) &mdash; Tilt of the line:</span>
+                  <span class="val" id="valB1">+1.20</span>
+                </div>
+                <input type="range" class="slr-slider-input" id="sliderB1" min="-2.0" max="3.0" step="0.05" value="1.20">
+                <div style="display: flex; justify-content: space-between; font-size: 0.72rem; color: var(--muted);">
+                  <span>-2.0 (Slopes down)</span>
+                  <span>0.0 (Flat)</span>
+                  <span>+3.0 (Steep up)</span>
+                </div>
+              </div>
+
+              <!-- Presets -->
+              <div class="slr-slider-group">
+                <div style="font-size: 0.75rem; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 0.04em;">
+                  Click to try different lines:
+                </div>
+                <div class="slr-presets">
+                  <button class="slr-preset-btn" id="btnOptimal">✨ Best-Fit Line</button>
+                  <button class="slr-preset-btn" id="btnFlat">➖ Flat Line (β₁ = 0)</button>
+                  <button class="slr-preset-btn" id="btnSteep">📈 Too Steep</button>
+                  <button class="slr-preset-btn" id="btnNegative">📉 Slopes Down</button>
+                </div>
+              </div>
+
+              <!-- Metrics Strip (SSE & Status) -->
+              <div class="slr-metrics-strip">
+                <div class="slr-metric-box">
+                  <span class="slr-metric-label">Total Error:</span>
+                  <span class="slr-metric-value" id="metricSSE">184.2</span>
+                </div>
+                <div class="slr-metric-box">
+                  <span class="slr-metric-label">How Good is the Fit?</span>
+                  <span class="slr-metric-value" id="metricFit" style="font-size: 0.88rem; color: var(--teal-dark);">Good Fit</span>
+                </div>
+              </div>
+
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- =========================================================================
+         SECTION 7: QUICK CHECK / QUIZ
+         ========================================================================= -->
+    <section class="block" id="quick-quiz">
+      <div class="block__body">
+        <h2 class="fade-up animate-on-scroll">
+          <span class="icon-badge icon-badge--gold">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+          </span>
+          Quick Quiz: Check What You Learned
+        </h2>
+
+        <!-- Question 1 -->
+        <div class="slr-quiz-card fade-up animate-on-scroll" id="quiz1">
+          <div class="slr-quiz-q">
+            <span class="slr-quiz-num">1</span>
+            <span>A doctor wants to predict a person's Blood Pressure using their Daily Salt Intake. Which one is the independent variable (x)?</span>
+          </div>
+          <div class="slr-quiz-options">
+            <button class="slr-quiz-opt" data-correct="true">Daily Salt Intake (the input we measure or change)</button>
+            <button class="slr-quiz-opt" data-correct="false">Blood Pressure (the result)</button>
+            <button class="slr-quiz-opt" data-correct="false">The patient's name</button>
+          </div>
+          <div class="slr-quiz-feedback"></div>
+        </div>
+
+        <!-- Question 2 -->
+        <div class="slr-quiz-card fade-up animate-on-scroll" id="quiz2">
+          <div class="slr-quiz-q">
+            <span class="slr-quiz-num">2</span>
+            <span>If the slope (β₁) of the line is a <strong>negative number (-2)</strong>, what happens when x increases?</span>
+          </div>
+          <div class="slr-quiz-options">
+            <button class="slr-quiz-opt" data-correct="false">y also increases.</button>
+            <button class="slr-quiz-opt" data-correct="true">y decreases (the line goes downhill).</button>
+            <button class="slr-quiz-opt" data-correct="false">The line stays flat.</button>
+          </div>
+          <div class="slr-quiz-feedback"></div>
+        </div>
+
+        <!-- Question 3 -->
+        <div class="slr-quiz-card fade-up animate-on-scroll" id="quiz3">
+          <div class="slr-quiz-q">
+            <span class="slr-quiz-num">3</span>
+            <span>Why is finding β₀ and β₁ the main process of simple linear regression?</span>
+          </div>
+          <div class="slr-quiz-options">
+            <button class="slr-quiz-opt" data-correct="false">Because β₀ and β₁ are always equal to zero.</button>
+            <button class="slr-quiz-opt" data-correct="true">Because these two numbers give us the best line with the smallest possible error.</button>
+            <button class="slr-quiz-opt" data-correct="false">Because it means we do not need data anymore.</button>
+          </div>
+          <div class="slr-quiz-feedback"></div>
+        </div>
+
+        <!-- Question 4 -->
+        <div class="slr-quiz-card fade-up animate-on-scroll" id="quiz4">
+          <div class="slr-quiz-q">
+            <span class="slr-quiz-num">4</span>
+            <span>In an ANOVA table for simple linear regression, the calculated p-value is <strong>0.012</strong> (which is less than 0.05). What does this mean?</span>
+          </div>
+          <div class="slr-quiz-options">
+            <button class="slr-quiz-opt" data-correct="false">We accept the Null Hypothesis (H₀) and conclude the slope is 0.</button>
+            <button class="slr-quiz-opt" data-correct="true">We reject the Null Hypothesis (H₀), proving there is a statistically significant linear relationship (β₁ &ne; 0).</button>
+            <button class="slr-quiz-opt" data-correct="false">The data is invalid and should be thrown away.</button>
+          </div>
+          <div class="slr-quiz-feedback"></div>
+        </div>
+
+        <!-- Question 5 -->
+        <div class="slr-quiz-card fade-up animate-on-scroll" id="quiz5">
+          <div class="slr-quiz-q">
+            <span class="slr-quiz-num">5</span>
+            <span>What is the primary difference between Simple and Multiple Linear Regression?</span>
+          </div>
+          <div class="slr-quiz-options">
+            <button class="slr-quiz-opt" data-correct="true">Simple uses 1 independent variable (X); Multiple uses 2 or more independent variables (X's) to predict 1 dependent variable (Y).</button>
+            <button class="slr-quiz-opt" data-correct="false">Simple regression predicts 2 dependent variables, while Multiple predicts only 1.</button>
+            <button class="slr-quiz-opt" data-correct="false">Simple regression is only for negative numbers.</button>
+          </div>
+          <div class="slr-quiz-feedback"></div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- =========================================================================
+         SECTION 8: KEY TAKEAWAYS & NEXT STEPS
+         ========================================================================= -->
+    <section class="block" id="summary">
+      <div class="block__body">
+        <h2 class="fade-up animate-on-scroll">
+          <span class="icon-badge icon-badge--teal">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+          </span>
+          Summary: 4 Things to Remember
+        </h2>
+
+        <div class="reg-grid-3 fade-up animate-on-scroll" style="grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));">
+          <div class="reg-card">
+            <div style="font-family: var(--display); font-weight: 700; color: var(--coral-dark); font-size: 1rem; margin-bottom: 0.35rem;">1. Simple vs. Multiple</div>
+            <p style="font-size: 0.88rem; color: var(--ink-soft); line-height: 1.55; margin: 0;">
+              Simple Regression uses <strong>1 input (x) &rarr; 1 output (y)</strong> (a single knob). Multiple Regression uses <strong>2 or more inputs (x₁, x₂, ...)</strong> while keeping other variables constant.
+            </p>
+          </div>
+
+          <div class="reg-card">
+            <div style="font-family: var(--display); font-weight: 700; color: var(--teal-dark); font-size: 1rem; margin-bottom: 0.35rem;">2. The Line Equation</div>
+            <p style="font-size: 0.88rem; color: var(--ink-soft); line-height: 1.55; margin: 0;">
+              <code>y = β₀ &plusmn; β₁x &plusmn; ε₁</code> where <strong>β₀</strong> is the intercept, <strong>β₁</strong> is the slope, and <strong>ε₁</strong> is the error.
+            </p>
+          </div>
+
+          <div class="reg-card">
+            <div style="font-family: var(--display); font-weight: 700; color: var(--gold-dark); font-size: 1rem; margin-bottom: 0.35rem;">3. The Main Goal</div>
+            <p style="font-size: 0.88rem; color: var(--ink-soft); line-height: 1.55; margin: 0;">
+              <strong>Finding β₀ and β₁</strong> is the main process. Once found, we have the best line with minimum squared error.
+            </p>
+          </div>
+
+          <div class="reg-card">
+            <div style="font-family: var(--display); font-weight: 700; color: #6D28D9; font-size: 1rem; margin-bottom: 0.35rem;">4. Statistical Significance</div>
+            <p style="font-size: 0.88rem; color: var(--ink-soft); line-height: 1.55; margin: 0;">
+              We test <strong>H₀ : β₁ = 0</strong> using the ANOVA table (<code>F = MSR / MSE</code>). If <strong>p &lt; 0.05</strong>, we reject H₀ and prove the relationship is real!
+            </p>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ============ LESSON FOOTER ============ -->
+    <footer class="lesson__footer">
+      <a href="regression-analysis.html" class="lesson__footer-prev" id="prevLessonLink">
+        <span class="lesson__footer-prev-arrow">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5"/><path d="m12 19-7-7 7-7"/></svg>
+        </span>
+        <div class="lesson__footer-prev-text">
+          <span class="lesson__footer-prev-label">Previous part</span>
+          <span class="lesson__footer-prev-name">4.6 Introduction to Regression</span>
+        </div>
+      </a>
+
+      <div class="lesson__footer-progress">Part 7 of 8 &bull; Supervised Learning</div>
+
+      <a href="polynomial-regression.html" class="lesson__footer-next" id="nextLessonLink">
+        <div class="lesson__footer-next-text">
+          <span class="lesson__footer-next-label">Next part</span>
+          <span class="lesson__footer-next-name">4.8 Polynomial Regression</span>
+        </div>
+        <span class="lesson__footer-arrow">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+        </span>
+      </a>
+    </footer>
+
+  </main>
+</div>
+
+<script src="main.js"></script>
+<script src="glossary.js"></script>
+
+<script>
+// =========================================================================
+// INTERACTIVE ENGINE: SIMPLE LINEAR REGRESSION PAGE
+// =========================================================================
+(function () {
+  "use strict";
+
+  // --- 1. Equation Token Anatomy Explorer ---
+  var termData = {
+    y: {
+      title: '<span style="color: var(--coral);">y</span> &mdash; Dependent Variable (Output)',
+      desc: 'The real-world value we want to predict (like exam score or house price). Its value depends on x.'
+    },
+    b0: {
+      title: '<span style="color: #6D28D9;">β₀</span> &mdash; The Intercept Point of the Regression Line and the y Axis',
+      desc: 'The point where the line crosses the vertical y-axis. It is the value of y when x is zero (for example, the baseline score if you study 0 hours).'
+    },
+    b1: {
+      title: '<span style="color: var(--teal);">β₁</span> &mdash; The Slope of the Regression Line',
+      desc: 'How steep the regression line is. It tells you how much y goes up (or down) each time x increases by 1. A positive slope goes uphill; a negative slope goes downhill.'
+    },
+    x: {
+      title: '<span style="color: var(--gold-dark);">x</span> &mdash; Independent Variable (Input)',
+      desc: 'The input value that you know or control (like hours of study or house size). It sits on the horizontal x-axis.'
+    },
+    err: {
+      title: '<span style="color: #BE185D;">ε₁</span> &mdash; Error',
+      desc: 'Real life is never a perfect straight line! Points are almost always slightly above or below the line. The error (ε₁) is the difference between the real dot and the line: (Actual y &minus; Line guess). Points above the line have positive error (+ε₁); points below have negative error (&minus;ε₁).'
+    }
+  };
+
+  var tokens = document.querySelectorAll(".slr-token");
+  var detailTitle = document.getElementById("tokenDetailTitle");
+  var detailDesc = document.getElementById("tokenDetailDesc");
+
+  tokens.forEach(function (token) {
+    token.addEventListener("click", function () {
+      tokens.forEach(function (t) { t.classList.remove("is-active"); });
+      token.classList.add("is-active");
+      var term = token.getAttribute("data-term");
+      if (termData[term]) {
+        detailTitle.innerHTML = termData[term].title;
+        detailDesc.innerHTML = termData[term].desc;
+      }
+    });
+  });
+
+  // --- 2. Real-World Scenario Pills ---
+  var scenarioPills = document.querySelectorAll(".slr-scenario-pill");
+  var scenX = document.getElementById("scenX");
+  var scenY = document.getElementById("scenY");
+  var scenDesc = document.getElementById("scenDesc");
+
+  scenarioPills.forEach(function (pill) {
+    pill.addEventListener("click", function () {
+      scenarioPills.forEach(function (p) { p.classList.remove("is-selected"); });
+      pill.classList.add("is-selected");
+      if (scenX) scenX.textContent = pill.getAttribute("data-x");
+      if (scenY) scenY.textContent = pill.getAttribute("data-y");
+      if (scenDesc) scenDesc.textContent = pill.getAttribute("data-desc");
+    });
+  });
+
+  // --- 3. Interactive SVG Graph & Live Sliders ---
+  var xOrigin = 50;
+  var yOrigin = 260;
+  var xScale = 3.3; // px per x unit
+  var yScale = 2.4; // px per y unit
+
+  function toSvgX(val) { return xOrigin + (val * xScale); }
+  function toSvgY(val) { return yOrigin - (val * yScale); }
+
+  // Sample data points representing Study Hours vs Exam Score
+  var samplePoints = [
+    { x: 10, y: 25 },
+    { x: 22, y: 38 },
+    { x: 35, y: 44 },
+    { x: 45, y: 56 },
+    { x: 55, y: 58 },
+    { x: 68, y: 72 },
+    { x: 80, y: 76 },
+    { x: 92, y: 90 }
+  ];
+
+  var pointsGroup = document.getElementById("svgPointsGroup");
+  var residualsGroup = document.getElementById("svgResidualsGroup");
+  var regressionLine = document.getElementById("svgRegressionLine");
+  var interceptPoint = document.getElementById("svgInterceptPoint");
+  var interceptLabel = document.getElementById("svgInterceptLabel");
+  var slopeTriangle = document.getElementById("svgSlopeTriangle");
+
+  var sliderB0 = document.getElementById("sliderB0");
+  var sliderB1 = document.getElementById("sliderB1");
+  var valB0 = document.getElementById("valB0");
+  var valB1 = document.getElementById("valB1");
+  var eqB0 = document.getElementById("eqB0");
+  var eqB1 = document.getElementById("eqB1");
+  var metricSSE = document.getElementById("metricSSE");
+  var metricFit = document.getElementById("metricFit");
+
+  // Render static data points once
+  if (pointsGroup) {
+    samplePoints.forEach(function (pt) {
+      var circle = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+      circle.setAttribute("cx", toSvgX(pt.x));
+      circle.setAttribute("cy", toSvgY(pt.y));
+      circle.setAttribute("r", "5.5");
+      circle.setAttribute("fill", "#FF5A3C");
+      circle.setAttribute("stroke", "#FFFFFF");
+      circle.setAttribute("stroke-width", "1.5");
+      pointsGroup.appendChild(circle);
+    });
+  }
+
+  function updateGraph() {
+    if (!sliderB0 || !sliderB1) return;
+    var b0 = parseFloat(sliderB0.value);
+    var b1 = parseFloat(sliderB1.value);
+
+    // Update text readouts
+    if (valB0) valB0.textContent = b0.toFixed(1);
+    if (valB1) valB1.textContent = (b1 >= 0 ? "+" : "") + b1.toFixed(2);
+    if (eqB0) eqB0.textContent = b0.toFixed(1);
+    if (eqB1) eqB1.textContent = (b1 >= 0 ? "+" : "") + b1.toFixed(2);
+
+    // Calculate line start (x=0) and end (x=100)
+    var yAt0 = b0 + (b1 * 0);
+    var yAt100 = b0 + (b1 * 100);
+
+    var svgX1 = toSvgX(0);
+    var svgY1 = toSvgY(yAt0);
+    var svgX2 = toSvgX(100);
+    var svgY2 = toSvgY(yAt100);
+
+    if (regressionLine) {
+      regressionLine.setAttribute("x1", svgX1);
+      regressionLine.setAttribute("y1", svgY1);
+      regressionLine.setAttribute("x2", svgX2);
+      regressionLine.setAttribute("y2", svgY2);
+    }
+
+    // Intercept Marker
+    if (interceptPoint) {
+      interceptPoint.setAttribute("cx", svgX1);
+      interceptPoint.setAttribute("cy", svgY1);
+    }
+    if (interceptLabel) {
+      interceptLabel.setAttribute("x", svgX1 + 8);
+      interceptLabel.setAttribute("y", svgY1 - 6);
+    }
+
+    // Update Residuals and calculate SSE
+    var sse = 0;
+    if (residualsGroup) {
+      residualsGroup.innerHTML = "";
+      samplePoints.forEach(function (pt) {
+        var predY = b0 + (b1 * pt.x);
+        var err = pt.y - predY;
+        sse += (err * err);
+
+        var rLine = document.createElementNS("http://www.w3.org/2000/svg", "line");
+        rLine.setAttribute("x1", toSvgX(pt.x));
+        rLine.setAttribute("y1", toSvgY(pt.y));
+        rLine.setAttribute("x2", toSvgX(pt.x));
+        rLine.setAttribute("y2", toSvgY(predY));
+        rLine.setAttribute("stroke", "#EC4899");
+        rLine.setAttribute("stroke-width", "1.8");
+        rLine.setAttribute("stroke-dasharray", "3,2");
+        residualsGroup.appendChild(rLine);
+      });
+    }
+
+    // Update SSE and status
+    if (metricSSE) metricSSE.textContent = sse.toFixed(1);
+    if (metricFit) {
+      if (sse < 95) {
+        metricFit.textContent = "🌟 Great Best Fit!";
+        metricFit.style.color = "var(--teal-dark)";
+      } else if (sse < 250) {
+        metricFit.textContent = "👍 Okay Fit";
+        metricFit.style.color = "var(--gold-dark)";
+      } else {
+        metricFit.textContent = "❌ Poor Fit (Too much error)";
+        metricFit.style.color = "var(--coral-dark)";
+      }
+    }
+
+    // Update slope triangle around x=45 -> x=65
+    if (slopeTriangle) {
+      var triX1 = 45;
+      var triX2 = 65;
+      var triY1 = b0 + (b1 * triX1);
+      var triY2 = b0 + (b1 * triX2);
+
+      var p1 = { x: toSvgX(triX1), y: toSvgY(triY1) };
+      var p2 = { x: toSvgX(triX2), y: toSvgY(triY1) };
+      var p3 = { x: toSvgX(triX2), y: toSvgY(triY2) };
+
+      slopeTriangle.innerHTML =
+        '<path d="M ' + p1.x + ' ' + p1.y + ' L ' + p2.x + ' ' + p2.y + ' L ' + p3.x + ' ' + p3.y + '" fill="rgba(14,168,148,0.12)" stroke="#0EA894" stroke-width="1.2" stroke-dasharray="2,2"/>' +
+        '<text x="' + ((p1.x + p2.x)/2) + '" y="' + (p1.y + 12) + '" font-family="\'IBM Plex Mono\', monospace" font-size="9" fill="#087365" text-anchor="middle">Run (+x)</text>' +
+        '<text x="' + (p2.x + 12) + '" y="' + ((p2.y + p3.y)/2 + 3) + '" font-family="\'IBM Plex Mono\', monospace" font-size="9" fill="#087365" text-anchor="middle">Rise (change in y)</text>';
+    }
+  }
+
+  if (sliderB0 && sliderB1) {
+    sliderB0.addEventListener("input", updateGraph);
+    sliderB1.addEventListener("input", updateGraph);
+  }
+
+  // Presets
+  var btnOptimal = document.getElementById("btnOptimal");
+  var btnFlat = document.getElementById("btnFlat");
+  var btnSteep = document.getElementById("btnSteep");
+  var btnNegative = document.getElementById("btnNegative");
+
+  if (btnOptimal) {
+    btnOptimal.addEventListener("click", function () {
+      sliderB0.value = 18;
+      sliderB1.value = 0.75;
+      updateGraph();
+    });
+  }
+  if (btnFlat) {
+    btnFlat.addEventListener("click", function () {
+      sliderB0.value = 57;
+      sliderB1.value = 0.0;
+      updateGraph();
+    });
+  }
+  if (btnSteep) {
+    btnSteep.addEventListener("click", function () {
+      sliderB0.value = 0;
+      sliderB1.value = 1.8;
+      updateGraph();
+    });
+  }
+  if (btnNegative) {
+    btnNegative.addEventListener("click", function () {
+      sliderB0.value = 60;
+      sliderB1.value = -0.7;
+      updateGraph();
+    });
+  }
+
+  // Initialize graph
+  updateGraph();
+
+  // --- 4. Interactive Quiz Checkers ---
+  var quizzes = [
+    {
+      id: "quiz1",
+      feedback: "Great job! Daily Salt Intake is the input (x) because it is what we measure or change. Blood Pressure is the output (y) that changes as a result."
+    },
+    {
+      id: "quiz2",
+      feedback: "Correct! A negative slope means when x goes up, y goes down. The line tilts downhill."
+    },
+    {
+      id: "quiz3",
+      feedback: "Exactly right! There are many possible lines you could draw. Finding the best numbers for β₀ and β₁ gives us the line with the least amount of error."
+    },
+    {
+      id: "quiz4",
+      feedback: "Spot on! Because the p-value is less than 0.05, we reject the null hypothesis (H₀: β₁ = 0). This proves that the slope is non-zero (β₁ &ne; 0) and the linear relationship is statistically significant."
+    },
+    {
+      id: "quiz5",
+      feedback: "Spot on! Simple Linear Regression connects 1 independent variable (X) to 1 dependent variable (Y) forming a straight line, while Multiple Linear Regression uses 2 or more independent variables (X's) to predict 1 Y (forming a plane or hyperplane), interpreting each coefficient while holding the other variables constant."
+    }
+  ];
+
+  quizzes.forEach(function (q) {
+    var card = document.getElementById(q.id);
+    if (!card) return;
+    var opts = card.querySelectorAll(".slr-quiz-opt");
+    var feedbackBox = card.querySelector(".slr-quiz-feedback");
+
+    opts.forEach(function (opt) {
+      opt.addEventListener("click", function () {
+        var isCorrect = opt.getAttribute("data-correct") === "true";
+        opts.forEach(function (o) {
+          o.classList.remove("is-correct", "is-wrong");
+          o.disabled = true;
+        });
+
+        if (isCorrect) {
+          opt.classList.add("is-correct");
+          feedbackBox.className = "slr-quiz-feedback is-visible is-correct";
+          feedbackBox.innerHTML = "<strong>Correct!</strong> " + q.feedback;
+        } else {
+          opt.classList.add("is-wrong");
+          feedbackBox.className = "slr-quiz-feedback is-visible is-wrong";
+          feedbackBox.innerHTML = "<strong>Not quite.</strong> Take another look at the explanation above and try again!";
+        }
+      });
+    });
+  });
+
+})();
+</script>
+
+</body>
+</html>

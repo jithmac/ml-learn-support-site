@@ -1,0 +1,1054 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Introduction to Regression Analysis &ndash; Learning Machines</title>
+<meta name="description" content="Visual overview and roadmap to Regression Analysis: Simple and Multiple Regression, Ordinary Least Squares, variance metrics, assumptions, regularization, and practical diagnostics.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,600;12..96,700&family=Figtree:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="grain" aria-hidden="true"></div>
+
+<div class="progress-rail" aria-hidden="true"><div class="progress-fill" id="progressFill"></div></div>
+
+<header class="top-bar">
+  <div class="top-bar__brand">
+    <span class="course-nav__mark">LM</span>
+    <span class="top-bar__title">Learning Machines</span>
+  </div>
+  <div class="top-bar__controls">
+    <span class="top-bar__time" id="readTime">~6 min read</span>
+    <button class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="courseNav">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="4" x2="20" y1="6" y2="6"/><line x1="4" x2="20" y1="12" y2="12"/><line x1="4" x2="20" y1="18" y2="18"/></svg>
+      <span class="nav-toggle__label">Course map</span>
+    </button>
+  </div>
+</header>
+
+<div class="nav-overlay" id="navOverlay" aria-hidden="true"></div>
+
+<!-- ============ SLIDE-OVER SIDEBAR ============ -->
+<aside class="course-nav" id="courseNav">
+  <div class="course-nav__header">
+    <h2 class="course-nav__title-side">Course map</h2>
+    <button class="nav-close" id="navClose" aria-label="Close nav">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
+    </button>
+  </div>
+  <p class="course-nav__tagline">A slow, careful path through machine learning, start to finish.</p>
+
+  <ol class="course-nav__list">
+    <li class="course-nav__item is-completed">
+      <a href="index.html" class="course-nav__inner-link">
+        <span class="course-nav__num">1</span>
+        <div>
+          <span class="course-nav__name">Introduction</span>
+          <span class="course-nav__state">completed</span>
+        </div>
+      </a>
+    </li>
+    <li class="course-nav__item is-completed">
+      <a href="data-preprocessing.html" class="course-nav__inner-link">
+        <span class="course-nav__num">2</span>
+        <div>
+          <span class="course-nav__name">Data Preprocessing</span>
+          <span class="course-nav__state">completed</span>
+        </div>
+      </a>
+    </li>
+    <li class="course-nav__item is-completed">
+      <a href="eda.html" class="course-nav__inner-link">
+        <span class="course-nav__num">3</span>
+        <div>
+          <span class="course-nav__name">Exploratory Data Analysis</span>
+          <span class="course-nav__state">completed</span>
+        </div>
+      </a>
+    </li>
+    <li class="course-nav__item is-active-group">
+      <span class="course-nav__num">4</span>
+      <div>
+        <span class="course-nav__name">Supervised Learning</span>
+        <span class="course-nav__state">in progress</span>
+      </div>
+    </li>
+    <ol class="course-nav__sub-list">
+      <li class="course-nav__sub-item is-completed">
+        <a href="supervised-learning.html">
+          <span class="course-nav__sub-num">4.1</span>
+          <div>
+            <span class="course-nav__sub-name">Introduction</span>
+            <span class="course-nav__state">completed</span>
+          </div>
+        </a>
+      </li>
+      <li class="course-nav__sub-item is-completed">
+        <a href="classification.html">
+          <span class="course-nav__sub-num">4.2</span>
+          <div>
+            <span class="course-nav__sub-name">Classification &amp; Decision Trees</span>
+            <span class="course-nav__state">completed</span>
+          </div>
+        </a>
+      </li>
+      <li class="course-nav__sub-item is-completed">
+        <a href="id3-algorithm.html">
+          <span class="course-nav__sub-num">4.3</span>
+          <div>
+            <span class="course-nav__sub-name">ID3 Algorithm</span>
+            <span class="course-nav__state">completed</span>
+          </div>
+        </a>
+      </li>
+      <li class="course-nav__sub-item is-completed">
+        <a href="c45-algorithm.html">
+          <span class="course-nav__sub-num">4.4</span>
+          <div>
+            <span class="course-nav__sub-name">C4.5 Algorithm</span>
+            <span class="course-nav__state">completed</span>
+          </div>
+        </a>
+      </li>
+      <li class="course-nav__sub-item is-completed">
+        <a href="cart-algorithm.html">
+          <span class="course-nav__sub-num">4.5</span>
+          <div>
+            <span class="course-nav__sub-name">CART Algorithm</span>
+            <span class="course-nav__state">completed</span>
+          </div>
+        </a>
+      </li>
+      <li class="course-nav__sub-item is-active">
+        <a href="regression-analysis.html">
+          <span class="course-nav__sub-num">4.6</span>
+          <div>
+            <span class="course-nav__sub-name">Introduction to Regression</span>
+            <span class="course-nav__state">reading now</span>
+          </div>
+        </a>
+      </li>
+      <li class="course-nav__sub-item">
+        <a href="simple-linear-regression.html">
+          <span class="course-nav__sub-num">4.7</span>
+          <div>
+            <span class="course-nav__sub-name">Simple Linear Regression</span>
+            <span class="course-nav__state">available now</span>
+          </div>
+        </a>
+      </li>
+      <li class="course-nav__sub-item">
+        <a href="polynomial-regression.html">
+          <span class="course-nav__sub-num">4.8</span>
+          <div>
+            <span class="course-nav__sub-name">Polynomial Regression</span>
+            <span class="course-nav__state">available now</span>
+          </div>
+        </a>
+      </li>
+    </ol>
+    <li class="course-nav__item">
+      <a href="unsupervised-learning.html" class="course-nav__inner-link">
+        <span class="course-nav__num">5</span>
+        <div>
+          <span class="course-nav__name">Unsupervised Learning</span>
+          <span class="course-nav__state">available now</span>
+        </div>
+      </a>
+    </li>
+    <ol class="course-nav__sub-list">
+      <li class="course-nav__sub-item">
+        <a href="unsupervised-learning.html">
+          <span class="course-nav__sub-num">5.1</span>
+          <div>
+            <span class="course-nav__sub-name">Introduction</span>
+            <span class="course-nav__state">available now</span>
+          </div>
+        </a>
+      </li>
+      <li class="course-nav__sub-item">
+        <a href="hierarchical-clustering.html">
+          <span class="course-nav__sub-num">5.2</span>
+          <div>
+            <span class="course-nav__sub-name">Hierarchical Clustering</span>
+            <span class="course-nav__state">available now</span>
+          </div>
+        </a>
+      </li>
+    </ol>
+    <li class="course-nav__item is-locked">
+      <span class="course-nav__num">6</span>
+      <div>
+        <span class="course-nav__name">Reinforcement Learning</span>
+        <span class="course-nav__state">
+          <svg class="course-nav__lock" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          coming soon
+        </span>
+      </div>
+    </li>
+  </ol>
+</aside>
+
+<div class="shell">
+
+  <!-- ============ MAIN ARTICLE ============ -->
+  <main class="lesson">
+
+    <header class="lesson__header">
+      <span class="lesson__eyebrow-free-title">
+        <h1>Introduction to Regression Analysis</h1>
+        <svg class="title-underline" viewBox="0 0 520 14" preserveAspectRatio="none" aria-hidden="true">
+          <path d="M4 9 C 120 2, 260 13, 400 6 C 440 4, 480 8, 516 5"/>
+        </svg>
+      </span>
+      <p class="lesson__dek">A visual roadmap and quick field guide to what is coming in the regression chapters: core concepts, key figures, equations, and diagnostic checklists at a glance.</p>
+    </header>
+
+    <!-- =========================================================================
+         WHAT IS REGRESSION ANALYSIS? (VISUAL ESSENCE)
+         ========================================================================= -->
+    <section class="block" id="what-is-regression">
+      <div class="block__body">
+        <h2 class="fade-up animate-on-scroll">
+          <span class="icon-badge icon-badge--coral">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+          </span>
+          What is Regression Analysis?
+        </h2>
+
+        <!-- High-Impact 3-Pillar Visual Card -->
+        <div class="reg-grid-3 fade-up animate-on-scroll">
+          <div class="reg-card" style="border-top: 4px solid var(--coral);">
+            <div class="reg-badge reg-badge--coral" style="align-self: flex-start; margin-bottom: 0.5rem;">The Definition</div>
+            <h3 style="font-family: var(--display); font-size: 1.05rem; margin: 0 0 0.4rem;">Finding Relationships</h3>
+            <p style="font-size: 0.88rem; color: var(--ink-soft); margin: 0; line-height: 1.55;">
+              A statistical method for <strong>discovering and describing connections between variables</strong> &mdash; mainly used to predict a <strong>continuous numerical value</strong> (like price, salary, or temperature).
+            </p>
+          </div>
+
+          <div class="reg-card" style="border-top: 4px solid var(--teal);">
+            <div class="reg-badge reg-badge--teal" style="align-self: flex-start; margin-bottom: 0.5rem;">The Goal</div>
+            <h3 style="font-family: var(--display); font-size: 1.05rem; margin: 0 0 0.4rem;">Building an Equation</h3>
+            <p style="font-size: 0.88rem; color: var(--ink-soft); margin: 0 0 0.5rem; line-height: 1.55;">
+              Mathematically creates a formula between <strong>1 Dependent Variable (Y)</strong> and <strong>Independent Variables (X)</strong> to predict <strong>unseen new values</strong>.
+            </p>
+            <div class="reg-pill-formula reg-pill-formula--teal" style="text-align: center; font-size: 0.96rem; display: block; margin: 0.45rem 0;">
+              ŷ = b₀ + b₁x
+            </div>
+            <div style="font-size: 0.76rem; color: var(--muted); text-align: center; line-height: 1.4;">
+              ŷ: predicted value &bull; b₀: intercept &bull; b₁: slope
+            </div>
+          </div>
+
+          <div class="reg-card" style="border-top: 4px solid var(--gold);">
+            <div class="reg-badge reg-badge--gold" style="align-self: flex-start; margin-bottom: 0.5rem;">In Machine Learning</div>
+            <h3 style="font-family: var(--display); font-size: 1.05rem; margin: 0 0 0.4rem;">Supervised Learning</h3>
+            <p style="font-size: 0.88rem; color: var(--ink-soft); margin: 0; line-height: 1.55;">
+              Categorized under <strong>supervised learning</strong> because the formula is derived from <strong>historical data + correct answers</strong> (labeled data). The algorithm learns by comparing its guesses against true results!
+            </p>
+          </div>
+        </div>
+
+        <!-- Visual Supervised Equation Flow Diagram -->
+        <div class="reg-card reg-flow-wide fade-up animate-on-scroll" style="background: linear-gradient(135deg, rgba(255,90,60,0.03) 0%, rgba(14,168,148,0.03) 100%);">
+          <div style="font-family: var(--display); font-size: 0.88rem; font-weight: 800; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; text-align: center; margin-bottom: 1.2rem;">
+            The Supervised Regression Pipeline
+          </div>
+          <div class="reg-flow-steps">
+            <div class="reg-flow-step">
+              <div style="font-size: 0.74rem; color: var(--muted); font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 0.35rem;">1. Training Data</div>
+              <div style="font-weight: 700; color: var(--ink); font-size: 0.96rem;">Inputs (X) + True Answers (Y)</div>
+              <div style="font-size: 0.78rem; color: var(--ink-soft); margin-top: 0.3rem;">Historical ground truth pairs</div>
+            </div>
+
+            <div class="reg-flow-arrow">&rarr;</div>
+
+            <div class="reg-flow-step" style="background: var(--coral-tint); border-color: rgba(255,90,60,0.25);">
+              <div style="font-size: 0.74rem; color: var(--coral-dark); font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 0.35rem;">2. Algorithm Learns</div>
+              <div style="font-weight: 700; color: var(--coral-dark); font-size: 0.96rem;">Minimizes Prediction Error</div>
+              <div style="font-size: 0.78rem; color: var(--coral-dark); margin-top: 0.3rem;">Iteratively tunes weights</div>
+            </div>
+
+            <div class="reg-flow-arrow" style="color: var(--teal);">&rarr;</div>
+
+            <div class="reg-flow-step" style="background: var(--teal-tint); border-color: rgba(14,168,148,0.25);">
+              <div style="font-size: 0.74rem; color: var(--teal-dark); font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 0.35rem;">3. Learned Equation</div>
+              <div style="font-family: 'IBM Plex Mono', monospace; font-weight: 700; color: var(--teal-dark); font-size: 1.05rem;">ŷ = b₀ + b₁x</div>
+              <div style="font-size: 0.78rem; color: var(--teal-dark); margin-top: 0.3rem;">Mathematical predictive rule</div>
+            </div>
+
+            <div class="reg-flow-arrow" style="color: var(--gold);">&rarr;</div>
+
+            <div class="reg-flow-step" style="background: var(--gold-tint); border-color: rgba(233,168,37,0.3);">
+              <div style="font-size: 0.74rem; color: var(--gold-dark); font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 0.35rem;">4. New Prediction</div>
+              <div style="font-weight: 700; color: var(--gold-dark); font-size: 0.96rem;">Forecasts Unseen Numbers</div>
+              <div style="font-size: 0.78rem; color: var(--gold-dark); margin-top: 0.3rem;">Deploy to production</div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- =========================================================================
+         ROADMAP: HOW REGRESSION WORKS & CHAPTER PHASES
+         ========================================================================= -->
+    <section class="block" id="upcoming-roadmap">
+      <div class="block__body">
+        <h2 class="fade-up animate-on-scroll">
+          <span class="icon-badge icon-badge--teal">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polygon points="12 8 8 12 12 16 16 12 12 8"/></svg>
+          </span>
+          Roadmap: How Regression Works from Start to Finish
+        </h2>
+        <p class="fade-up animate-on-scroll" style="font-size: 0.95rem; color: var(--ink-soft); margin-bottom: 1.4rem;">
+          The step-by-step roadmap of building a regression model, from raw data points to making real-world predictions:
+        </p>
+
+        <!-- 8-Step Process Roadmap Grid -->
+        <div class="reg-steps-grid fade-up animate-on-scroll">
+          <!-- Step 1 -->
+          <div class="reg-step-box">
+            <div class="reg-step-badge">1</div>
+            <div class="reg-step-content">
+              <div class="reg-step-title">Collect data &rarr;</div>
+              <p class="reg-step-desc">Have <strong>X</strong> (input) and <strong>Y</strong> (target) values.</p>
+            </div>
+          </div>
+
+          <!-- Step 2 -->
+          <div class="reg-step-box">
+            <div class="reg-step-badge">2</div>
+            <div class="reg-step-content">
+              <div class="reg-step-title">Plot the data &rarr;</div>
+              <p class="reg-step-desc">Usually visualised as a <strong>scatter plot</strong>.</p>
+            </div>
+          </div>
+
+          <!-- Step 3 -->
+          <div class="reg-step-box">
+            <div class="reg-step-badge reg-step-badge--coral">3</div>
+            <div class="reg-step-content">
+              <div class="reg-step-title">Assume a line &rarr;</div>
+              <p class="reg-step-desc"><span class="reg-pill-formula reg-pill-formula--coral" style="padding: 0.15rem 0.45rem; font-size: 0.8rem; margin: 0;">ŷ = b₀ + b₁x</span></p>
+            </div>
+          </div>
+
+          <!-- Step 4 -->
+          <div class="reg-step-box">
+            <div class="reg-step-badge reg-step-badge--coral">4</div>
+            <div class="reg-step-content">
+              <div class="reg-step-title">Calculate errors &rarr;</div>
+              <p class="reg-step-desc">Actual <strong>y</strong> &minus; predicted <strong>ŷ</strong>.</p>
+            </div>
+          </div>
+
+          <!-- Step 5 -->
+          <div class="reg-step-box">
+            <div class="reg-step-badge reg-step-badge--gold">5</div>
+            <div class="reg-step-content">
+              <div class="reg-step-title">Square the errors &rarr;</div>
+              <p class="reg-step-desc">Prevent positive and negative errors from cancelling.</p>
+            </div>
+          </div>
+
+          <!-- Step 6 -->
+          <div class="reg-step-box">
+            <div class="reg-step-badge reg-step-badge--gold">6</div>
+            <div class="reg-step-content">
+              <div class="reg-step-title">Find line with minimum SSE &rarr;</div>
+              <p class="reg-step-desc">Choose <strong>b₀</strong> and <strong>b₁</strong> that give the smallest total squared error.</p>
+            </div>
+          </div>
+
+          <!-- Step 7 -->
+          <div class="reg-step-box">
+            <div class="reg-step-badge">7</div>
+            <div class="reg-step-content">
+              <div class="reg-step-title">Get regression equation &rarr;</div>
+              <p class="reg-step-desc">This is your mathematical <strong>best-fit line</strong>.</p>
+            </div>
+          </div>
+
+          <!-- Step 8 -->
+          <div class="reg-step-box" style="border-color: var(--teal); background: rgba(14,168,148,0.02);">
+            <div class="reg-step-badge">8</div>
+            <div class="reg-step-content">
+              <div class="reg-step-title">Use line for prediction &rarr;</div>
+              <p class="reg-step-desc">Give a new <strong>X</strong>, and calculate its predicted <strong>Y</strong>.</p>
+            </div>
+          </div>
+        </div>
+
+
+      </div>
+    </section>
+
+    <!-- =========================================================================
+         REGRESSION TAXONOMY TREE CHART
+         ========================================================================= -->
+    <section class="block" id="regression-taxonomy">
+      <div class="block__body">
+        <h2 class="fade-up animate-on-scroll">
+          <span class="icon-badge icon-badge--coral">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="8" height="8" x="8" y="2" rx="1"/><rect width="8" height="8" x="2" y="14" rx="1"/><rect width="8" height="8" x="14" y="14" rx="1"/><path d="M12 10v4"/><path d="M6 14v-2h12v2"/></svg>
+          </span>
+          The Regression Family Tree (Taxonomy Chart)
+        </h2>
+        <p class="fade-up animate-on-scroll" style="font-size: 0.95rem; color: var(--ink-soft); margin-bottom: 1.4rem;">
+          How regression models are structured and categorized across machine learning and statistics:
+        </p>
+      </div>
+
+      <!-- Taxonomy Tree Container (Wide Infographic Canvas) -->
+      <div class="reg-tree-wrap fade-up animate-on-scroll">
+          
+          <!-- Master Root Node -->
+          <div class="reg-tree-root">
+            <div class="reg-tree-root__card">
+              <span class="reg-tree-root__badge">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="m4.93 4.93 4.24 4.24"/><path d="m14.83 9.17 4.24-4.24"/><path d="m14.83 14.83 4.24 4.24"/><path d="m9.17 14.83-4.24 4.24"/></svg>
+                Master Method Family
+              </span>
+              <h3 class="reg-tree-root__title">REGRESSION</h3>
+              <p class="reg-tree-root__desc">
+                Discovers mathematical relationships to predict continuous numerical targets from input features.
+              </p>
+            </div>
+            <!-- Downward Root Stem -->
+            <div class="reg-tree-stem" aria-hidden="true"></div>
+          </div>
+
+          <!-- Desktop Branch Distribution Rail -->
+          <div class="reg-tree-desktop-rail" aria-hidden="true"></div>
+
+          <!-- The 5 Family Columns Grid -->
+          <div class="reg-tree-columns">
+
+            <!-- 1. Linear Regression -->
+            <div class="reg-family-card reg-family-card--teal">
+              <div class="reg-family-card__head">
+                <span class="reg-family-badge">Branch 01</span>
+                <span class="reg-family-curve-icon" title="Straight line">
+                  <svg width="24" height="16" viewBox="0 0 24 16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><line x1="2" y1="14" x2="22" y2="2"/></svg>
+                </span>
+              </div>
+              <h4 class="reg-family-title">1. Linear</h4>
+              <p class="reg-family-desc">Models straight-line relationships</p>
+
+              <ul class="reg-tree-nodes">
+                <li class="reg-tree-node">
+                  <div class="reg-node-name">Simple Linear</div>
+                  <div class="reg-node-leaf">1 input (X)</div>
+                </li>
+                <li class="reg-tree-node">
+                  <div class="reg-node-name">Multiple Linear</div>
+                  <div class="reg-node-leaf">2+ inputs (X₁, X₂, ...)</div>
+                </li>
+              </ul>
+
+              <div class="reg-family-footer">
+                <span class="reg-family-tag">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><circle cx="12" cy="12" r="10"/></svg>
+                  OLS Best-fit Line
+                </span>
+              </div>
+            </div>
+
+            <!-- 2. Polynomial Regression -->
+            <div class="reg-family-card reg-family-card--coral">
+              <div class="reg-family-card__head">
+                <span class="reg-family-badge">Branch 02</span>
+                <span class="reg-family-curve-icon" title="Curved parabola">
+                  <svg width="24" height="16" viewBox="0 0 24 16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><path d="M2 14 Q12 1 22 14"/></svg>
+                </span>
+              </div>
+              <h4 class="reg-family-title">2. Polynomial</h4>
+              <p class="reg-family-desc">Models curved relationships</p>
+
+              <ul class="reg-tree-nodes">
+                <li class="reg-tree-node">
+                  <div class="reg-node-name">Curved Trends</div>
+                  <div class="reg-node-leaf">x², x³ higher powers</div>
+                </li>
+                <li class="reg-tree-node">
+                  <div class="reg-node-name">Linear Weights</div>
+                  <div class="reg-node-leaf" style="font-size: 0.69rem;">Linear in parameters</div>
+                </li>
+              </ul>
+
+              <div class="reg-family-footer">
+                <span class="reg-family-tag">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><circle cx="12" cy="12" r="10"/></svg>
+                  U-Shapes &amp; Waves
+                </span>
+              </div>
+            </div>
+
+            <!-- 3. Non-Linear Regression -->
+            <div class="reg-family-card reg-family-card--gold">
+              <div class="reg-family-card__head">
+                <span class="reg-family-badge">Branch 03</span>
+                <span class="reg-family-curve-icon" title="Exponential growth curve">
+                  <svg width="24" height="16" viewBox="0 0 24 16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><path d="M2 14 C12 14, 16 9, 22 2"/></svg>
+                </span>
+              </div>
+              <h4 class="reg-family-title">3. Non-Linear</h4>
+              <p class="reg-family-desc">Intrinsic non-linear parameters</p>
+
+              <ul class="reg-tree-nodes">
+                <li class="reg-tree-node">
+                  <div class="reg-node-name">Exponential</div>
+                  <div class="reg-node-leaf">Growth &amp; decay</div>
+                </li>
+                <li class="reg-tree-node">
+                  <div class="reg-node-name">Logarithmic</div>
+                  <div class="reg-node-leaf">Diminishing returns</div>
+                </li>
+                <li class="reg-tree-node">
+                  <div class="reg-node-name">Power</div>
+                  <div class="reg-node-leaf">Allometric scaling</div>
+                </li>
+              </ul>
+
+              <div class="reg-family-footer">
+                <span class="reg-family-tag">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><circle cx="12" cy="12" r="10"/></svg>
+                  Non-linear Math
+                </span>
+              </div>
+            </div>
+
+            <!-- 4. Regularized Regression -->
+            <div class="reg-family-card reg-family-card--purple">
+              <div class="reg-family-card__head">
+                <span class="reg-family-badge">Branch 04</span>
+                <span class="reg-family-curve-icon" title="Penalty / Shrinkage">
+                  <svg width="24" height="16" viewBox="0 0 24 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><line x1="2" y1="14" x2="22" y2="14"/><line x1="12" y1="14" x2="12" y2="3"/><circle cx="6" cy="7" r="3"/><circle cx="18" cy="9" r="2"/></svg>
+                </span>
+              </div>
+              <h4 class="reg-family-title">4. Regularized</h4>
+              <p class="reg-family-desc">Prevents overfitting via penalty</p>
+
+              <ul class="reg-tree-nodes">
+                <li class="reg-tree-node">
+                  <div class="reg-node-name">Ridge (L2)</div>
+                  <div class="reg-node-leaf">Shrinks coefficients</div>
+                </li>
+                <li class="reg-tree-node">
+                  <div class="reg-node-name">Lasso (L1)</div>
+                  <div class="reg-node-leaf">Selects key features</div>
+                </li>
+                <li class="reg-tree-node">
+                  <div class="reg-node-name">Elastic Net</div>
+                  <div class="reg-node-leaf">L1 + L2 combined</div>
+                </li>
+              </ul>
+
+              <div class="reg-family-footer">
+                <span class="reg-family-tag">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><circle cx="12" cy="12" r="10"/></svg>
+                  Penalty Shrinkage
+                </span>
+              </div>
+            </div>
+
+            <!-- 5. Logistic Regression -->
+            <div class="reg-family-card reg-family-card--slate">
+              <div class="reg-family-card__head">
+                <span class="reg-family-badge">Branch 05</span>
+                <span class="reg-family-curve-icon" title="Sigmoid S-curve">
+                  <svg width="24" height="16" viewBox="0 0 24 16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><path d="M2 14 C9 14, 15 2, 22 2"/></svg>
+                </span>
+              </div>
+              <h4 class="reg-family-title">5. Logistic</h4>
+              <p class="reg-family-desc">The classification crossover</p>
+
+              <ul class="reg-tree-nodes">
+                <li class="reg-tree-node">
+                  <div class="reg-node-name">Mainly Used For</div>
+                  <div class="reg-node-leaf" style="color: var(--coral-dark); font-weight: 600;">Classification</div>
+                </li>
+                <li class="reg-tree-node">
+                  <div class="reg-node-name">Sigmoid Function</div>
+                  <div class="reg-node-leaf">Maps sum &rarr; [0, 1]</div>
+                </li>
+              </ul>
+
+              <div class="reg-family-footer">
+                <span class="reg-family-tag">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><circle cx="12" cy="12" r="10"/></svg>
+                  Discrete 0 / 1 Labels
+                </span>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Bottom Key Takeaway Strip -->
+          <div class="reg-tree-legend">
+            <div class="reg-tree-legend-item">
+              <span class="reg-tree-legend-dot" style="background: var(--teal);"></span>
+              <span><strong>Families 1&ndash;4:</strong> Continuous numerical targets (House price, Sales, Age)</span>
+            </div>
+            <div class="reg-tree-legend-item">
+              <span class="reg-tree-legend-dot" style="background: #0284C7;"></span>
+              <span><strong>Family 5:</strong> Discrete classes (Spam / Not Spam, Pass / Fail)</span>
+            </div>
+            <div class="reg-tree-legend-item">
+              <span class="reg-tree-legend-dot" style="background: var(--coral);"></span>
+              <span><strong>Families 1, 2, 4:</strong> Linear in parameters &bull; <strong>Family 3:</strong> Non-linear math</span>
+            </div>
+          </div>
+
+        </div>
+
+    </section>
+
+    <!-- =========================================================================
+         VISUAL SUMMARY CARDS: ALL 18 TOPICS AT A GLANCE
+         ========================================================================= -->
+    <section class="block" id="topics-summary">
+      <div class="block__body">
+        <h2 class="fade-up animate-on-scroll">
+          <span class="icon-badge icon-badge--gold">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="7" height="7" x="3" y="3" rx="1"/><rect width="7" height="7" x="14" y="3" rx="1"/><rect width="7" height="7" x="14" y="14" rx="1"/><rect width="7" height="7" x="3" y="14" rx="1"/></svg>
+          </span>
+          Visual Topic Summaries: What to Expect
+        </h2>
+
+        <!-- Grid of 18 Topics -->
+        <div class="reg-grid-2 fade-up animate-on-scroll">
+
+          <!-- TOPIC 1 -->
+          <div class="reg-card">
+            <div class="reg-card__head">
+              <span class="reg-card__title">1. Regression Basics</span>
+              <span class="reg-badge">Core Concept</span>
+            </div>
+            <p style="font-size: 0.88rem; color: var(--ink-soft); margin: 0 0 0.5rem;">
+              Predicts a <strong>continuous number</strong> along an unbroken spectrum.
+            </p>
+            <div style="display: flex; gap: 0.4rem; flex-wrap: wrap;">
+              <span class="reg-pill-formula">House Size &rarr; Price</span>
+              <span class="reg-pill-formula">Experience &rarr; Salary</span>
+              <span class="reg-pill-formula">Time &rarr; Temperature</span>
+            </div>
+            <div class="reg-key-note">
+              <strong>Key Distinction:</strong> <code>Y</code> = Dependent target (what we predict) &bull; <code>X</code> = Independent predictor (input).
+            </div>
+          </div>
+
+          <!-- TOPIC 2: ESSENTIAL ⭐ -->
+          <div class="reg-card" style="border: 2px solid var(--coral); background: rgba(255,90,60,0.02);">
+            <div class="reg-card__head">
+              <span class="reg-card__title" style="color: var(--coral-dark);">2. Simple Linear Regression ⭐</span>
+              <span class="reg-star-tag">⭐ Essential</span>
+            </div>
+            <div class="reg-pill-formula reg-pill-formula--coral" style="font-size: 1.05rem; text-align: center; display: block; margin-bottom: 0.6rem;">
+              ŷ = b₀ + b₁x
+            </div>
+            <div style="font-size: 0.85rem; color: var(--ink-soft); line-height: 1.5;">
+              &bull; <strong>ŷ</strong> = Predicted output<br>
+              &bull; <strong>b₀</strong> = Intercept (baseline when x = 0)<br>
+              &bull; <strong>b₁</strong> = Slope (rate of change in Y per unit change in X)
+            </div>
+            <div class="reg-key-note reg-key-note--coral">
+              <strong>Goal:</strong> Find the line giving the smallest total error across all points.
+            </div>
+          </div>
+
+          <!-- TOPIC 3: ESSENTIAL ⭐ -->
+          <div class="reg-card" style="border: 2px solid var(--teal); background: rgba(14,168,148,0.02);">
+            <div class="reg-card__head">
+              <span class="reg-card__title" style="color: var(--teal-dark);">3. Least Squares Method (OLS) ⭐</span>
+              <span class="reg-star-tag">⭐ Essential</span>
+            </div>
+            <div class="reg-pill-formula reg-pill-formula--teal" style="font-size: 0.95rem; text-align: center; display: block; margin-bottom: 0.6rem;">
+              Residual (e) = Actual (y) &minus; Predicted (ŷ)
+            </div>
+
+            <!-- Mini SVG OLS Squares Figure -->
+            <div style="background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 0.6rem; text-align: center; margin-bottom: 0.5rem;">
+              <svg viewBox="0 0 280 90" width="100%" height="70">
+                <line x1="20" y1="75" x2="260" y2="20" stroke="#0EA894" stroke-width="2.5"/>
+                <!-- points and squares -->
+                <rect x="70" y="45" width="18" height="18" fill="rgba(255,90,60,0.2)" stroke="#FF5A3C" stroke-width="1"/>
+                <circle cx="70" cy="63" r="3.5" fill="#FF5A3C"/>
+                <rect x="170" y="24" width="16" height="16" fill="rgba(255,90,60,0.2)" stroke="#FF5A3C" stroke-width="1"/>
+                <circle cx="170" cy="24" r="3.5" fill="#FF5A3C"/>
+                <text x="105" y="82" font-size="9" fill="#8A8177" font-family="sans-serif">OLS minimizes sum of squared areas!</text>
+              </svg>
+            </div>
+
+            <div class="reg-key-note reg-key-note--teal">
+              <strong>Why square errors?</strong> Stops positive and negative errors canceling each other, heavily punishes big blunders, and enables exact calculus solutions!
+            </div>
+          </div>
+
+          <!-- TOPIC 4: ESSENTIAL ⭐ -->
+          <div class="reg-card" style="border: 2px solid var(--gold); background: rgba(233,168,37,0.02);">
+            <div class="reg-card__head">
+              <span class="reg-card__title" style="color: var(--gold-dark);">4. SSE, SSR and SST ⭐</span>
+              <span class="reg-star-tag">⭐ Essential</span>
+            </div>
+            <div class="reg-pill-formula reg-pill-formula--coral" style="font-size: 1rem; text-align: center; display: block; margin-bottom: 0.6rem;">
+              SST = SSR + SSE
+            </div>
+            <div style="font-size: 0.85rem; color: var(--ink-soft); line-height: 1.5;">
+              &bull; <strong>SST</strong> = Total variation in actual Y around mean (ȳ)<br>
+              &bull; <strong>SSR</strong> = Variation explained by regression model<br>
+              &bull; <strong>SSE</strong> = Unexplained residual error
+            </div>
+            <!-- Mini Variance Bar -->
+            <div style="height: 18px; border-radius: 4px; overflow: hidden; display: flex; margin-top: 0.6rem; border: 1px solid var(--line);">
+              <div style="width: 75%; background: var(--teal); color: #fff; font-size: 9px; font-weight: 700; display:flex; align-items:center; justify-content:center;">SSR (Explained: 75%)</div>
+              <div style="width: 25%; background: var(--coral); color: #fff; font-size: 9px; font-weight: 700; display:flex; align-items:center; justify-content:center;">SSE (25%)</div>
+            </div>
+            <div class="reg-key-note reg-key-note--gold">
+              <strong>Mental Model:</strong> Total Variation = Explained + Unexplained.
+            </div>
+          </div>
+
+          <!-- TOPIC 5: ESSENTIAL ⭐ -->
+          <div class="reg-card" style="border: 2px solid var(--coral); background: rgba(255,90,60,0.02);">
+            <div class="reg-card__head">
+              <span class="reg-card__title" style="color: var(--coral-dark);">5. R&sup2; &mdash; Determination ⭐</span>
+              <span class="reg-star-tag">⭐ Essential</span>
+            </div>
+            <div class="reg-pill-formula" style="font-size: 0.95rem; text-align: center; display: block; margin-bottom: 0.5rem;">
+              R&sup2; = SSR / SST = 1 &minus; (SSE / SST)
+            </div>
+            <div style="font-size: 0.88rem; color: var(--ink-soft); line-height: 1.55;">
+              Tells us <strong>how much of the variation in Y is explained</strong> by the model.
+              <br><em>Example:</em> <strong>R&sup2; = 0.80</strong> &rarr; 80% explained!
+            </div>
+            <div class="reg-key-note reg-key-note--coral">
+              <strong>Caution:</strong> A high R&sup2; alone does not prove a good model! Use <strong>Adjusted R&sup2;</strong> to prevent junk features inflating the score.
+            </div>
+          </div>
+
+          <!-- TOPIC 6 -->
+          <div class="reg-card">
+            <div class="reg-card__head">
+              <span class="reg-card__title">6. Regression Error Metrics</span>
+              <span class="reg-badge">Evaluation</span>
+            </div>
+            <div style="font-size: 0.86rem; color: var(--ink-soft); line-height: 1.6;">
+              &bull; <strong>MAE:</strong> Average error. <em>&ldquo;On average, how far off am I?&rdquo;</em><br>
+              &bull; <strong>MSE:</strong> Average squared error; heavily penalizes big misses.<br>
+              &bull; <strong>RMSE:</strong> Square root of MSE; expressed in the <strong>same units as Y ($)</strong>.
+            </div>
+            <div class="reg-key-note">
+              <strong>Cheat Sheet:</strong> MAE for stakeholder clarity &bull; RMSE for heavy penalties on large blunders.
+            </div>
+          </div>
+
+          <!-- TOPIC 7: ESSENTIAL ⭐ -->
+          <div class="reg-card" style="border: 2px solid var(--teal); background: rgba(14,168,148,0.02);">
+            <div class="reg-card__head">
+              <span class="reg-card__title" style="color: var(--teal-dark);">7. Multiple Linear Regression ⭐</span>
+              <span class="reg-star-tag">⭐ Essential</span>
+            </div>
+            <div class="reg-pill-formula reg-pill-formula--teal" style="font-size: 0.92rem; text-align: center; display: block; margin-bottom: 0.6rem;">
+              ŷ = b₀ + b₁x₁ + b₂x₂ + b₃x₃ + &hellip;
+            </div>
+            <p style="font-size: 0.88rem; color: var(--ink-soft); margin: 0 0 0.5rem;">
+              Predicts house price using size, bedrooms, location, and age simultaneously.
+            </p>
+            <div class="reg-key-note reg-key-note--teal">
+              <strong>Ceteris Paribus:</strong> Each coefficient shows how Y changes for that variable <strong>while keeping all other variables constant</strong>.
+            </div>
+          </div>
+
+          <!-- TOPIC 8: ESSENTIAL ⭐ -->
+          <div class="reg-card" style="border: 2px solid var(--gold); background: rgba(233,168,37,0.02);">
+            <div class="reg-card__head">
+              <span class="reg-card__title" style="color: var(--gold-dark);">8. Regression Assumptions ⭐</span>
+              <span class="reg-star-tag">⭐ Essential</span>
+            </div>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.3rem; font-size: 0.8rem; font-weight: 600; color: var(--ink);">
+              <div>1. Linearity</div>
+              <div>4. Normal errors</div>
+              <div>2. Independence</div>
+              <div>5. No multicollinearity</div>
+              <div>3. Homoscedasticity</div>
+              <div>6. Mean error = 0</div>
+            </div>
+            <div class="reg-key-note reg-key-note--gold">
+              <strong>Diagnostic:</strong> Check Residual Plots. Errors must form an even, random cloud with no funnel shape or curves!
+            </div>
+          </div>
+
+          <!-- TOPIC 9 -->
+          <div class="reg-card">
+            <div class="reg-card__head">
+              <span class="reg-card__title">9. Multicollinearity</span>
+              <span class="reg-badge">Feature Trouble</span>
+            </div>
+            <p style="font-size: 0.88rem; color: var(--ink-soft); margin: 0 0 0.5rem;">
+              Happens when predictors are strongly related (e.g., size in m&sup2; vs. size in ft&sup2;).
+            </p>
+            <div class="reg-pill-formula reg-pill-formula--coral">VIF (Variance Inflation Factor) &gt; 5 or 10 = Danger!</div>
+            <div class="reg-key-note reg-key-note--coral">
+              <strong>Problem:</strong> Makes it hard to determine individual effects. Fix: Drop redundant feature or apply Ridge.
+            </div>
+          </div>
+
+          <!-- TOPIC 10 -->
+          <div class="reg-card">
+            <div class="reg-card__head">
+              <span class="reg-card__title">10. Statistical Inference</span>
+              <span class="reg-badge">Significance</span>
+            </div>
+            <div style="font-size: 0.86rem; color: var(--ink-soft); line-height: 1.55;">
+              &bull; <strong>t-test:</strong> Tests an individual coefficient (Is it &ne; 0?)<br>
+              &bull; <strong>F-test:</strong> Tests the overall regression model<br>
+              &bull; <strong>p-value:</strong> Evidence against null hypothesis (p &lt; 0.05)<br>
+              &bull; <strong>Confidence Interval:</strong> Plausible parameter range
+            </div>
+          </div>
+
+          <!-- TOPIC 11 -->
+          <div class="reg-card">
+            <div class="reg-card__head">
+              <span class="reg-card__title">11. ANOVA in Regression</span>
+              <span class="reg-badge">Variance Table</span>
+            </div>
+            <p style="font-size: 0.88rem; color: var(--ink-soft); margin: 0 0 0.5rem;">
+              Partitions total variation into Explained vs. Error in a structured table:
+            </p>
+            <div style="font-family: 'IBM Plex Mono', monospace; font-size: 0.78rem; background: var(--bg); padding: 0.4rem 0.6rem; border-radius: 4px;">
+              SS &bull; df &bull; Mean Square &bull; F-statistic &bull; p-value
+            </div>
+          </div>
+
+          <!-- TOPIC 12 -->
+          <div class="reg-card">
+            <div class="reg-card__head">
+              <span class="reg-card__title">12. Polynomial Regression</span>
+              <span class="reg-badge">Bending Lines</span>
+            </div>
+            <div class="reg-pill-formula">y = b₀ + b₁x + b₂x&sup2;</div>
+            <p style="font-size: 0.88rem; color: var(--ink-soft); margin: 0.4rem 0 0;">
+              Captures curved relationships. Still treated as linear regression because it is <strong>linear in its coefficients</strong>!
+            </p>
+          </div>
+
+          <!-- TOPIC 13 -->
+          <div class="reg-card">
+            <div class="reg-card__head">
+              <span class="reg-card__title">13. Ridge Regression</span>
+              <span class="reg-badge reg-badge--teal">L2 Regularization</span>
+            </div>
+            <div class="reg-pill-formula reg-pill-formula--teal">Loss = SSE + &lambda; &sum; bⱼ&sup2;</div>
+            <p style="font-size: 0.88rem; color: var(--ink-soft); margin: 0.4rem 0 0;">
+              Adds an <strong>L2 penalty</strong>. Shrinks large coefficients smoothly toward zero to control overfitting and handle collinear features.
+            </p>
+          </div>
+
+          <!-- TOPIC 14 -->
+          <div class="reg-card">
+            <div class="reg-card__head">
+              <span class="reg-card__title">14. Lasso Regression</span>
+              <span class="reg-badge reg-badge--gold">L1 Regularization</span>
+            </div>
+            <div class="reg-pill-formula">Loss = SSE + &lambda; &sum; |bⱼ|</div>
+            <p style="font-size: 0.88rem; color: var(--ink-soft); margin: 0.4rem 0 0;">
+              Adds an <strong>L1 penalty</strong>. Can shrink unneeded coefficients to <strong>exactly zero</strong> &mdash; performing built-in <strong>feature selection</strong>!
+            </p>
+          </div>
+
+          <!-- TOPIC 15 -->
+          <div class="reg-card">
+            <div class="reg-card__head">
+              <span class="reg-card__title">15. Overfitting &amp; Underfitting</span>
+              <span class="reg-badge">Bias vs Variance</span>
+            </div>
+            <div style="font-size: 0.86rem; color: var(--ink-soft); line-height: 1.55;">
+              &bull; <strong>Underfitting:</strong> Model too simple (poor train + test).<br>
+              &bull; <strong>Overfitting:</strong> Learns noise (good train + poor test).
+            </div>
+            <div class="reg-key-note">
+              <strong>Remedy:</strong> Regularization (Ridge/Lasso) reduces overfitting.
+            </div>
+          </div>
+
+          <!-- TOPIC 16 -->
+          <div class="reg-card">
+            <div class="reg-card__head">
+              <span class="reg-card__title">16. Train/Test Split</span>
+              <span class="reg-badge">Generalization</span>
+            </div>
+            <div style="display: flex; gap: 4px; height: 20px; margin-bottom: 0.5rem;">
+              <div style="flex: 8; background: var(--teal); border-radius: 4px; color: #fff; font-size: 9px; display:flex; align-items:center; justify-content:center; font-weight:700;">80% Training Data</div>
+              <div style="flex: 2; background: var(--coral); border-radius: 4px; color: #fff; font-size: 9px; display:flex; align-items:center; justify-content:center; font-weight:700;">20% Test</div>
+            </div>
+            <p style="font-size: 0.88rem; color: var(--ink-soft); margin: 0;">
+              Never test on training data. Evaluates whether the model generalizes to unseen examples.
+            </p>
+          </div>
+
+          <!-- TOPIC 17 -->
+          <div class="reg-card">
+            <div class="reg-card__head">
+              <span class="reg-card__title">17. Cross-Validation</span>
+              <span class="reg-badge">K-Fold</span>
+            </div>
+            <p style="font-size: 0.88rem; color: var(--ink-soft); margin: 0 0 0.5rem;">
+              Divides training data into <code>K</code> folds, rotating the validation fold.
+            </p>
+            <div class="reg-key-note reg-key-note--teal">
+              Prevents lucky/unlucky splits &rarr; gives a reliable estimate of model performance!
+            </div>
+          </div>
+
+          <!-- TOPIC 18 -->
+          <div class="reg-card">
+            <div class="reg-card__head">
+              <span class="reg-card__title">18. Logistic Regression</span>
+              <span class="reg-badge reg-badge--coral">Classification</span>
+            </div>
+            <div class="reg-pill-formula reg-pill-formula--coral">p = 1 / (1 + e&minus;&zwnj;ᶻ)</div>
+            <p style="font-size: 0.88rem; color: var(--ink-soft); margin: 0.4rem 0 0;">
+              Used for <strong>classification</strong> (Spam / Not spam), not continuous values! Uses the <strong>sigmoid function</strong> to output probabilities between 0 and 1.
+            </p>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+    <!-- =========================================================================
+         THE BIG PICTURE: EXECUTIVE SUMMARY & PLAYBOOK
+         ========================================================================= -->
+    <section class="block" id="the-big-picture">
+      <div class="block__body">
+        <h2 class="fade-up animate-on-scroll">
+          <span class="icon-badge icon-badge--coral">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
+          </span>
+          🧠 The Big Picture: Diagnostic Playbook
+        </h2>
+
+        <!-- The Mental Framework Pill -->
+        <div style="background: var(--surface); border: 2px solid var(--line); border-radius: var(--radius); padding: 1.2rem; text-align: center; margin: 1.2rem 0;" class="fade-up animate-on-scroll">
+          <span style="font-family: var(--display); font-size: 1.15rem; font-weight: 800; color: var(--ink);">
+            Input Variables (X) &nbsp;&rarr;&nbsp; <span style="color: var(--coral);">Regression Model</span> &nbsp;&rarr;&nbsp; Prediction (ŷ)
+          </span>
+        </div>
+
+        <p class="fade-up animate-on-scroll" style="font-size: 0.95rem; color: var(--ink-soft); margin-bottom: 1.2rem;">
+          When building any regression model, keep this question-and-answer checklist in mind:
+        </p>
+
+        <!-- Rapid-Fire Checklist Card -->
+        <div class="reg-card fade-up animate-on-scroll" style="padding: 1.2rem 1.6rem;">
+          
+          <div class="reg-playbook-item">
+            <div class="reg-step-number" style="background: var(--coral);">Q1</div>
+            <div>
+              <div class="reg-playbook-q">How good is the prediction?</div>
+              <p class="reg-playbook-ans">&rarr; Check <strong>MAE, MSE, RMSE, R&sup2;</strong></p>
+            </div>
+          </div>
+
+          <div class="reg-playbook-item">
+            <div class="reg-step-number" style="background: var(--teal);">Q2</div>
+            <div>
+              <div class="reg-playbook-q">How much variation does the model explain?</div>
+              <p class="reg-playbook-ans">&rarr; Check <strong>SSR, SST, R&sup2;</strong></p>
+            </div>
+          </div>
+
+          <div class="reg-playbook-item">
+            <div class="reg-step-number" style="background: var(--coral);">Q3</div>
+            <div>
+              <div class="reg-playbook-q">How much error remains?</div>
+              <p class="reg-playbook-ans">&rarr; Check <strong>SSE</strong></p>
+            </div>
+          </div>
+
+          <div class="reg-playbook-item">
+            <div class="reg-step-number" style="background: var(--gold);">Q4</div>
+            <div>
+              <div class="reg-playbook-q">Is the model statistically valid?</div>
+              <p class="reg-playbook-ans">&rarr; Check <strong>6 Assumptions, t-test, F-test, p-values</strong></p>
+            </div>
+          </div>
+
+          <div class="reg-playbook-item">
+            <div class="reg-step-number" style="background: var(--coral);">Q5</div>
+            <div>
+              <div class="reg-playbook-q">Are the features causing problems?</div>
+              <p class="reg-playbook-ans">&rarr; Check <strong>Multicollinearity, VIF (&gt; 5 or 10)</strong></p>
+            </div>
+          </div>
+
+          <div class="reg-playbook-item">
+            <div class="reg-step-number" style="background: var(--teal);">Q6</div>
+            <div>
+              <div class="reg-playbook-q">Is the model overfitting?</div>
+              <p class="reg-playbook-ans">&rarr; Check <strong>Train/Test split, K-Fold Cross-Validation</strong></p>
+            </div>
+          </div>
+
+          <div class="reg-playbook-item">
+            <div class="reg-step-number" style="background: var(--gold);">Q7</div>
+            <div>
+              <div class="reg-playbook-q">Is the model too complex?</div>
+              <p class="reg-playbook-ans">&rarr; Apply <strong>Ridge (L2) or Lasso (L1) Regularization</strong></p>
+            </div>
+          </div>
+
+          <div class="reg-playbook-item">
+            <div class="reg-step-number" style="background: var(--teal);">Q8</div>
+            <div>
+              <div class="reg-playbook-q">Is the relationship curved?</div>
+              <p class="reg-playbook-ans">&rarr; Upgrade to <a href="polynomial-regression.html" style="color: var(--teal-dark);"><strong>Polynomial Regression (x&sup2;, x&sup3;)</strong></a></p>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ============ LESSON FOOTER ============ -->
+    <footer class="lesson__footer">
+      <a href="cart-algorithm.html" class="lesson__footer-prev" id="prevLessonLink">
+        <span class="lesson__footer-prev-arrow">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5"/><path d="m12 19-7-7 7-7"/></svg>
+        </span>
+        <div class="lesson__footer-prev-text">
+          <span class="lesson__footer-prev-label">Previous part</span>
+          <span class="lesson__footer-prev-name">4.5 CART Algorithm</span>
+        </div>
+      </a>
+
+      <div class="lesson__footer-progress">Part 6 of 8 &bull; Supervised Learning</div>
+
+      <a href="simple-linear-regression.html" class="lesson__footer-next" id="nextLessonLink">
+        <div class="lesson__footer-next-text">
+          <span class="lesson__footer-next-label">Next lesson</span>
+          <span class="lesson__footer-next-name">4.7 Simple Linear Regression</span>
+        </div>
+        <span class="lesson__footer-arrow">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+        </span>
+      </a>
+    </footer>
+
+  </main>
+</div>
+
+<script src="main.js"></script>
+<script src="glossary.js"></script>
+</body>
+</html>

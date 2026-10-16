@@ -1,0 +1,1909 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Data Preprocessing – Learning Machines</title>
+<meta name="description" content="Understanding data types, real-world data flaws, and the essential 7-step data preprocessing pipeline with interactive runnable Python code.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,600;12..96,700&family=Figtree:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="grain" aria-hidden="true"></div>
+
+<div class="progress-rail" aria-hidden="true"><div class="progress-fill" id="progressFill"></div></div>
+
+<header class="top-bar">
+  <div class="top-bar__brand">
+    <span class="course-nav__mark">LM</span>
+    <span class="top-bar__title">Learning Machines</span>
+  </div>
+  <div class="top-bar__controls">
+    <span class="top-bar__time" id="readTime">~8 min read</span>
+    <button class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="courseNav">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="4" x2="20" y1="6" y2="6"/><line x1="4" x2="20" y1="12" y2="12"/><line x1="4" x2="20" y1="18" y2="18"/></svg>
+      <span class="nav-toggle__label">Course map</span>
+    </button>
+  </div>
+</header>
+
+<div class="nav-overlay" id="navOverlay" aria-hidden="true"></div>
+
+<!-- ============ SLIDE-OVER SIDEBAR ============ -->
+<aside class="course-nav" id="courseNav">
+  <div class="course-nav__header">
+    <h2 class="course-nav__title-side">Course map</h2>
+    <button class="nav-close" id="navClose" aria-label="Close nav">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
+    </button>
+  </div>
+  <p class="course-nav__tagline">A slow, careful path through machine learning, start to finish.</p>
+
+  <ol class="course-nav__list">
+    <li class="course-nav__item is-completed">
+      <a href="index.html" class="course-nav__inner-link">
+        <span class="course-nav__num">1</span>
+        <div>
+          <span class="course-nav__name">Introduction</span>
+          <span class="course-nav__state">completed</span>
+        </div>
+      </a>
+    </li>
+    <li class="course-nav__item is-active">
+      <span class="course-nav__num">2</span>
+      <div>
+        <span class="course-nav__name">Data Preprocessing</span>
+        <span class="course-nav__state">reading now</span>
+      </div>
+    </li>
+    <li class="course-nav__item is-available">
+      <a href="eda.html" class="course-nav__inner-link">
+        <span class="course-nav__num">3</span>
+        <div>
+          <span class="course-nav__name">Exploratory Data Analysis</span>
+          <span class="course-nav__state">available now</span>
+        </div>
+      </a>
+    </li>
+    <li class="course-nav__item is-available">
+      <a href="supervised-learning.html" class="course-nav__inner-link">
+        <span class="course-nav__num">4</span>
+        <div>
+          <span class="course-nav__name">Supervised Learning</span>
+          <span class="course-nav__state">available now</span>
+        </div>
+      </a>
+    </li>
+    <ol class="course-nav__sub-list">
+      <li class="course-nav__sub-item">
+        <a href="supervised-learning.html">
+          <span class="course-nav__sub-num">4.1</span>
+          <div>
+            <span class="course-nav__sub-name">Introduction</span>
+            <span class="course-nav__state">available now</span>
+          </div>
+        </a>
+      </li>
+      <li class="course-nav__sub-item">
+        <a href="classification.html">
+          <span class="course-nav__sub-num">4.2</span>
+          <div>
+            <span class="course-nav__sub-name">Classification &amp; Decision Trees</span>
+            <span class="course-nav__state">available now</span>
+          </div>
+        </a>
+      </li>
+      <li class="course-nav__sub-item">
+        <a href="id3-algorithm.html">
+          <span class="course-nav__sub-num">4.3</span>
+          <div>
+            <span class="course-nav__sub-name">ID3 Algorithm</span>
+            <span class="course-nav__state">available now</span>
+          </div>
+        </a>
+      </li>
+      <li class="course-nav__sub-item">
+        <a href="c45-algorithm.html">
+          <span class="course-nav__sub-num">4.4</span>
+          <div>
+            <span class="course-nav__sub-name">C4.5 Algorithm</span>
+            <span class="course-nav__state">available now</span>
+          </div>
+        </a>
+      </li>
+      <li class="course-nav__sub-item">
+        <a href="cart-algorithm.html">
+          <span class="course-nav__sub-num">4.5</span>
+          <div>
+            <span class="course-nav__sub-name">CART Algorithm</span>
+            <span class="course-nav__state">available now</span>
+          </div>
+        </a>
+      </li>
+      <li class="course-nav__sub-item">
+        <a href="regression-analysis.html">
+          <span class="course-nav__sub-num">4.6</span>
+          <div>
+            <span class="course-nav__sub-name">Introduction to Regression</span>
+            <span class="course-nav__state">available now</span>
+          </div>
+        </a>
+      </li>
+      <li class="course-nav__sub-item">
+        <a href="simple-linear-regression.html">
+          <span class="course-nav__sub-num">4.7</span>
+          <div>
+            <span class="course-nav__sub-name">Simple Linear Regression</span>
+            <span class="course-nav__state">available now</span>
+          </div>
+        </a>
+      </li>
+    </ol>
+    <li class="course-nav__item">
+      <a href="unsupervised-learning.html" class="course-nav__inner-link">
+        <span class="course-nav__num">5</span>
+        <div>
+          <span class="course-nav__name">Unsupervised Learning</span>
+          <span class="course-nav__state">available now</span>
+        </div>
+      </a>
+    </li>
+    <ol class="course-nav__sub-list">
+      <li class="course-nav__sub-item">
+        <a href="unsupervised-learning.html">
+          <span class="course-nav__sub-num">5.1</span>
+          <div>
+            <span class="course-nav__sub-name">Introduction</span>
+            <span class="course-nav__state">available now</span>
+          </div>
+        </a>
+      </li>
+      <li class="course-nav__sub-item">
+        <a href="hierarchical-clustering.html">
+          <span class="course-nav__sub-num">5.2</span>
+          <div>
+            <span class="course-nav__sub-name">Hierarchical Clustering</span>
+            <span class="course-nav__state">available now</span>
+          </div>
+        </a>
+      </li>
+    </ol>
+    <li class="course-nav__item is-locked">
+      <span class="course-nav__num">6</span>
+      <div>
+        <span class="course-nav__name">Reinforcement Learning</span>
+        <span class="course-nav__state">
+          <svg class="course-nav__lock" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          coming soon
+        </span>
+      </div>
+    </li>
+  </ol>
+</aside>
+
+<div class="shell">
+
+  <!-- ============ MAIN ARTICLE ============ -->
+  <main class="lesson">
+
+    <header class="lesson__header">
+      <span class="lesson__eyebrow-free-title">
+        <h1>Data Preprocessing</h1>
+        <svg class="title-underline" viewBox="0 0 520 14" preserveAspectRatio="none" aria-hidden="true">
+          <path d="M4 9 C 120 2, 260 13, 400 6 C 440 4, 480 8, 516 5"/>
+        </svg>
+      </span>
+      <p class="lesson__dek">A machine learning model is as good as the data it is learning from. Before using data, they must be properly prepared for the model training.</p>
+    </header>
+
+    <!-- ---- Section 1: Intro / Philosophy ---- -->
+    <section class="block" id="data-intro">
+      <div class="block__body">
+        <p class="marginable fade-up animate-on-scroll" data-note="The classic axiom of data science: Garbage In, Garbage Out (GIGO). Flawed inputs guarantee flawed models.">
+          If your training data is distorted, incomplete, or chaotic, even the most sophisticated deep neural network will learn wrong conclusions. That is why professional data scientists routinely spend <strong>70% to 80%</strong> of their project time preparing and refining datasets before running an algorithm.
+        </p>
+      </div>
+    </section>
+
+    <!-- ---- Section 2: What is Data? ---- -->
+    <section class="block" id="what-is-data">
+      <div class="block__body">
+        <h2 class="fade-up animate-on-scroll">
+          <span class="icon-badge icon-badge--coral">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg>
+          </span>
+          What is data?
+        </h2>
+
+        <div class="definition fade-up animate-on-scroll">
+          <div class="definition__label">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+            Core Definition
+          </div>
+          <p>
+            <strong>Data</strong> is simply raw facts that have not yet been processed into meaningful information.
+          </p>
+        </div>
+
+        <p class="fade-up animate-on-scroll">
+          Think of data as unorganized measurements, numbers, characters, symbols, or observations collected from the world without intrinsic context. On its own, a raw number like <code>72000</code> or a word like <code>"France"</code> conveys no conclusion. It only becomes <strong>information</strong> when it is organized, structured, and given context.
+        </p>
+
+        <!-- Visual Progression: Data -> Processing -> Information -->
+        <div class="data-flow-box fade-up animate-on-scroll">
+          <div class="data-flow-grid">
+            <div class="data-flow-card data-flow-card--raw">
+              <span class="data-flow-card__stage">Step 1: Raw Facts</span>
+              <h4 class="data-flow-card__title">Data</h4>
+              <p class="data-flow-card__desc">Unprocessed observations with no built-in meaning or context.</p>
+              <div class="data-flow-card__example">[44, "France", 72000, "No"]</div>
+            </div>
+
+            <div class="data-flow-arrow">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+            </div>
+
+            <div class="data-flow-card data-flow-card--proc">
+              <span class="data-flow-card__stage">Step 2: Processing</span>
+              <h4 class="data-flow-card__title">Preprocessing &amp; Context</h4>
+              <p class="data-flow-card__desc">Labels, clean schemas, unit definitions, and validation are applied.</p>
+              <div class="data-flow-card__example">Age=44 | Country=France | Salary=$72k</div>
+            </div>
+
+            <div class="data-flow-arrow">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+            </div>
+
+            <div class="data-flow-card data-flow-card--info">
+              <span class="data-flow-card__stage">Step 3: Outcome</span>
+              <h4 class="data-flow-card__title">Information</h4>
+              <p class="data-flow-card__desc">Interpreted facts ready for decision making and mathematical modeling.</p>
+              <div class="data-flow-card__example">"A 44-year-old French professional earning $72k."</div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ---- Section 3: Ways to Divide Data ---- -->
+    <section class="block" id="data-types">
+      <div class="block__body">
+        <h2 class="fade-up animate-on-scroll">
+          <span class="icon-badge icon-badge--teal">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M3 9h18"/><path d="M9 21V9"/></svg>
+          </span>
+          Ways we can divide data
+        </h2>
+        <p class="fade-up animate-on-scroll">
+          Data comes in vastly different formats and mathematical characteristics. To choose the right preprocessing technique, we must inspect data through two fundamental perspectives: its <strong>structural format</strong> and its <strong>statistical nature</strong>.
+        </p>
+
+        <!-- Categorization 1: Structural Format -->
+        <h3 style="margin-top: 2rem;" class="fade-up animate-on-scroll">1. Structural Categorization (By Format)</h3>
+        <p class="fade-up animate-on-scroll">
+          How is the data organized in storage? Does it fit naturally into a table, or does it exist as raw, free-form signals?
+        </p>
+
+        <!-- Figure 1: Structured vs Unstructured Diagram -->
+        <div class="struct-comparison fade-up animate-on-scroll">
+          <div class="struct-grid">
+            
+            <!-- Structured Card -->
+            <div class="struct-card struct-card--structured">
+              <div class="struct-card__head">
+                <span class="struct-card__tag">Tabular &bull; Rigid</span>
+                <span class="icon-badge icon-badge--teal" style="width:1.8rem;height:1.8rem;">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3h18v18H3z"/><path d="M3 9h18"/><path d="M3 15h18"/><path d="M9 3v18"/><path d="M15 3v18"/></svg>
+                </span>
+              </div>
+              <h4 class="struct-card__title">1. Structured Data</h4>
+              <p class="struct-card__desc">
+                Data organized in neat rows and columns, like a spreadsheet. Each row is one record, each column holds one type of information. This makes it easy to search and convert into numbers a computer can work with.
+              </p>
+
+              <div class="struct-visual">
+                <table class="mini-table">
+                  <thead>
+                    <tr><th>Country</th><th>Age</th><th>Salary</th><th>Purchased</th></tr>
+                  </thead>
+                  <tbody>
+                    <tr><td>France</td><td>44</td><td>72000</td><td>No</td></tr>
+                    <tr><td>Spain</td><td>27</td><td>48000</td><td>Yes</td></tr>
+                    <tr><td>Germany</td><td>30</td><td>54000</td><td>No</td></tr>
+                  </tbody>
+                </table>
+              </div>
+
+              <div class="struct-badges">
+                <span class="struct-badge">CSV files</span>
+                <span class="struct-badge">Excel Spreadsheets</span>
+                <span class="struct-badge">SQL Databases</span>
+              </div>
+            </div>
+
+            <!-- Unstructured Card -->
+            <div class="struct-card struct-card--unstructured">
+              <div class="struct-card__head">
+                <span class="struct-card__tag">Sensory &bull; Free-form</span>
+                <span class="icon-badge icon-badge--coral" style="width:1.8rem;height:1.8rem;">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 10v4"/><path d="M6 6v12"/><path d="M10 3v18"/><path d="M14 8v8"/><path d="M18 5v14"/><path d="M22 10v4"/></svg>
+                </span>
+              </div>
+              <h4 class="struct-card__title">2. Unstructured Data</h4>
+              <p class="struct-card__desc">
+                Data that doesn't fit neatly into rows and columns — things like audio, video, and written text. It makes up more than 80% of all data in the world. Since it has no fixed structure, you need special techniques (like breaking text into tokens or using neural networks) to turn it into numbers a computer can analyze.
+              </p>
+
+              <div class="struct-visual">
+                <div class="unstructured-visual-list">
+                  <div class="unstruct-item">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="22"/></svg>
+                    <span>Audio</span>
+                  </div>
+                  <div class="unstruct-item">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="18" height="18" x="3" y="3" rx="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg>
+                    <span>Images</span>
+                  </div>
+                  <div class="unstruct-item">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="23 7 16 12 23 17 23 7"/><rect width="14" height="14" x="1" y="5" rx="2" ry="2"/></svg>
+                    <span>Video</span>
+                  </div>
+                  <div class="unstruct-item">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/><line x1="8" y1="13" x2="16" y2="13"/></svg>
+                    <span>Text (NLP)</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="struct-badges">
+                <span class="struct-badge">Audio Recordings</span>
+                <span class="struct-badge">Video Streams</span>
+                <span class="struct-badge">Natural Language Text</span>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Categorization 2: Statistical Nature -->
+        <h3 style="margin-top: 3.5rem;" class="fade-up animate-on-scroll">2. Statistical Classification (Quantitative vs Qualitative)</h3>
+        <p class="fade-up animate-on-scroll">
+          When examining variables inside a dataset, statistics divides them into two major branches based on whether they measure mathematical amounts or descriptive qualities:
+        </p>
+
+        <!-- Redrawn Spacious Interactive Taxonomy Figure -->
+        <div class="stat-taxonomy-redesign fade-up animate-on-scroll" id="statTaxonomyContainer">
+          <div class="stat-tax__header">
+            <h3>Statistical Data Taxonomy</h3>
+            <p>Data variables fall into numbers you calculate with (Quantitative) or labels you categorize with (Qualitative).</p>
+            
+            <!-- Category Filter Tabs -->
+            <div class="stat-tax__tabs" role="tablist" aria-label="Statistical categories">
+              <button class="stat-tax-tab is-active" data-tax-filter="all" role="tab" aria-selected="true">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="m4.93 4.93 4.24 4.24"/><path d="m14.83 9.17 4.24-4.24"/><path d="m14.83 14.83 4.24 4.24"/><path d="m9.17 14.83-4.24 4.24"/></svg>
+                <span>All 4 Types</span>
+              </button>
+              <button class="stat-tax-tab stat-tax-tab--quant" data-tax-filter="quant" role="tab" aria-selected="false">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+                <span>1. Quantitative (Numbers)</span>
+              </button>
+              <button class="stat-tax-tab stat-tax-tab--qual" data-tax-filter="qual" role="tab" aria-selected="false">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                <span>2. Qualitative (Categories)</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Branch 1: Quantitative -->
+          <div class="stat-branch-section stat-branch-section--quant" id="branchQuant">
+            <div class="stat-branch__head">
+              <h4 class="stat-branch__title">
+                <span class="icon-badge icon-badge--teal" style="width:2rem;height:2rem;">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+                </span>
+                1. Quantitative Data
+              </h4>
+              <span class="stat-branch__pill">Numerical &bull; Measurable</span>
+            </div>
+            <p class="stat-branch__lead">
+              Variables expressed as real numbers where arithmetic calculations (averages, sums, differences, and scalings) have genuine mathematical meaning.
+            </p>
+
+            <div class="stat-cards-grid">
+              <!-- 1.1 Discrete -->
+              <div class="tax-card-wide">
+                <div class="tax-card-wide__top">
+                  <span class="tax-card-wide__num">1.1 Countable</span>
+                  <span class="tax-card-wide__badge">Integers Only</span>
+                </div>
+                <h5 class="tax-card-wide__name">Discrete Data</h5>
+                <p class="tax-card-wide__desc">
+                  Values that can only take distinct, separate, countable numbers. They cannot be divided into fractional parts.
+                </p>
+                
+                <div class="tax-rule-pill">
+                  <strong>Quick Test:</strong> Can you have 2.5 of it? If NO, it is Discrete.
+                </div>
+
+                <div class="tax-examples-box">
+                  <span class="tax-examples-label">Real-World Examples:</span>
+                  <div class="tax-examples-chips">
+                    <span class="tax-chip">Number of cars</span>
+                    <span class="tax-chip">Website clicks</span>
+                    <span class="tax-chip">Hospital beds</span>
+                    <span class="tax-chip">Rooms in a house</span>
+                  </div>
+                </div>
+
+                <!-- Interactive Mini-Lab -->
+                <div class="tax-interactive-lab">
+                  <div class="tax-lab-header">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+                    Interactive Test
+                  </div>
+                  <div class="tax-lab-control">
+                    <button class="lab-counter-btn" id="discreteDecBtn" aria-label="Decrease count">&minus;</button>
+                    <span class="lab-counter-val" id="discreteCountText">3 items</span>
+                    <button class="lab-counter-btn" id="discreteIncBtn" aria-label="Increase count">&plus;</button>
+                  </div>
+                  <p class="lab-feedback" id="discreteFeedback">
+                    Notice: Discrete values jump in whole numbers (1, 2, 3, 4). You cannot have <strong>3.4 items</strong>.
+                  </p>
+                </div>
+              </div>
+
+              <!-- 1.2 Continuous -->
+              <div class="tax-card-wide">
+                <div class="tax-card-wide__top">
+                  <span class="tax-card-wide__num">1.2 Measurable</span>
+                  <span class="tax-card-wide__badge">Infinite Decimals</span>
+                </div>
+                <h5 class="tax-card-wide__name">Continuous Data</h5>
+                <p class="tax-card-wide__desc">
+                  Measurements that can take any value along an unbroken, continuous scale with infinite possible decimal subdivisions.
+                </p>
+
+                <div class="tax-rule-pill">
+                  <strong>Quick Test:</strong> Can you measure it with decimals? If YES, it is Continuous.
+                </div>
+
+                <div class="tax-examples-box">
+                  <span class="tax-examples-label">Real-World Examples:</span>
+                  <div class="tax-examples-chips">
+                    <span class="tax-chip">Salary ($63,777.78)</span>
+                    <span class="tax-chip">Age (38.78 yrs)</span>
+                    <span class="tax-chip">Temperature (24.6&deg;C)</span>
+                    <span class="tax-chip">Height &amp; Weight</span>
+                  </div>
+                </div>
+
+                <!-- Interactive Mini-Lab -->
+                <div class="tax-interactive-lab">
+                  <div class="tax-lab-header">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+                    Interactive Test
+                  </div>
+                  <div class="tax-lab-control">
+                    <input type="range" class="lab-slider" id="continuousSlider" min="20000" max="100000" step="125.5" value="63777.78">
+                    <span class="lab-slider-val" id="continuousValText">$63,777.78</span>
+                  </div>
+                  <p class="lab-feedback" id="continuousFeedback">
+                    Notice: Continuous values flow smoothly with infinite decimal points ($63,777.78).
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Branch 2: Qualitative -->
+          <div class="stat-branch-section stat-branch-section--qual" id="branchQual">
+            <div class="stat-branch__head">
+              <h4 class="stat-branch__title">
+                <span class="icon-badge icon-badge--gold" style="width:2rem;height:2rem;">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                </span>
+                2. Qualitative Data
+              </h4>
+              <span class="stat-branch__pill">Categorical &bull; Descriptive</span>
+            </div>
+            <p class="stat-branch__lead">
+              Variables expressed as descriptive labels, characteristics, or categories rather than raw numerical measurements.
+            </p>
+
+            <div class="stat-cards-grid">
+              <!-- 2.1 Nominal -->
+              <div class="tax-card-wide">
+                <div class="tax-card-wide__top">
+                  <span class="tax-card-wide__num">2.1 Unordered</span>
+                  <span class="tax-card-wide__badge">No Hierarchy</span>
+                </div>
+                <h5 class="tax-card-wide__name">Nominal Data</h5>
+                <p class="tax-card-wide__desc">
+                  Categories or names that have <strong>no natural order or ranking</strong>. One label is mathematically neither greater nor smaller than another.
+                </p>
+
+                <div class="tax-rule-pill">
+                  <strong>Quick Test:</strong> Does one category outrank another? If NO, it is Nominal.
+                </div>
+
+                <div class="tax-examples-box">
+                  <span class="tax-examples-label">Real-World Examples:</span>
+                  <div class="tax-examples-chips">
+                    <span class="tax-chip">Country (France, Spain, Germany)</span>
+                    <span class="tax-chip">Blood Type</span>
+                    <span class="tax-chip">Color</span>
+                    <span class="tax-chip">Gender</span>
+                  </div>
+                </div>
+
+                <!-- Interactive Mini-Lab -->
+                <div class="tax-interactive-lab">
+                  <div class="tax-lab-header">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+                    Interactive Test
+                  </div>
+                  <div class="tax-lab-control">
+                    <div class="lab-pills-row" id="nominalPillRow">
+                      <button class="lab-pill-btn" data-nominal="France">France</button>
+                      <button class="lab-pill-btn is-active" data-nominal="Spain">Spain</button>
+                      <button class="lab-pill-btn" data-nominal="Germany">Germany</button>
+                    </div>
+                  </div>
+                  <p class="lab-feedback" id="nominalFeedback">
+                    Selected: <strong>Spain</strong>. Spain is different from France, but Spain is NOT "greater than" France. No order exists!
+                  </p>
+                </div>
+              </div>
+
+              <!-- 2.2 Ordinal -->
+              <div class="tax-card-wide">
+                <div class="tax-card-wide__top">
+                  <span class="tax-card-wide__num">2.2 Ordered</span>
+                  <span class="tax-card-wide__badge">Ranked Hierarchy</span>
+                </div>
+                <h5 class="tax-card-wide__name">Ordinal Data</h5>
+                <p class="tax-card-wide__desc">
+                  Categories that possess a <strong>clear, meaningful order or rank</strong>, though the mathematical distance between ranks cannot be measured.
+                </p>
+
+                <div class="tax-rule-pill">
+                  <strong>Quick Test:</strong> Is there a natural hierarchy? If YES, it is Ordinal.
+                </div>
+
+                <div class="tax-examples-box">
+                  <span class="tax-examples-label">Real-World Examples:</span>
+                  <div class="tax-examples-chips">
+                    <span class="tax-chip">Satisfaction (Low, Med, High)</span>
+                    <span class="tax-chip">Education (BSc, MSc, PhD)</span>
+                    <span class="tax-chip">Sizes (S, M, L, XL)</span>
+                  </div>
+                </div>
+
+                <!-- Interactive Mini-Lab -->
+                <div class="tax-interactive-lab">
+                  <div class="tax-lab-header">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+                    Interactive Test
+                  </div>
+                  <div class="tax-lab-control">
+                    <div class="lab-pills-row" id="ordinalPillRow">
+                      <button class="lab-pill-btn" data-ordinal="Low">Low</button>
+                      <button class="lab-pill-btn" data-ordinal="Medium">Medium</button>
+                      <button class="lab-pill-btn is-active" data-ordinal="High">High</button>
+                    </div>
+                  </div>
+                  <p class="lab-feedback" id="ordinalFeedback">
+                    Selected: <strong>High</strong>. Clear ranking: High > Medium > Low. The order matters, but we cannot calculate High minus Medium.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- The Reality Check: Real-World Data is Unsuitable -->
+        <h3 style="margin-top: 3.5rem;" class="fade-up animate-on-scroll">Why Real-World Data is Not Ready for Machine Learning</h3>
+        <p class="fade-up animate-on-scroll">
+          Here is the harsh reality that every practitioner must confront: <strong>None of these real-world data types are directly suitable for machine learning algorithms out of the box.</strong>
+        </p>
+        <p class="fade-up animate-on-scroll">
+          Real-world data collected from human forms, IoT sensors, web scrapers, and business databases is messy, imperfect, and mathematically incompatible with learning algorithms:
+        </p>
+
+        <!-- 4 Data Flaws Grid -->
+        <div class="flaws-grid fade-up animate-on-scroll">
+          <div class="flaw-card">
+            <div class="flaw-card__head">
+              <svg class="flaw-card__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+              <h4 class="flaw-card__title">1. Incomplete</h4>
+            </div>
+            <p class="flaw-card__desc">
+              Missing values and <code>NaN</code> entries occur constantly when users skip optional form fields or sensors drop packets. Standard matrix math fails instantly when encountering null values.
+            </p>
+          </div>
+
+          <div class="flaw-card">
+            <div class="flaw-card__head">
+              <svg class="flaw-card__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+              <h4 class="flaw-card__title">2. Noisy &amp; Corrupted</h4>
+            </div>
+            <p class="flaw-card__desc">
+              Contains measurement errors, typos, and extreme outliers (e.g. an Age of 350 or a negative salary). Outliers skew gradient descent and pull regression lines away from the true pattern.
+            </p>
+          </div>
+
+          <div class="flaw-card">
+            <div class="flaw-card__head">
+              <svg class="flaw-card__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+              <h4 class="flaw-card__title">3. Inconsistent</h4>
+            </div>
+            <p class="flaw-card__desc">
+              Conflicting formats, duplicate records, or mismatched naming conventions (e.g., <code>"Spain"</code> vs <code>"spain"</code> vs <code>"ES"</code>, or dates stored in mixed conventions).
+            </p>
+          </div>
+
+          <div class="flaw-card">
+            <div class="flaw-card__head">
+              <svg class="flaw-card__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="18" height="18" x="3" y="3" rx="2"/><line x1="9" y1="9" x2="15" y2="15"/><line x1="15" y1="9" x2="9" y2="15"/></svg>
+              <h4 class="flaw-card__title">4. Not in a Usable Format</h4>
+            </div>
+            <p class="flaw-card__desc">
+              Machine learning models are strictly mathematical systems calculating vector dot products and matrix multiplications. They cannot compute equations directly on text strings like <code>"France"</code> or <code>"Yes"</code>.
+            </p>
+          </div>
+        </div>
+
+        <!-- The Transformation Bridge -->
+        <div class="solution-banner fade-up animate-on-scroll">
+          <div class="solution-banner__icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/></svg>
+          </div>
+          <div class="solution-banner__text">
+            <h3>What Data Preprocessing Does</h3>
+            <p>
+              <strong>Data preprocessing is the vital bridge:</strong> it cleans the noise, imputes missing values, translates categorical text into numeric vectors, scales numerical ranges, and splits the data into training and evaluation sets. It transforms raw chaos into clean, structured numerical tensors that learning algorithms can compute smoothly without error.
+            </p>
+          </div>
+        </div>
+
+      </div> <!-- end block__body -->
+
+      <!-- =========================================================================
+           FIGURE: Data Taxonomy to Preprocessing to Machine Learning Model Pipeline
+           ========================================================================= -->
+      <figure class="pipeline-tree-wrapper fade-up animate-on-scroll" id="dataTaxonomyFigure" aria-label="Hierarchical data taxonomy to preprocessing and machine learning model">
+        
+        <!-- Header -->
+        <div class="pflow-header">
+          <div class="pflow-header__badge">
+            <span class="icon-badge icon-badge--teal" style="width:1.75rem;height:1.75rem;">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg>
+            </span>
+            <span class="pflow-header__eyebrow">Architecture &amp; Taxonomy Map</span>
+          </div>
+          <h3 class="pflow-header__title">From Raw Data to Machine Learning: The Pipeline Flow</h3>
+          <p class="pflow-header__desc">
+            Explore how real-world data types branch out and why <strong>every single branch must converge into Data Preprocessing</strong> before any learning algorithm can compute predictions.
+          </p>
+        </div>
+
+        <!-- ============ DIAGRAM CANVAS ============ -->
+        <div class="pflow-canvas" id="pflowCanvas">
+
+          <!-- ---------------- LEVEL 1: ROOT NODE (DATA) ---------------- -->
+          <div class="pflow-level pflow-level--root">
+            <div class="pflow-node pflow-node--root" id="node-data" data-node="data" tabindex="0" role="button" aria-label="Root node: Raw Data">
+              <div class="pflow-node__halo"></div>
+              <div class="pflow-node__content">
+                <!-- SVG Image: 3D Data Stack & Storage Cylinder -->
+                <div class="pflow-image pflow-image--root">
+                  <svg viewBox="0 0 96 96" fill="none" xmlns="http://www.w3.org/2000/svg" class="pflow-svg-art" aria-hidden="true">
+                    <defs>
+                      <linearGradient id="dbGrad1" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stop-color="#FF5A3C"/>
+                        <stop offset="50%" stop-color="#E9A825"/>
+                        <stop offset="100%" stop-color="#0EA894"/>
+                      </linearGradient>
+                      <linearGradient id="diskGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+                        <stop offset="0%" stop-color="#FFFFFF" stop-opacity="0.9"/>
+                        <stop offset="100%" stop-color="#FFF3EE"/>
+                      </linearGradient>
+                      <filter id="glowRoot" x="-20%" y="-20%" width="140%" height="140%">
+                        <feGaussianBlur stdDeviation="3" result="blur"/>
+                        <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+                      </filter>
+                    </defs>
+                    <!-- Background ambient aura -->
+                    <circle cx="48" cy="48" r="42" fill="url(#dbGrad1)" opacity="0.12" />
+                    <!-- Tier 3 Cylinder Base -->
+                    <ellipse cx="48" cy="68" rx="34" ry="11" fill="#E2D9CC" />
+                    <path d="M14 56 C14 62 82 62 82 56 L82 68 C82 74 14 74 14 68 Z" fill="#EDE7DE" />
+                    <ellipse cx="48" cy="56" rx="34" ry="11" fill="url(#diskGrad)" stroke="#FF5A3C" stroke-width="2" />
+                    <circle cx="28" cy="62" r="2.2" fill="#0EA894" class="pflow-pulse-light" />
+                    <circle cx="36" cy="63" r="2.2" fill="#E9A825" class="pflow-pulse-light" style="animation-delay:0.4s;" />
+                    <circle cx="44" cy="63.5" r="2.2" fill="#FF5A3C" class="pflow-pulse-light" style="animation-delay:0.8s;" />
+                    <!-- Tier 2 Cylinder Middle -->
+                    <path d="M18 42 C18 48 78 48 78 42 L78 52 C78 58 18 58 18 52 Z" fill="#F4EFEA" />
+                    <ellipse cx="48" cy="42" rx="30" ry="9.5" fill="#FFFFFF" stroke="#0EA894" stroke-width="2" />
+                    <line x1="32" y1="47" x2="64" y2="47" stroke="#CBD5E1" stroke-width="2" stroke-linecap="round" stroke-dasharray="3 3"/>
+                    <!-- Tier 1 Cylinder Top -->
+                    <path d="M22 28 C22 34 74 34 74 28 L74 38 C74 44 22 44 22 38 Z" fill="#FFF7ED" />
+                    <ellipse cx="48" cy="28" rx="26" ry="8.5" fill="#FFFFFF" stroke="#FF5A3C" stroke-width="2.5" />
+                    <!-- Floating Data Packets -->
+                    <rect x="36" y="12" width="24" height="11" rx="5.5" fill="#1B1712" />
+                    <text x="48" y="20" fill="#FFFFFF" font-family="'IBM Plex Mono', monospace" font-size="7.5" font-weight="700" text-anchor="middle">RAW [0,1]</text>
+                    <!-- Sparkles -->
+                    <path d="M18 18 L20 22 L24 24 L20 26 L18 30 L16 26 L12 24 L16 22 Z" fill="#E9A825" opacity="0.8" />
+                    <path d="M78 20 L80 23 L83 24.5 L80 26 L78 29 L76 26 L73 24.5 L76 23 Z" fill="#0EA894" opacity="0.8" />
+                  </svg>
+                </div>
+                <div class="pflow-node__text">
+                  <span class="pflow-node__tag">Input Ingestion</span>
+                  <h4 class="pflow-node__title">DATA</h4>
+                  <p class="pflow-node__hint">Raw, unorganized observations from files, databases, sensors &amp; APIs</p>
+                </div>
+              </div>
+              <div class="pflow-node__port pflow-node__port--bottom">
+                <span class="pflow-port-beacon"></span>
+              </div>
+            </div>
+          </div>
+
+          <!-- ---------------- CONNECTOR: ROOT TO 3 CATEGORIES ---------------- -->
+          <div class="pflow-connector pflow-connector--root-to-cat" aria-hidden="true">
+            <svg class="pflow-svg-branch" viewBox="0 0 900 68" preserveAspectRatio="none">
+              <!-- Background guide paths -->
+              <path class="pflow-wire-bg" d="M450 0 L450 20 C450 48, 150 28, 150 68" />
+              <path class="pflow-wire-bg" d="M450 0 L450 68" />
+              <path class="pflow-wire-bg" d="M450 0 L450 20 C450 48, 750 28, 750 68" />
+              <!-- Active flow paths with animated pulses -->
+              <path id="wire-num" class="pflow-wire pflow-wire--coral" d="M450 0 L450 20 C450 48, 150 28, 150 68" />
+              <path id="wire-cat" class="pflow-wire pflow-wire--teal" d="M450 0 L450 68" />
+              <path id="wire-oth" class="pflow-wire pflow-wire--purple" d="M450 0 L450 20 C450 48, 750 28, 750 68" />
+              <!-- Pulsing traveling flow particles -->
+              <circle class="pflow-particle pflow-particle--coral" r="4.5">
+                <animateMotion dur="2.4s" repeatCount="indefinite" path="M450 0 L450 20 C450 48, 150 28, 150 68" />
+              </circle>
+              <circle class="pflow-particle pflow-particle--teal" r="4.5">
+                <animateMotion dur="2.0s" repeatCount="indefinite" path="M450 0 L450 68" />
+              </circle>
+              <circle class="pflow-particle pflow-particle--purple" r="4.5">
+                <animateMotion dur="2.6s" repeatCount="indefinite" path="M450 0 L450 20 C450 48, 750 28, 750 68" />
+              </circle>
+            </svg>
+          </div>
+
+          <!-- ---------------- LEVEL 2: 3 CATEGORY BRANCHES ---------------- -->
+          <div class="pflow-level pflow-level--categories">
+            <div class="pflow-grid pflow-grid--3">
+
+              <!-- Category 1: Numerical -->
+              <div class="pflow-branch pflow-branch--numerical" data-branch="numerical">
+                <div class="pflow-node pflow-node--cat pflow-node--coral" id="node-numerical" data-node="numerical" tabindex="0" role="button" aria-label="Category: Numerical Data">
+                  <div class="pflow-node__port pflow-node__port--top"><span class="pflow-port-beacon"></span></div>
+                  <div class="pflow-node__head">
+                    <!-- SVG Image: Numerical Coordinate Plane & Trendline -->
+                    <div class="pflow-image pflow-image--category">
+                      <svg viewBox="0 0 64 64" fill="none" class="pflow-svg-art" aria-hidden="true">
+                        <rect width="64" height="64" rx="14" fill="#FFE7DE"/>
+                        <!-- Grid lines -->
+                        <line x1="12" y1="52" x2="54" y2="52" stroke="#FF5A3C" stroke-width="2" stroke-linecap="round"/>
+                        <line x1="12" y1="12" x2="12" y2="52" stroke="#FF5A3C" stroke-width="2" stroke-linecap="round"/>
+                        <line x1="12" y1="36" x2="52" y2="36" stroke="#FF5A3C" stroke-opacity="0.25" stroke-dasharray="2 2"/>
+                        <line x1="12" y1="22" x2="52" y2="22" stroke="#FF5A3C" stroke-opacity="0.25" stroke-dasharray="2 2"/>
+                        <!-- Curved trend line -->
+                        <path d="M14 46 Q 28 42, 34 26 T 50 16" stroke="#D8431F" stroke-width="3" stroke-linecap="round" fill="none"/>
+                        <!-- Scatter Points -->
+                        <circle cx="20" cy="44" r="3" fill="#FF5A3C"/>
+                        <circle cx="30" cy="34" r="3.5" fill="#D8431F"/>
+                        <circle cx="42" cy="22" r="3" fill="#FF5A3C"/>
+                        <circle cx="50" cy="16" r="4" fill="#D8431F"/>
+                        <!-- Math Sigma Badge -->
+                        <rect x="40" y="40" width="18" height="16" rx="4" fill="#FFFFFF" stroke="#FF5A3C" stroke-width="1.5"/>
+                        <text x="49" y="52" fill="#D8431F" font-family="'IBM Plex Mono', monospace" font-size="11" font-weight="700" text-anchor="middle">#</text>
+                      </svg>
+                    </div>
+                    <div>
+                      <span class="pflow-badge pflow-badge--coral">Quantitative</span>
+                      <h4 class="pflow-cat-title">Numerical</h4>
+                    </div>
+                  </div>
+                  <p class="pflow-cat-desc">Measurements and arithmetic quantities with natural numeric scales.</p>
+                  <div class="pflow-node__port pflow-node__port--bottom"><span class="pflow-port-beacon"></span></div>
+                </div>
+              </div>
+
+              <!-- Category 2: Categorical -->
+              <div class="pflow-branch pflow-branch--categorical" data-branch="categorical">
+                <div class="pflow-node pflow-node--cat pflow-node--teal" id="node-categorical" data-node="categorical" tabindex="0" role="button" aria-label="Category: Categorical Data">
+                  <div class="pflow-node__port pflow-node__port--top"><span class="pflow-port-beacon"></span></div>
+                  <div class="pflow-node__head">
+                    <!-- SVG Image: Categorical Tags & Labels -->
+                    <div class="pflow-image pflow-image--category">
+                      <svg viewBox="0 0 64 64" fill="none" class="pflow-svg-art" aria-hidden="true">
+                        <rect width="64" height="64" rx="14" fill="#DFF7F3"/>
+                        <!-- Tag 1 -->
+                        <rect x="10" y="14" width="32" height="14" rx="7" fill="#0EA894"/>
+                        <circle cx="16" cy="21" r="2.5" fill="#FFFFFF"/>
+                        <rect x="22" y="19" width="14" height="4" rx="2" fill="#FFFFFF"/>
+                        <!-- Tag 2 -->
+                        <rect x="24" y="32" width="30" height="14" rx="7" fill="#0B7B6B"/>
+                        <circle cx="30" cy="39" r="2.5" fill="#FFFFFF"/>
+                        <rect x="36" y="37" width="12" height="4" rx="2" fill="#FFFFFF"/>
+                        <!-- Categorization Swatch Matrix -->
+                        <rect x="12" y="36" width="8" height="8" rx="2" fill="#E9A825"/>
+                        <rect x="46" y="16" width="8" height="8" rx="2" fill="#FF5A3C"/>
+                        <!-- Connector string -->
+                        <path d="M16 21 C 20 28, 26 28, 30 39" stroke="#0EA894" stroke-width="1.5" stroke-dasharray="2 2" fill="none"/>
+                      </svg>
+                    </div>
+                    <div>
+                      <span class="pflow-badge pflow-badge--teal">Qualitative</span>
+                      <h4 class="pflow-cat-title">Categorical</h4>
+                    </div>
+                  </div>
+                  <p class="pflow-cat-desc">Labels, discrete groups, and class attributes requiring encoding.</p>
+                  <div class="pflow-node__port pflow-node__port--bottom"><span class="pflow-port-beacon"></span></div>
+                </div>
+              </div>
+
+              <!-- Category 3: Other Data -->
+              <div class="pflow-branch pflow-branch--other" data-branch="other">
+                <div class="pflow-node pflow-node--cat pflow-node--purple" id="node-other" data-node="other" tabindex="0" role="button" aria-label="Category: Other Data">
+                  <div class="pflow-node__port pflow-node__port--top"><span class="pflow-port-beacon"></span></div>
+                  <div class="pflow-node__head">
+                    <!-- SVG Image: Multimodal Documents & Image Frame -->
+                    <div class="pflow-image pflow-image--category">
+                      <svg viewBox="0 0 64 64" fill="none" class="pflow-svg-art" aria-hidden="true">
+                        <rect width="64" height="64" rx="14" fill="#EDE9FE"/>
+                        <!-- Document card -->
+                        <rect x="10" y="12" width="26" height="34" rx="4" fill="#FFFFFF" stroke="#7C3AED" stroke-width="1.8"/>
+                        <line x1="16" y1="18" x2="30" y2="18" stroke="#7C3AED" stroke-width="2" stroke-linecap="round"/>
+                        <line x1="16" y1="24" x2="28" y2="24" stroke="#94A3B8" stroke-width="1.8" stroke-linecap="round"/>
+                        <line x1="16" y1="30" x2="30" y2="30" stroke="#94A3B8" stroke-width="1.8" stroke-linecap="round"/>
+                        <line x1="16" y1="36" x2="24" y2="36" stroke="#94A3B8" stroke-width="1.8" stroke-linecap="round"/>
+                        <!-- Image Frame Card (overlapping) -->
+                        <rect x="26" y="24" width="28" height="26" rx="4" fill="#FFFFFF" stroke="#6366F1" stroke-width="1.8"/>
+                        <rect x="28" y="26" width="24" height="22" rx="3" fill="#F8FAFC"/>
+                        <!-- Mountain / Sun in photo -->
+                        <circle cx="44" cy="31" r="3" fill="#F59E0B"/>
+                        <path d="M30 44 L36 36 L41 41 L45 35 L50 44 Z" fill="#6366F1" opacity="0.85"/>
+                        <!-- Tensor badge -->
+                        <rect x="36" y="10" width="18" height="11" rx="3" fill="#7C3AED"/>
+                        <text x="45" y="18" fill="#FFFFFF" font-family="'IBM Plex Mono', monospace" font-size="6.5" font-weight="700" text-anchor="middle">[N,C]</text>
+                      </svg>
+                    </div>
+                    <div>
+                      <span class="pflow-badge pflow-badge--purple">Unstructured</span>
+                      <h4 class="pflow-cat-title">Other Data</h4>
+                    </div>
+                  </div>
+                  <p class="pflow-cat-desc">High-dimensional signals like language text and photographic pixels.</p>
+                  <div class="pflow-node__port pflow-node__port--bottom"><span class="pflow-port-beacon"></span></div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+          <!-- ---------------- CONNECTOR: CATEGORIES TO 6 LEAVES ---------------- -->
+          <div class="pflow-connector pflow-connector--cat-to-leaf" aria-hidden="true">
+            <svg class="pflow-svg-branch" viewBox="0 0 900 48" preserveAspectRatio="none">
+              <!-- Numerical splits: 150 -> 75 (Discrete) and 225 (Continuous) -->
+              <path class="pflow-wire-bg" d="M150 0 L150 14 C150 28, 75 20, 75 48" />
+              <path class="pflow-wire-bg" d="M150 0 L150 14 C150 28, 225 20, 225 48" />
+              <path id="wire-discrete" class="pflow-wire pflow-wire--coral" d="M150 0 L150 14 C150 28, 75 20, 75 48" />
+              <path id="wire-continuous" class="pflow-wire pflow-wire--coral" d="M150 0 L150 14 C150 28, 225 20, 225 48" />
+              <circle class="pflow-particle pflow-particle--coral" r="3.5">
+                <animateMotion dur="2.1s" repeatCount="indefinite" path="M150 0 L150 14 C150 28, 75 20, 75 48" />
+              </circle>
+              <circle class="pflow-particle pflow-particle--coral" r="3.5">
+                <animateMotion dur="2.3s" repeatCount="indefinite" path="M150 0 L150 14 C150 28, 225 20, 225 48" />
+              </circle>
+
+              <!-- Categorical splits: 450 -> 375 (Nominal) and 525 (Ordinal) -->
+              <path class="pflow-wire-bg" d="M450 0 L450 14 C450 28, 375 20, 375 48" />
+              <path class="pflow-wire-bg" d="M450 0 L450 14 C450 28, 525 20, 525 48" />
+              <path id="wire-nominal" class="pflow-wire pflow-wire--teal" d="M450 0 L450 14 C450 28, 375 20, 375 48" />
+              <path id="wire-ordinal" class="pflow-wire pflow-wire--teal" d="M450 0 L450 14 C450 28, 525 20, 525 48" />
+              <circle class="pflow-particle pflow-particle--teal" r="3.5">
+                <animateMotion dur="2.0s" repeatCount="indefinite" path="M450 0 L450 14 C450 28, 375 20, 375 48" />
+              </circle>
+              <circle class="pflow-particle pflow-particle--teal" r="3.5">
+                <animateMotion dur="2.2s" repeatCount="indefinite" path="M450 0 L450 14 C450 28, 525 20, 525 48" />
+              </circle>
+
+              <!-- Other Data splits: 750 -> 675 (Text) and 825 (Images) -->
+              <path class="pflow-wire-bg" d="M750 0 L750 14 C750 28, 675 20, 675 48" />
+              <path class="pflow-wire-bg" d="M750 0 L750 14 C750 28, 825 20, 825 48" />
+              <path id="wire-text" class="pflow-wire pflow-wire--purple" d="M750 0 L750 14 C750 28, 675 20, 675 48" />
+              <path id="wire-images" class="pflow-wire pflow-wire--purple" d="M750 0 L750 14 C750 28, 825 20, 825 48" />
+              <circle class="pflow-particle pflow-particle--purple" r="3.5">
+                <animateMotion dur="2.4s" repeatCount="indefinite" path="M750 0 L750 14 C750 28, 675 20, 675 48" />
+              </circle>
+              <circle class="pflow-particle pflow-particle--purple" r="3.5">
+                <animateMotion dur="2.5s" repeatCount="indefinite" path="M750 0 L750 14 C750 28, 825 20, 825 48" />
+              </circle>
+            </svg>
+          </div>
+
+          <!-- ---------------- LEVEL 3: 6 SPECIFIC DATA TYPES (LEAF NODES) ---------------- -->
+          <div class="pflow-level pflow-level--leaves">
+            <div class="pflow-grid pflow-grid--6">
+
+              <!-- Leaf 1: Discrete -->
+              <div class="pflow-leaf-col" data-leaf="discrete" data-parent="numerical">
+                <div class="pflow-node pflow-node--leaf pflow-node--coral-soft" id="node-discrete" data-node="discrete" tabindex="0" role="button" aria-label="Subtype: Discrete Data">
+                  <div class="pflow-node__port pflow-node__port--top"><span class="pflow-port-beacon"></span></div>
+                  <!-- SVG Image: Integer Blocks & Dice -->
+                  <div class="pflow-image pflow-image--leaf">
+                    <svg viewBox="0 0 48 48" fill="none" class="pflow-svg-art" aria-hidden="true">
+                      <rect width="48" height="48" rx="10" fill="#FFE7DE"/>
+                      <!-- Dice block 1 -->
+                      <rect x="8" y="14" width="14" height="14" rx="3" fill="#FF5A3C"/>
+                      <circle cx="15" cy="21" r="2" fill="#FFFFFF"/>
+                      <!-- Dice block 2 -->
+                      <rect x="26" y="10" width="14" height="14" rx="3" fill="#D8431F"/>
+                      <circle cx="30" cy="14" r="1.5" fill="#FFFFFF"/>
+                      <circle cx="36" cy="20" r="1.5" fill="#FFFFFF"/>
+                      <!-- Block 3 -->
+                      <rect x="18" y="26" width="16" height="14" rx="3" fill="#FFFFFF" stroke="#FF5A3C" stroke-width="1.5"/>
+                      <circle cx="23" cy="33" r="1.5" fill="#FF5A3C"/>
+                      <circle cx="26" cy="33" r="1.5" fill="#FF5A3C"/>
+                      <circle cx="29" cy="33" r="1.5" fill="#FF5A3C"/>
+                    </svg>
+                  </div>
+                  <h5 class="pflow-leaf-title">Discrete</h5>
+                  <span class="pflow-leaf-badge">Whole counts</span>
+                  <div class="pflow-leaf-example"><code>44 yrs, 3 cars</code></div>
+                  <p class="pflow-leaf-note">Countable whole numbers; no 2.5 children.</p>
+                  <div class="pflow-node__port pflow-node__port--bottom"><span class="pflow-port-beacon"></span></div>
+                </div>
+              </div>
+
+              <!-- Leaf 2: Continuous -->
+              <div class="pflow-leaf-col" data-leaf="continuous" data-parent="numerical">
+                <div class="pflow-node pflow-node--leaf pflow-node--coral-soft" id="node-continuous" data-node="continuous" tabindex="0" role="button" aria-label="Subtype: Continuous Data">
+                  <div class="pflow-node__port pflow-node__port--top"><span class="pflow-port-beacon"></span></div>
+                  <!-- SVG Image: Smooth Continuous Analog Wave -->
+                  <div class="pflow-image pflow-image--leaf">
+                    <svg viewBox="0 0 48 48" fill="none" class="pflow-svg-art" aria-hidden="true">
+                      <rect width="48" height="48" rx="10" fill="#FFE7DE"/>
+                      <!-- Smooth sine curve -->
+                      <path d="M6 28 C 14 12, 18 40, 26 24 C 34 8, 38 38, 42 22" stroke="#FF5A3C" stroke-width="2.8" stroke-linecap="round" fill="none"/>
+                      <!-- Floating precision markers -->
+                      <circle cx="16" cy="20" r="3" fill="#D8431F"/>
+                      <circle cx="26" cy="24" r="3" fill="#D8431F"/>
+                      <circle cx="34" cy="14" r="3" fill="#D8431F"/>
+                      <line x1="8" y1="40" x2="40" y2="40" stroke="#FF5A3C" stroke-width="1.5" stroke-dasharray="2 2"/>
+                    </svg>
+                  </div>
+                  <h5 class="pflow-leaf-title">Continuous</h5>
+                  <span class="pflow-leaf-badge">Infinite range</span>
+                  <div class="pflow-leaf-example"><code>$72k, 37.2°C</code></div>
+                  <p class="pflow-leaf-note">Measurable continuum with infinite decimal precision.</p>
+                  <div class="pflow-node__port pflow-node__port--bottom"><span class="pflow-port-beacon"></span></div>
+                </div>
+              </div>
+
+              <!-- Leaf 3: Nominal -->
+              <div class="pflow-leaf-col" data-leaf="nominal" data-parent="categorical">
+                <div class="pflow-node pflow-node--leaf pflow-node--teal-soft" id="node-nominal" data-node="nominal" tabindex="0" role="button" aria-label="Subtype: Nominal Data">
+                  <div class="pflow-node__port pflow-node__port--top"><span class="pflow-port-beacon"></span></div>
+                  <!-- SVG Image: Country Pins & Unordered Category Badges -->
+                  <div class="pflow-image pflow-image--leaf">
+                    <svg viewBox="0 0 48 48" fill="none" class="pflow-svg-art" aria-hidden="true">
+                      <rect width="48" height="48" rx="10" fill="#DFF7F3"/>
+                      <!-- Country pin tag 1: France -->
+                      <rect x="8" y="10" width="18" height="11" rx="4" fill="#0EA894"/>
+                      <text x="17" y="18" fill="#FFFFFF" font-family="'IBM Plex Mono', monospace" font-size="6" font-weight="700" text-anchor="middle">FRA</text>
+                      <!-- Country pin tag 2: Spain -->
+                      <rect x="22" y="24" width="18" height="11" rx="4" fill="#0B7B6B"/>
+                      <text x="31" y="32" fill="#FFFFFF" font-family="'IBM Plex Mono', monospace" font-size="6" font-weight="700" text-anchor="middle">ESP</text>
+                      <!-- Pin marker -->
+                      <circle cx="17" cy="34" r="3" fill="#0EA894"/>
+                      <path d="M17 37 L17 41" stroke="#0EA894" stroke-width="2" stroke-linecap="round"/>
+                    </svg>
+                  </div>
+                  <h5 class="pflow-leaf-title">Nominal</h5>
+                  <span class="pflow-leaf-badge">No order</span>
+                  <div class="pflow-leaf-example"><code>"France", "Yes"</code></div>
+                  <p class="pflow-leaf-note">Unordered names; France is not "greater than" Spain.</p>
+                  <div class="pflow-node__port pflow-node__port--bottom"><span class="pflow-port-beacon"></span></div>
+                </div>
+              </div>
+
+              <!-- Leaf 4: Ordinal -->
+              <div class="pflow-leaf-col" data-leaf="ordinal" data-parent="categorical">
+                <div class="pflow-node pflow-node--leaf pflow-node--teal-soft" id="node-ordinal" data-node="ordinal" tabindex="0" role="button" aria-label="Subtype: Ordinal Data">
+                  <div class="pflow-node__port pflow-node__port--top"><span class="pflow-port-beacon"></span></div>
+                  <!-- SVG Image: 3-Tier Stepped Podium (Ranked) -->
+                  <div class="pflow-image pflow-image--leaf">
+                    <svg viewBox="0 0 48 48" fill="none" class="pflow-svg-art" aria-hidden="true">
+                      <rect width="48" height="48" rx="10" fill="#DFF7F3"/>
+                      <!-- Step 2: Medium -->
+                      <rect x="8" y="22" width="10" height="18" rx="2" fill="#2DD4BF"/>
+                      <text x="13" y="34" fill="#0F766E" font-family="'IBM Plex Mono', monospace" font-size="6.5" font-weight="700" text-anchor="middle">2</text>
+                      <!-- Step 1: High (Tallest) -->
+                      <rect x="19" y="14" width="10" height="26" rx="2" fill="#0EA894"/>
+                      <text x="24" y="26" fill="#FFFFFF" font-family="'IBM Plex Mono', monospace" font-size="7" font-weight="700" text-anchor="middle">1</text>
+                      <!-- Step 3: Low -->
+                      <rect x="30" y="28" width="10" height="12" rx="2" fill="#99F6E4"/>
+                      <text x="35" y="37" fill="#0F766E" font-family="'IBM Plex Mono', monospace" font-size="6.5" font-weight="700" text-anchor="middle">3</text>
+                      <!-- Upward arrow -->
+                      <path d="M12 14 L24 8 L36 14" stroke="#0B7B6B" stroke-width="1.8" stroke-linecap="round" fill="none"/>
+                    </svg>
+                  </div>
+                  <h5 class="pflow-leaf-title">Ordinal</h5>
+                  <span class="pflow-leaf-badge">Ranked order</span>
+                  <div class="pflow-leaf-example"><code>Low &lt; Med &lt; High</code></div>
+                  <p class="pflow-leaf-note">Clear hierarchy; intervals between ranks are non-numeric.</p>
+                  <div class="pflow-node__port pflow-node__port--bottom"><span class="pflow-port-beacon"></span></div>
+                </div>
+              </div>
+
+              <!-- Leaf 5: Text -->
+              <div class="pflow-leaf-col" data-leaf="text" data-parent="other">
+                <div class="pflow-node pflow-node--leaf pflow-node--purple-soft" id="node-text" data-node="text" tabindex="0" role="button" aria-label="Subtype: Text Data">
+                  <div class="pflow-node__port pflow-node__port--top"><span class="pflow-port-beacon"></span></div>
+                  <!-- SVG Image: Document Text Tokens & Quotes -->
+                  <div class="pflow-image pflow-image--leaf">
+                    <svg viewBox="0 0 48 48" fill="none" class="pflow-svg-art" aria-hidden="true">
+                      <rect width="48" height="48" rx="10" fill="#EDE9FE"/>
+                      <!-- Document -->
+                      <rect x="10" y="8" width="28" height="32" rx="3" fill="#FFFFFF" stroke="#7C3AED" stroke-width="1.5"/>
+                      <path d="M15 15 L22 15" stroke="#7C3AED" stroke-width="2" stroke-linecap="round"/>
+                      <path d="M15 21 L33 21" stroke="#94A3B8" stroke-width="1.5" stroke-linecap="round"/>
+                      <path d="M15 26 L30 26" stroke="#94A3B8" stroke-width="1.5" stroke-linecap="round"/>
+                      <path d="M15 31 L26 31" stroke="#94A3B8" stroke-width="1.5" stroke-linecap="round"/>
+                      <!-- Token pill -->
+                      <rect x="22" y="29" width="18" height="10" rx="3" fill="#7C3AED"/>
+                      <text x="31" y="36.5" fill="#FFFFFF" font-family="'IBM Plex Mono', monospace" font-size="6" font-weight="700" text-anchor="middle">"word"</text>
+                    </svg>
+                  </div>
+                  <h5 class="pflow-leaf-title">Text</h5>
+                  <span class="pflow-leaf-badge">NLP Tokens</span>
+                  <div class="pflow-leaf-example"><code>"Reviews", "Posts"</code></div>
+                  <p class="pflow-leaf-note">Free-form sentences needing vocabulary vectorization.</p>
+                  <div class="pflow-node__port pflow-node__port--bottom"><span class="pflow-port-beacon"></span></div>
+                </div>
+              </div>
+
+              <!-- Leaf 6: Images -->
+              <div class="pflow-leaf-col" data-leaf="images" data-parent="other">
+                <div class="pflow-node pflow-node--leaf pflow-node--purple-soft" id="node-images" data-node="images" tabindex="0" role="button" aria-label="Subtype: Images Data">
+                  <div class="pflow-node__port pflow-node__port--top"><span class="pflow-port-beacon"></span></div>
+                  <!-- SVG Image: Camera Viewfinder & RGB Pixel Tensor -->
+                  <div class="pflow-image pflow-image--leaf">
+                    <svg viewBox="0 0 48 48" fill="none" class="pflow-svg-art" aria-hidden="true">
+                      <rect width="48" height="48" rx="10" fill="#EDE9FE"/>
+                      <!-- Camera frame -->
+                      <rect x="8" y="11" width="32" height="26" rx="4" fill="#FFFFFF" stroke="#6366F1" stroke-width="1.5"/>
+                      <!-- RGB 3x3 pixel matrix inside -->
+                      <rect x="12" y="15" width="6" height="5" fill="#EF4444" opacity="0.8"/>
+                      <rect x="20" y="15" width="6" height="5" fill="#10B981" opacity="0.8"/>
+                      <rect x="28" y="15" width="6" height="5" fill="#3B82F6" opacity="0.8"/>
+                      <rect x="12" y="22" width="6" height="5" fill="#3B82F6" opacity="0.8"/>
+                      <rect x="20" y="22" width="6" height="5" fill="#EF4444" opacity="0.8"/>
+                      <rect x="28" y="22" width="6" height="5" fill="#10B981" opacity="0.8"/>
+                      <rect x="12" y="29" width="6" height="5" fill="#10B981" opacity="0.8"/>
+                      <rect x="20" y="29" width="6" height="5" fill="#3B82F6" opacity="0.8"/>
+                      <rect x="28" y="29" width="6" height="5" fill="#EF4444" opacity="0.8"/>
+                      <!-- Corner crosshairs -->
+                      <path d="M10 14 L10 12 L12 12" stroke="#6366F1" stroke-width="1.5"/>
+                      <path d="M38 14 L38 12 L36 12" stroke="#6366F1" stroke-width="1.5"/>
+                    </svg>
+                  </div>
+                  <h5 class="pflow-leaf-title">Images</h5>
+                  <span class="pflow-leaf-badge">Pixel grid</span>
+                  <div class="pflow-leaf-example"><code>224×224×3 RGB</code></div>
+                  <p class="pflow-leaf-note">2D/3D visual tensors of normalized pixel brightness (0-255).</p>
+                  <div class="pflow-node__port pflow-node__port--bottom"><span class="pflow-port-beacon"></span></div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+          <!-- ---------------- CONNECTOR: 6 LEAVES CONVERGING INTO PREPROCESSING ---------------- -->
+          <div class="pflow-connector pflow-connector--funnel" aria-hidden="true">
+            <svg class="pflow-svg-branch pflow-svg-branch--funnel" viewBox="0 0 900 86" preserveAspectRatio="none">
+              <!-- Background convergence traces -->
+              <path class="pflow-wire-bg" d="M75 0 L75 32 C75 56, 420 40, 420 86" />
+              <path class="pflow-wire-bg" d="M225 0 L225 28 C225 52, 430 44, 430 86" />
+              <path class="pflow-wire-bg" d="M375 0 L375 24 C375 48, 440 48, 440 86" />
+              <path class="pflow-wire-bg" d="M525 0 L525 24 C525 48, 460 48, 460 86" />
+              <path class="pflow-wire-bg" d="M675 0 L675 28 C675 52, 470 44, 470 86" />
+              <path class="pflow-wire-bg" d="M825 0 L825 32 C825 56, 480 40, 480 86" />
+
+              <!-- Main Active Converging Lines -->
+              <path id="wire-f-discrete" class="pflow-wire pflow-wire--coral" d="M75 0 L75 32 C75 56, 420 40, 420 86" />
+              <path id="wire-f-continuous" class="pflow-wire pflow-wire--coral" d="M225 0 L225 28 C225 52, 430 44, 430 86" />
+              <path id="wire-f-nominal" class="pflow-wire pflow-wire--teal" d="M375 0 L375 24 C375 48, 440 48, 440 86" />
+              <path id="wire-f-ordinal" class="pflow-wire pflow-wire--teal" d="M525 0 L525 24 C525 48, 460 48, 460 86" />
+              <path id="wire-f-text" class="pflow-wire pflow-wire--purple" d="M675 0 L675 28 C675 52, 470 44, 470 86" />
+              <path id="wire-f-images" class="pflow-wire pflow-wire--purple" d="M825 0 L825 32 C825 56, 480 40, 480 86" />
+
+              <!-- Funnel collector arrow -->
+              <polygon points="450,86 443,76 457,76" fill="#0EA894" />
+
+              <!-- Traveling pulses funneling downwards -->
+              <circle class="pflow-particle pflow-particle--coral" r="3.5">
+                <animateMotion dur="2.1s" repeatCount="indefinite" path="M75 0 L75 32 C75 56, 420 40, 420 86" />
+              </circle>
+              <circle class="pflow-particle pflow-particle--coral" r="3.5">
+                <animateMotion dur="2.3s" repeatCount="indefinite" path="M225 0 L225 28 C225 52, 430 44, 430 86" />
+              </circle>
+              <circle class="pflow-particle pflow-particle--teal" r="3.5">
+                <animateMotion dur="1.9s" repeatCount="indefinite" path="M375 0 L375 24 C375 48, 440 48, 440 86" />
+              </circle>
+              <circle class="pflow-particle pflow-particle--teal" r="3.5">
+                <animateMotion dur="2.1s" repeatCount="indefinite" path="M525 0 L525 24 C525 48, 460 48, 460 86" />
+              </circle>
+              <circle class="pflow-particle pflow-particle--purple" r="3.5">
+                <animateMotion dur="2.4s" repeatCount="indefinite" path="M675 0 L675 28 C675 52, 470 44, 470 86" />
+              </circle>
+              <circle class="pflow-particle pflow-particle--purple" r="3.5">
+                <animateMotion dur="2.6s" repeatCount="indefinite" path="M825 0 L825 32 C825 56, 480 40, 480 86" />
+              </circle>
+            </svg>
+            <div class="pflow-funnel-tag">
+              <span>All 6 pathways converge into Preprocessing</span>
+            </div>
+          </div>
+
+          <!-- ---------------- LEVEL 4: PREPROCESSING HUB ---------------- -->
+          <div class="pflow-level pflow-level--proc">
+            <div class="pflow-node pflow-node--proc" id="node-proc" data-node="preprocessing" tabindex="0" role="button" aria-label="Processing Hub: Data Preprocessing">
+              <div class="pflow-node__port pflow-node__port--top"><span class="pflow-port-beacon"></span></div>
+              <div class="pflow-proc-inner">
+                
+                <!-- Left: Animated Gear & Transformer Graphic -->
+                <div class="pflow-proc-visual">
+                  <svg viewBox="0 0 96 96" fill="none" class="pflow-svg-art pflow-svg-gear-anim" aria-hidden="true">
+                    <defs>
+                      <linearGradient id="gearGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stop-color="#0EA894"/>
+                        <stop offset="100%" stop-color="#059669"/>
+                      </linearGradient>
+                    </defs>
+                    <!-- Ambient Glow -->
+                    <circle cx="48" cy="48" r="44" fill="#0EA894" opacity="0.1"/>
+                    <!-- Large Rotating Gear -->
+                    <g class="pflow-spin-gear">
+                      <circle cx="48" cy="48" r="28" fill="url(#gearGrad)"/>
+                      <!-- Gear Cogs -->
+                      <path d="M44 14 h8 v8 h-8 z M44 74 h8 v8 h-8 z M14 44 h8 v8 h-8 z M74 44 h8 v8 h-8 z" fill="#0B7B6B"/>
+                      <path d="M24 24 l6 -6 l6 6 l-6 6 z M66 66 l6 -6 l6 6 l-6 6 z M24 66 l6 6 l6 -6 l-6 -6 z M66 24 l6 6 l6 -6 l-6 -6 z" fill="#0B7B6B"/>
+                      <circle cx="48" cy="48" r="14" fill="#FFFFFF"/>
+                      <circle cx="48" cy="48" r="8" fill="#0EA894"/>
+                    </g>
+                    <!-- Small Counter-Rotating Gear -->
+                    <g class="pflow-spin-gear-reverse">
+                      <circle cx="72" cy="24" r="12" fill="#FF5A3C"/>
+                      <circle cx="72" cy="24" r="5" fill="#FFFFFF"/>
+                      <path d="M70 8 h4 v4 h-4 z M70 36 h4 v4 h-4 z M56 22 h4 v4 h-4 z M84 22 h4 v4 h-4 z" fill="#D8431F"/>
+                    </g>
+                    <!-- Binary Matrix Filter Arrow -->
+                    <path d="M28 72 L48 84 L68 72" stroke="#0EA894" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+                  </svg>
+                </div>
+
+                <!-- Center: Content Details -->
+                <div class="pflow-proc-body">
+                  <div class="pflow-proc-badge-row">
+                    <span class="pflow-badge pflow-badge--proc">Essential Stage</span>
+                    <span class="pflow-pulse-pill"><span class="pflow-pulse-dot"></span> Pipeline Active</span>
+                  </div>
+                  <h4 class="pflow-proc-title">Data Preprocessing</h4>
+                  <p class="pflow-proc-desc">
+                    The mandatory transformation bridge that turns inconsistent, dirty, mixed-format data into clean, normalized numerical tensors.
+                  </p>
+                  
+                  <!-- 4 Core Transformations Applied -->
+                  <div class="pflow-proc-pills">
+                    <div class="pflow-proc-pill">
+                      <span class="pflow-pill-icon">🩹</span>
+                      <div class="pflow-pill-info">
+                        <strong>Missing Value Imputer</strong>
+                        <span><code>SimpleImputer(strategy='mean')</code></span>
+                      </div>
+                    </div>
+                    <div class="pflow-proc-pill">
+                      <span class="pflow-pill-icon">🏷️</span>
+                      <div class="pflow-pill-info">
+                        <strong>Categorical Encoder</strong>
+                        <span><code>OneHotEncoder()</code> &bull; <code>OrdinalEncoder()</code></span>
+                      </div>
+                    </div>
+                    <div class="pflow-proc-pill">
+                      <span class="pflow-pill-icon">⚖️</span>
+                      <div class="pflow-pill-info">
+                        <strong>Feature Scaling</strong>
+                        <span><code>StandardScaler()</code> &bull; <code>MinMaxScaler()</code></span>
+                      </div>
+                    </div>
+                    <div class="pflow-proc-pill">
+                      <span class="pflow-pill-icon">✂️</span>
+                      <div class="pflow-pill-info">
+                        <strong>Train / Test Split</strong>
+                        <span><code>train_test_split(test_size=0.2)</code></span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+              <div class="pflow-node__port pflow-node__port--bottom"><span class="pflow-port-beacon"></span></div>
+            </div>
+          </div>
+
+          <!-- ---------------- CONNECTOR: PREPROCESSING TO MACHINE LEARNING MODEL ---------------- -->
+          <div class="pflow-connector pflow-connector--proc-to-model" aria-hidden="true">
+            <div class="pflow-beam-wrapper">
+              <svg class="pflow-svg-beam" viewBox="0 0 400 56" preserveAspectRatio="none">
+                <!-- Background guide -->
+                <line x1="200" y1="0" x2="200" y2="56" stroke="#EDE7DE" stroke-width="6" stroke-linecap="round"/>
+                <!-- High-voltage glowing data stream -->
+                <line class="pflow-beam-core" x1="200" y1="0" x2="200" y2="56" stroke="#0EA894" stroke-width="4" stroke-linecap="round"/>
+                <!-- Traveling packets -->
+                <circle class="pflow-particle pflow-particle--teal" r="5">
+                  <animateMotion dur="1.2s" repeatCount="indefinite" path="M200 0 L200 56" />
+                </circle>
+                <!-- Arrowhead entering model -->
+                <polygon points="200,56 193,44 207,44" fill="#0EA894"/>
+              </svg>
+              <div class="pflow-tensor-tag">
+                <span>Clean Matrix <strong>X</strong> &bull; Target Vector <strong>y</strong> (Pure Numbers)</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- ---------------- LEVEL 5: MACHINE LEARNING MODEL ---------------- -->
+          <div class="pflow-level pflow-level--model">
+            <div class="pflow-node pflow-node--model" id="node-model" data-node="model" tabindex="0" role="button" aria-label="Target: Machine Learning Model">
+              <div class="pflow-node__port pflow-node__port--top"><span class="pflow-port-beacon"></span></div>
+              
+              <div class="pflow-model-inner">
+                
+                <!-- Left: Neural Network Synapse Illustration -->
+                <div class="pflow-model-visual">
+                  <svg viewBox="0 0 96 96" fill="none" class="pflow-svg-art" aria-hidden="true">
+                    <defs>
+                      <linearGradient id="synapseGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stop-color="#FF5A3C"/>
+                        <stop offset="100%" stop-color="#0EA894"/>
+                      </linearGradient>
+                    </defs>
+                    <!-- Background aura -->
+                    <rect width="96" height="96" rx="20" fill="#1B1712"/>
+                    <!-- Synapse connecting lines -->
+                    <line x1="22" y1="28" x2="48" y2="24" stroke="#FF5A3C" stroke-width="1.8" stroke-opacity="0.8"/>
+                    <line x1="22" y1="28" x2="48" y2="48" stroke="#FF5A3C" stroke-width="1.8" stroke-opacity="0.8"/>
+                    <line x1="22" y1="48" x2="48" y2="24" stroke="#E9A825" stroke-width="1.8" stroke-opacity="0.8"/>
+                    <line x1="22" y1="48" x2="48" y2="48" stroke="#E9A825" stroke-width="1.8" stroke-opacity="0.8"/>
+                    <line x1="22" y1="48" x2="48" y2="72" stroke="#E9A825" stroke-width="1.8" stroke-opacity="0.8"/>
+                    <line x1="22" y1="68" x2="48" y2="48" stroke="#0EA894" stroke-width="1.8" stroke-opacity="0.8"/>
+                    <line x1="22" y1="68" x2="48" y2="72" stroke="#0EA894" stroke-width="1.8" stroke-opacity="0.8"/>
+                    
+                    <line x1="48" y1="24" x2="76" y2="48" stroke="#0EA894" stroke-width="2.2" stroke-opacity="0.9"/>
+                    <line x1="48" y1="48" x2="76" y2="48" stroke="#34D399" stroke-width="2.5" stroke-opacity="0.9"/>
+                    <line x1="48" y1="72" x2="76" y2="48" stroke="#0EA894" stroke-width="2.2" stroke-opacity="0.9"/>
+
+                    <!-- Input Layer Neurons (Clean Tensors) -->
+                    <circle cx="22" cy="28" r="6" fill="#FF5A3C" class="pflow-synapse-node" />
+                    <circle cx="22" cy="48" r="6" fill="#E9A825" class="pflow-synapse-node" style="animation-delay:0.3s;" />
+                    <circle cx="22" cy="68" r="6" fill="#0EA894" class="pflow-synapse-node" style="animation-delay:0.6s;" />
+
+                    <!-- Hidden Layer Neurons (Weights W * X + b) -->
+                    <circle cx="48" cy="24" r="7" fill="#FFFFFF" stroke="#0EA894" stroke-width="2.5" />
+                    <circle cx="48" cy="48" r="7" fill="#FFFFFF" stroke="#34D399" stroke-width="2.5" />
+                    <circle cx="48" cy="72" r="7" fill="#FFFFFF" stroke="#0EA894" stroke-width="2.5" />
+
+                    <!-- Output Layer Neuron (Prediction) -->
+                    <circle cx="76" cy="48" r="9" fill="#34D399" class="pflow-pulse-light" />
+                    <circle cx="76" cy="48" r="4" fill="#FFFFFF" />
+                  </svg>
+                </div>
+
+                <!-- Right: Model Details & Inferences -->
+                <div class="pflow-model-body">
+                  <div class="pflow-model-badge-row">
+                    <span class="pflow-badge pflow-badge--model">Target Learner</span>
+                    <span class="pflow-calc-badge">Computes: <code>&ycirc; = f(W &middot; x + b)</code></span>
+                  </div>
+                  <h4 class="pflow-model-title">Machine Learning Model</h4>
+                  <p class="pflow-model-desc">
+                    Logistic Regression, SVM, Random Forest, or Neural Network computing dot products and matrix multiplications. <strong>Cannot compute on raw strings or NaNs.</strong>
+                  </p>
+                  
+                  <!-- Live Model Prediction Readout -->
+                  <div class="pflow-prediction-pill" id="pflowPredictionPill">
+                    <span class="pflow-pred-dot"></span>
+                    <span class="pflow-pred-label">Inference Ready:</span>
+                    <span class="pflow-pred-val" id="pflowPredVal">Purchased = "Yes" (Probability: 0.94)</span>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+          </div>
+
+        </div> <!-- end pflow-canvas -->
+
+      </figure>
+
+    </section>
+
+    <!-- ---- Section 4: Data Preprocessing Tasks (Interactive List & Runnable Python Code) ---- -->
+    <section class="block" id="preprocessing-pipeline">
+      <div class="block__body">
+        <h2 class="fade-up animate-on-scroll">
+          <span class="icon-badge icon-badge--coral">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+          </span>
+          Data Preprocessing Tasks
+        </h2>
+        <p class="fade-up animate-on-scroll">
+          Preparing a dataset follows an established, sequential pipeline. Below is the complete interactive 7-step data preprocessing pipeline based on standard libraries (<strong>NumPy</strong>, <strong>Pandas</strong>, and <strong>Scikit-Learn</strong>).
+        </p>
+        <p class="fade-up animate-on-scroll" style="font-size:0.92rem; color:var(--muted);">
+          Select any task from the interactive list below, inspect its simple explanation, and click <strong>"▶ Run Code"</strong> to observe the Python code execute in real-time and render the live output transformations.
+        </p>
+      </div> <!-- end block__body -->
+
+      <!-- Interactive Pipeline Container -->
+      <div class="pipeline-container fade-up animate-on-scroll" id="pipelineContainer">
+          
+          <!-- Stepper Tab Bar -->
+          <div class="pipeline-stepper" role="tablist" aria-label="Preprocessing steps">
+            <button class="pipeline-step-btn is-active" data-step="1" role="tab" aria-selected="true">
+              <span class="pipeline-step-btn__num">1</span>
+              <span>Acquire Dataset</span>
+            </button>
+            <button class="pipeline-step-btn" data-step="2" role="tab" aria-selected="false">
+              <span class="pipeline-step-btn__num">2</span>
+              <span>Import Libraries</span>
+            </button>
+            <button class="pipeline-step-btn" data-step="3" role="tab" aria-selected="false">
+              <span class="pipeline-step-btn__num">3</span>
+              <span>Import Dataset</span>
+            </button>
+            <button class="pipeline-step-btn" data-step="4" role="tab" aria-selected="false">
+              <span class="pipeline-step-btn__num">4</span>
+              <span>Handle Missing Values</span>
+            </button>
+            <button class="pipeline-step-btn" data-step="5" role="tab" aria-selected="false">
+              <span class="pipeline-step-btn__num">5</span>
+              <span>Encode Categorical</span>
+            </button>
+            <button class="pipeline-step-btn" data-step="6" role="tab" aria-selected="false">
+              <span class="pipeline-step-btn__num">6</span>
+              <span>Split Dataset</span>
+            </button>
+            <button class="pipeline-step-btn" data-step="7" role="tab" aria-selected="false">
+              <span class="pipeline-step-btn__num">7</span>
+              <span>Feature Scaling</span>
+            </button>
+          </div>
+
+          <!-- Step Info Card -->
+          <div class="pipeline-step-content">
+            <div class="pipeline-step-meta">
+              <span class="pipeline-badge" id="stepBadge">Task 1 of 7</span>
+              <div class="pipeline-nav-arrows">
+                <button class="pipe-nav-btn" id="prevStepBtn" disabled aria-label="Previous step">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5"/><path d="m12 19-7-7 7-7"/></svg>
+                  <span>Prev</span>
+                </button>
+                <button class="pipe-nav-btn" id="nextStepBtn" aria-label="Next step">
+                  <span>Next</span>
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+                </button>
+              </div>
+            </div>
+
+            <h3 class="pipeline-step-title" id="stepTitle">1. Acquire the dataset</h3>
+            <p class="pipeline-step-desc" id="stepDesc">
+              Gathering raw data from reliable sources such as CSV spreadsheets, SQL enterprise databases, public web APIs, sensors, or web scraping. Without data, no model can be created.
+            </p>
+            <div class="pipeline-step-tip" id="stepTip">
+              💡 <strong>Key Takeaway:</strong> In this lecture, we acquire <code>Data.csv</code> containing 10 customer records with Country, Age, Salary, and whether they Purchased a product.
+            </div>
+          </div>
+
+          <!-- Code Sandbox / Editor & Console -->
+          <div class="code-sandbox">
+            <div class="code-sandbox__header">
+              <div class="code-sandbox__mac-dots" aria-hidden="true">
+                <span class="mac-dot mac-dot--red"></span>
+                <span class="mac-dot mac-dot--yellow"></span>
+                <span class="mac-dot mac-dot--green"></span>
+              </div>
+              <div class="code-sandbox__filename" id="sandboxFilename">step_1_acquire_dataset.py</div>
+              <div class="code-sandbox__actions">
+                <button class="copy-code-btn" id="copyCodeBtn" title="Copy code to clipboard">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>
+                  <span id="copyBtnText">Copy</span>
+                </button>
+                <button class="run-code-btn" id="runCodeBtn">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+                  <span>Run Code</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Code Editor Viewer -->
+            <div class="code-sandbox__editor">
+              <pre><code id="codeSnippet" class="language-python"># Task 1: Acquire the dataset
+# Data can be gathered from databases, online APIs, or CSV files.
+# In our project folder, we have 'Data.csv' representing customer purchases:
+
+data_source = "Data.csv"
+print(f"Acquired dataset file: '{data_source}' successfully.")
+print("Columns present: ['Country', 'Age', 'Salary', 'Purchased']")</code></pre>
+            </div>
+
+            <!-- Execution Console Output -->
+            <div class="code-sandbox__console">
+              <div class="console-header">
+                <span class="console-title">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="4 17 10 11 4 5"/><line x1="12" y1="19" x2="20" y2="19"/></svg>
+                  Output Console
+                </span>
+                <span class="console-status console-status--ready" id="consoleStatus">Ready to run</span>
+              </div>
+              <div class="console-output" id="consoleOutput">Click "▶ Run Code" above to execute this task.</div>
+            </div>
+          </div>
+
+        </div>
+
+    </section>
+
+    <!-- ---- Section 5: Important Facts About Preprocessing Tasks ---- -->
+    <section class="block facts-section" id="important-facts">
+      <div class="block__body">
+        
+        <h2 class="fade-up animate-on-scroll">
+          <span class="icon-badge icon-badge--gold">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+          </span>
+          Important Facts About Preprocessing Tasks
+        </h2>
+
+        <div class="facts-lead-card fade-up animate-on-scroll">
+          <p>
+            Data preprocessing is not just a mechanical checklist of coding steps; it is governed by foundational mathematical and statistical principles. Below are the <strong>three critical pillars</strong> that every machine learning practitioner must master: <strong>Dataset Splitting</strong>, <strong>Feature Scaling</strong>, and <strong>Categorical Encoding</strong>.
+          </p>
+        </div>
+
+        <!-- =========================================================
+             FACT 1: SPLIT DATA SET
+             ========================================================= -->
+        <div class="fact-block fact-block--split fade-up animate-on-scroll" id="fact-split">
+          
+          <div class="fact-block__header">
+            <div class="fact-block__title-area">
+              <span class="fact-block__num">1</span>
+              <div>
+                <h3 class="fact-block__title">Split Dataset</h3>
+                <span style="font-size:0.84rem; color:var(--muted);">Separating training knowledge from evaluation truth</span>
+              </div>
+            </div>
+            <span class="fact-block__badge">Train / Test Division</span>
+          </div>
+
+          <p>
+            This step splits the dataset into distinct subsets using <strong>percentages</strong>. In machine learning, an algorithm must never be evaluated on the same data it learned from. Common standard split ratios in practice are:
+          </p>
+
+          <!-- Interactive Split Visualizer -->
+          <div class="split-visualizer">
+            <div class="split-ratio-controls">
+              <button class="split-ratio-btn is-active" id="split8020Btn" type="button">80% Train / 20% Test (Standard)</button>
+              <button class="split-ratio-btn" id="split7030Btn" type="button">70% Train / 30% Test (Alternative)</button>
+            </div>
+
+            <div class="split-bar-wrap" aria-label="Visual representation of dataset split">
+              <div class="split-bar-segment split-bar-segment--train" id="splitTrainBar" style="width: 80%;">
+                <span id="splitTrainPct">80% Training</span>
+              </div>
+              <div class="split-bar-segment split-bar-segment--test" id="splitTestBar" style="width: 20%;">
+                <span id="splitTestPct">20% Testing</span>
+              </div>
+            </div>
+
+            <div class="split-bar-labels">
+              <span class="split-label-train" id="splitTrainInfo">✓ 8 of 10 samples for learning patterns</span>
+              <span class="split-label-test" id="splitTestInfo">🔒 2 of 10 samples held out for testing</span>
+            </div>
+          </div>
+
+          <div class="fact-two-col">
+            <!-- Training Set Card -->
+            <div class="fact-subcard fact-subcard--train">
+              <h4 class="fact-subcard__title">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#0EA894" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                Training Set (Larger Portion: 70% – 80%)
+              </h4>
+              <p style="font-size:0.92rem; color:var(--ink-soft); margin-bottom:0.6rem;">
+                The <strong>larger portion is always the training set</strong>. The machine learning model uses this data to discover underlying patterns, optimize mathematical weights, and adjust its decision boundaries.
+              </p>
+              <div style="font-size:0.8rem; font-family:'IBM Plex Mono', monospace; color:var(--teal-dark); background:var(--teal-tint); padding:0.4rem 0.6rem; border-radius:6px;">
+                x_train, y_train &bull; 80% of rows
+              </div>
+            </div>
+
+            <!-- Testing Set Card -->
+            <div class="fact-subcard fact-subcard--test">
+              <h4 class="fact-subcard__title">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#FF5A3C" stroke-width="2.5"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                Testing Set (Smaller Portion: 20% – 30%)
+              </h4>
+              <p style="font-size:0.92rem; color:var(--ink-soft); margin-bottom:0.6rem;">
+                The <strong>smaller portion is the testing set</strong>. It remains completely hidden and untouched during model training. It serves as an unbiased benchmark to test whether the model can generalize to unseen real-world data.
+              </p>
+              <div style="font-size:0.8rem; font-family:'IBM Plex Mono', monospace; color:var(--coral-dark); background:var(--coral-tint); padding:0.4rem 0.6rem; border-radius:6px;">
+                x_test, y_test &bull; 20% unseen rows
+              </div>
+            </div>
+          </div>
+
+          <!-- Important Note on Split Ratios -->
+          <div class="definition" style="margin: 1.5rem 0 0.5rem; padding: 1.2rem 1.6rem;">
+            <div class="definition__label">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+              Why is the larger portion always the training set?
+            </div>
+            <p style="font-size:0.92rem; margin:0;">
+              Algorithms need substantial volumes of data to detect nuanced statistical patterns without being misled by random noise. A 20% to 30% holdout provides more than enough statistical power to test real-world accuracy without starving the model of learning material.
+            </p>
+          </div>
+
+          <div style="margin-top:1.2rem; font-size:0.86rem; color:var(--muted); display:flex; align-items:center; gap:0.5rem;">
+            <span>⚡ <strong>Pipeline Rule:</strong> Always split before feature scaling to prevent <em>Data Leakage</em> (test statistics contaminating the training process).</span>
+          </div>
+
+        </div>
+
+        <!-- =========================================================
+             FACT 2: FEATURE SCALING
+             ========================================================= -->
+        <div class="fact-block fact-block--scaling fade-up animate-on-scroll" id="fact-scaling">
+          
+          <div class="fact-block__header">
+            <div class="fact-block__title-area">
+              <span class="fact-block__num">2</span>
+              <div>
+                <h3 class="fact-block__title">Feature Scaling</h3>
+                <span style="font-size:0.84rem; color:var(--muted);">Balancing numeric magnitudes across variables</span>
+              </div>
+            </div>
+            <span class="fact-block__badge">Magnitude Balancing</span>
+          </div>
+
+          <p>
+            Feature scaling is very important when training machine learning models to get a proper, reliable output. 
+            <strong>What feature scaling does is bring numerical features onto a similar, comparable mathematical range.</strong>
+          </p>
+          <p>
+            This is done to make sure that one feature does not have an unintended, disproportionately large influence on a machine learning model just because it happens to be measured in bigger numbers.
+          </p>
+
+          <!-- Core Feature Definition Callout -->
+          <div class="feature-def-banner">
+            <span class="feature-def-icon">📌</span>
+            <div class="feature-def-text">
+              <strong>Core Definition:</strong> A <strong>feature</strong> is an individual variable or a column in the dataset that normally contains one specific type of data (for example: <code>Country</code>, <code>Age</code>, or <code>Salary</code>).
+            </div>
+          </div>
+
+          <!-- Simple Concrete Example Box -->
+          <div class="scale-example-box">
+            <h4 style="font-family:var(--display); font-size:1.05rem; margin:0 0 0.5rem; color:var(--ink);">
+              💡 Simple Example: Why Scale Differences Create Unfair Bias
+            </h4>
+            <p style="font-size:0.92rem; color:var(--ink-soft); margin-bottom:0.8rem;">
+              Suppose a model predicts customer behavior using two features: <strong>Age</strong> and <strong>Salary</strong>. Look at their raw numbers:
+            </p>
+
+            <div class="scale-example-grid">
+              <div class="scale-feature-card">
+                <div class="scale-feature-card__name">Feature 1: Age</div>
+                <div class="scale-feature-card__range">Values range from <strong>27 to 50</strong></div>
+                <div class="scale-feature-card__contrast">Max difference: <strong>23 years</strong></div>
+              </div>
+              <div class="scale-feature-card">
+                <div class="scale-feature-card__name">Feature 2: Salary</div>
+                <div class="scale-feature-card__range">Values range from <strong>$48,000 to $83,000</strong></div>
+                <div class="scale-feature-card__contrast">Max difference: <strong>$35,000 dollars</strong></div>
+              </div>
+            </div>
+
+            <p style="font-size:0.88rem; color:var(--ink-soft); line-height:1.55; margin:0;">
+              In real life, a 10-year age difference represents a major generational gap, while a $1,000 salary difference is minor. 
+              However, when computing distances:
+              <br>
+              &bull; Age squared difference: <code>(50 - 27)² = 529</code>
+              <br>
+              &bull; Salary squared difference: <code>(83,000 - 48,000)² = 1,225,000,000</code>
+              <br>
+              Because <code>1,225,000,000</code> is <strong>over 2.3 million times larger</strong> than <code>529</code>, the model will essentially ignore Age and make all its decisions based solely on Salary, simply because Salary is measured in thousands of dollars! Feature scaling eliminates this unfair distortion.
+            </p>
+          </div>
+
+          <!-- Why Feature Scaling Matters & Algorithms Dependent on Distance -->
+          <h4 style="font-family:var(--display); font-size:1.08rem; margin:1.8rem 0 0.5rem; color:var(--ink);">
+            Why Feature Scaling Matters: Distance &amp; Size-Dependent Algorithms
+          </h4>
+          <p style="font-size:0.92rem; color:var(--ink-soft);">
+            Many machine learning algorithms rely directly on <strong>geometric distance calculations</strong> between data points or <strong>gradient magnitudes</strong>. Without scaling, larger features overpower these algorithms completely:
+          </p>
+
+          <div class="algo-pills-row">
+            <div class="algo-pill">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="m10 15 5-3-5-3v6Z"/></svg>
+              <span><strong>K-Nearest Neighbors (KNN):</strong> Calculates Euclidean distance to classify neighbors</span>
+            </div>
+            <div class="algo-pill">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="6" cy="6" r="3"/><circle cx="18" cy="18" r="3"/><path d="M8.5 8.5 15.5 15.5"/></svg>
+              <span><strong>K-Means Clustering:</strong> Partitions data clusters around spatial centroids</span>
+            </div>
+            <div class="algo-pill">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/></svg>
+              <span><strong>Gradient Descent (Neural Nets &amp; Regressions):</strong> Unscaled inputs cause erratic oscillation</span>
+            </div>
+            <div class="algo-pill">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M3 9h18"/></svg>
+              <span><strong>Support Vector Machines (SVM):</strong> Hyperplane margins depend directly on distances</span>
+            </div>
+          </div>
+
+          <!-- Manual Scaling Methods and Equations -->
+          <h4 style="font-family:var(--display); font-size:1.08rem; margin:2rem 0 0.8rem; color:var(--ink);">
+            Manual Feature Scaling Methods &amp; Their Mathematical Equations
+          </h4>
+
+          <div class="fact-two-col">
+            
+            <!-- 1. Standardization Card -->
+            <div class="formula-card">
+              <div class="formula-card__head">
+                <h5 class="formula-card__title">1. Standardization</h5>
+                <span class="formula-card__badge">Z-score Normalization</span>
+              </div>
+              <p style="font-size:0.86rem; color:var(--ink-soft); margin-bottom:0.8rem;">
+                Centers the distribution around <strong>mean &mu; = 0</strong> with <strong>standard deviation &sigma; = 1</strong>. Preserves outlier information and is ideal for normally distributed data.
+              </p>
+
+              <div class="math-display-box">
+                <div class="math-eq-row">
+                  <span>z = </span>
+                  <div class="math-frac">
+                    <span class="math-num">x &minus; &mu;</span>
+                    <span class="math-den">&sigma;</span>
+                  </div>
+                </div>
+                <div class="math-legend">
+                  <div class="math-legend-item"><code>x</code> &mdash; original feature value</div>
+                  <div class="math-legend-item"><code>&mu;</code> &mdash; mean of the feature</div>
+                  <div class="math-legend-item"><code>&sigma;</code> &mdash; standard deviation</div>
+                  <div class="math-legend-item"><code>z</code> &mdash; standardized value</div>
+                </div>
+              </div>
+
+              <div style="font-size:0.8rem; color:var(--muted); margin-top:0.6rem;">
+                In Scikit-Learn: <code>StandardScaler()</code>
+              </div>
+            </div>
+
+            <!-- 2. Normalization Card -->
+            <div class="formula-card">
+              <div class="formula-card__head">
+                <h5 class="formula-card__title">2. Normalization</h5>
+                <span class="formula-card__badge">Min-Max Scaling</span>
+              </div>
+              <p style="font-size:0.86rem; color:var(--ink-soft); margin-bottom:0.8rem;">
+                Shifts and rescales values into a fixed bounded range between <strong>0.0 and 1.0</strong>. Ideal when you know distribution boundaries, though sensitive to extreme outliers.
+              </p>
+
+              <div class="math-display-box">
+                <div class="math-eq-row">
+                  <span>x<sub>norm</sub> = </span>
+                  <div class="math-frac">
+                    <span class="math-num">x &minus; x<sub>min</sub></span>
+                    <span class="math-den">x<sub>max</sub> &minus; x<sub>min</sub></span>
+                  </div>
+                </div>
+                <div class="math-legend">
+                  <div class="math-legend-item"><code>x</code> &mdash; original feature value</div>
+                  <div class="math-legend-item"><code>x<sub>min</sub></code> &mdash; minimum column value</div>
+                  <div class="math-legend-item"><code>x<sub>max</sub></code> &mdash; maximum column value</div>
+                  <div class="math-legend-item"><code>x<sub>norm</sub></code> &mdash; normalized value [0, 1]</div>
+                </div>
+              </div>
+
+              <div style="font-size:0.8rem; color:var(--muted); margin-top:0.6rem;">
+                In Scikit-Learn: <code>MinMaxScaler()</code>
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+
+        <!-- =========================================================
+             FACT 3: ENCODING CATEGORICAL DATA
+             ========================================================= -->
+        <div class="fact-block fact-block--encoding fade-up animate-on-scroll" id="fact-encoding">
+          
+          <div class="fact-block__header">
+            <div class="fact-block__title-area">
+              <span class="fact-block__num">3</span>
+              <div>
+                <h3 class="fact-block__title">Encoding Categorical Data</h3>
+                <span style="font-size:0.84rem; color:var(--muted);">Translating text categories into mathematical numbers</span>
+              </div>
+            </div>
+            <span class="fact-block__badge">Text to Numbers</span>
+          </div>
+
+          <p>
+            Machine learning algorithms compute mathematical equations (vector dot products like <code>W &middot; x + b</code>) and cannot compute on raw text strings like <code>"France"</code> or <code>"Yes"</code>.
+          </p>
+          <p>
+            There are two primary methods of categorical encoding: <strong>One-Hot Encoding</strong> and <strong>Label Encoding</strong>. Knowing which one to use depends strictly on whether the categories have a natural ranking or order.
+          </p>
+
+          <div class="fact-two-col">
+
+            <!-- Card 1: One-Hot Encoding -->
+            <div class="fact-subcard" style="border-top: 3px solid var(--teal);">
+              <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:0.5rem;">
+                <h4 class="fact-subcard__title" style="margin:0;">One-Hot Encoding</h4>
+                <span style="font-size:0.72rem; font-weight:700; color:var(--teal-dark); background:var(--teal-tint); padding:0.2rem 0.5rem; border-radius:999px;">Nominal (Unordered)</span>
+              </div>
+              
+              <p style="font-size:0.88rem; color:var(--ink-soft); margin-bottom:0.7rem;">
+                <strong>When to use:</strong> Use One-Hot Encoding when there is <strong>no particular order or ranking among the categories</strong>.
+              </p>
+              
+              <p style="font-size:0.84rem; color:var(--ink-soft); margin-bottom:0.8rem;">
+                <strong>Why:</strong> If you encoded countries as <code>0, 1, 2</code>, the algorithm would incorrectly assume that Germany (2) is mathematically "greater than" France (0). One-Hot encoding avoids this false bias by creating separate binary (0 or 1) indicator columns for each category.
+              </p>
+
+              <div class="encoding-table-wrap">
+                <table class="mini-enc-table">
+                  <thead>
+                    <tr><th>Raw Country</th><th>France</th><th>Germany</th><th>Spain</th></tr>
+                  </thead>
+                  <tbody>
+                    <tr><td>France</td><td><span class="code-vec">1</span></td><td><span class="code-vec">0</span></td><td><span class="code-vec">0</span></td></tr>
+                    <tr><td>Spain</td><td><span class="code-vec">0</span></td><td><span class="code-vec">0</span></td><td><span class="code-vec">1</span></td></tr>
+                    <tr><td>Germany</td><td><span class="code-vec">0</span></td><td><span class="code-vec">1</span></td><td><span class="code-vec">0</span></td></tr>
+                  </tbody>
+                </table>
+              </div>
+
+              <div style="font-size:0.8rem; color:var(--muted); margin-top:auto;">
+                💡 <strong>Other Examples:</strong> Colors (Red, Blue, Green), Blood Types (A, B, AB, O), Cities, Browser Types.
+              </div>
+            </div>
+
+            <!-- Card 2: Label Encoding -->
+            <div class="fact-subcard" style="border-top: 3px solid var(--coral);">
+              <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:0.5rem;">
+                <h4 class="fact-subcard__title" style="margin:0;">Label Encoding</h4>
+                <span style="font-size:0.72rem; font-weight:700; color:var(--coral-dark); background:var(--coral-tint); padding:0.2rem 0.5rem; border-radius:999px;">Ordinal (Ordered)</span>
+              </div>
+              
+              <p style="font-size:0.88rem; color:var(--ink-soft); margin-bottom:0.7rem;">
+                <strong>When to use:</strong> Use Label Encoding when there is a <strong>clear, meaningful order or hierarchy among the categories</strong>, or for the <strong>dependent target variable (y)</strong>.
+              </p>
+              
+              <p style="font-size:0.84rem; color:var(--ink-soft); margin-bottom:0.8rem;">
+                <strong>Why:</strong> Sequential integers (0, 1, 2, ...) preserve the natural progression and hierarchy of ranks without expanding your dataset into excessive dummy columns.
+              </p>
+
+              <div class="encoding-table-wrap">
+                <table class="mini-enc-table">
+                  <thead>
+                    <tr><th>Rank Category</th><th>Hierarchy</th><th>Encoded Integer</th></tr>
+                  </thead>
+                  <tbody>
+                    <tr><td>Low</td><td>Lowest Tier</td><td><span class="code-int">0</span></td></tr>
+                    <tr><td>Medium</td><td>Intermediate Tier</td><td><span class="code-int">1</span></td></tr>
+                    <tr><td>High</td><td>Highest Tier</td><td><span class="code-int">2</span></td></tr>
+                  </tbody>
+                </table>
+              </div>
+
+              <div style="font-size:0.8rem; color:var(--muted); margin-top:auto;">
+                💡 <strong>Other Examples:</strong> Education (High School &rarr; 0, BSc &rarr; 1, MSc &rarr; 2, PhD &rarr; 3), Sizes (S &rarr; 0, M &rarr; 1, L &rarr; 2), Target <code>Purchased</code> (No &rarr; 0, Yes &rarr; 1).
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Quick Decision Guide Summary Box -->
+          <div class="decision-guide-box">
+            <h4 style="font-family:var(--display); font-size:1.05rem; margin:0 0 0.5rem; color:var(--ink);">
+              📋 Quick Decision Guide: One-Hot vs. Label Encoding
+            </h4>
+            <div style="overflow-x:auto;">
+              <table class="mini-enc-table" style="margin-top:0.6rem;">
+                <thead>
+                  <tr>
+                    <th>Category Nature</th>
+                    <th>Does Order Matter?</th>
+                    <th>Recommended Method</th>
+                    <th>Scikit-Learn Class</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><strong>Nominal</strong> (Unordered names)</td>
+                    <td>❌ No order (France vs Spain)</td>
+                    <td><strong style="color:var(--teal-dark);">One-Hot Encoding</strong></td>
+                    <td><code>OneHotEncoder()</code></td>
+                  </tr>
+                  <tr>
+                    <td><strong>Ordinal</strong> (Ranked tiers)</td>
+                    <td>✓ Yes (Low &lt; Med &lt; High)</td>
+                    <td><strong style="color:var(--coral-dark);">Label / Ordinal Encoding</strong></td>
+                    <td><code>OrdinalEncoder()</code></td>
+                  </tr>
+                  <tr>
+                    <td><strong>Target Variable (y)</strong></td>
+                    <td>Binary or class outcome</td>
+                    <td><strong style="color:var(--coral-dark);">Label Encoding</strong></td>
+                    <td><code>LabelEncoder()</code></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+        </div>
+
+      </div> <!-- end block__body -->
+    </section>
+
+    <!-- ============ LESSON FOOTER ============ -->
+    <footer class="lesson__footer">
+      <a href="index.html" class="lesson__footer-prev" id="prevLessonLink">
+        <span class="lesson__footer-prev-arrow">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5"/><path d="m12 19-7-7 7-7"/></svg>
+        </span>
+        <div class="lesson__footer-prev-text">
+          <span class="lesson__footer-prev-label">Previous lesson</span>
+          <span class="lesson__footer-prev-name">1. Introduction to ML</span>
+        </div>
+      </a>
+
+      <div class="lesson__footer-progress">Lesson 2 of 6</div>
+
+      <a href="eda.html" class="lesson__footer-next" id="nextLessonLink">
+        <div class="lesson__footer-next-text">
+          <span class="lesson__footer-next-label">Next lesson</span>
+          <span class="lesson__footer-next-name">3. Exploratory Data Analysis</span>
+        </div>
+        <span class="lesson__footer-arrow">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+        </span>
+      </a>
+    </footer>
+
+  </main>
+</div>
+
+<script src="main.js"></script>
+</body>
+</html>
